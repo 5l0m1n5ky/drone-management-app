@@ -1,41 +1,45 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { LoginService } from './login.service';
+import { RegisterService } from './register.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
+  selector: 'app-register',
+  templateUrl: './register.component.html',
   styleUrls: []
 })
-export class LoginComponent {
+export class RegisterComponent {
 
-  constructor(private loginService: LoginService) { }
+  constructor(private registerService: RegisterService) { }
 
   loginForm: any;
-  PasswordVisible: boolean = false;
-  isRegisterError: boolean = false;
-  registerError: string = "";
   isLoading: boolean = false;
-
-
+  passwordVisible: boolean = false;
+  confirmPasswordVisible: boolean = false;
+  termsAccepted: boolean = false;
+  passwordMismatch: boolean = false;
+  registerError: string = '';
 
   changeVisibilityofPassword() {
-    this.PasswordVisible = !this.PasswordVisible;
+    this.passwordVisible = !this.passwordVisible;
   }
 
-  onLoginFormSubmit(form: NgForm) {
+  changeVisibilityofPasswordConfirmation() {
+    this.confirmPasswordVisible = !this.confirmPasswordVisible;
+  }
+
+  onRegisterFormSubmit(form: NgForm) {
 
     if (!form.valid) {
       return;
     }
 
-    this.isLoading = true;
-
-
     const email = form.value.email;
     const password = form.value.password;
+    const password_confirmation = form.value.password_confirmation;
 
-    this.loginService.login(email, password).subscribe(responseData => {
+    this.isLoading = true;
+
+    this.registerService.register(email, password, password_confirmation).subscribe(responseData => {
       console.log(responseData);
       this.isLoading = false;
     },
@@ -53,10 +57,9 @@ export class LoginComponent {
     );
 
     console.log(form.value)
-
-    // console.log(form.value)
-
     form.reset();
   }
 
 }
+
+

@@ -1,42 +1,68 @@
-<div class="bg-gradient-to-b from-gray-700 to-black h-screen w-screen">
-    <div class="flex flex-col items-center flex-1 h-full justify-center px-4 sm:px-0">
-        <div class="flex rounded-lg shadow-lg w-full sm:w-3/4 lg:w-2/3 bg-white sm:mx-0 sm:h-4/5 lg:h-4/5">
-            <div class="flex flex-col w-full md:w-1/2 p-4">
-                <div class="flex flex-col flex-1 justify-center mb-8">
-                    <h1 class="text-4xl text-center font-thin">Welcome Back</h1>
-                    <div class="w-full mt-4">
-                        <form class="form-horizontal w-3/4 mx-auto" method="POST" action="#">
-                            <div class="flex flex-col mt-4">
-                                <input id="email" type="text" class="flex-grow h-8 px-2 border rounded border-grey-400"
-                                    name="email" value="" placeholder="Email">
-                            </div>
-                            <div class="flex flex-col mt-4">
-                                <input id="password" type="password"
-                                    class="flex-grow h-8 px-2 rounded border border-grey-400" name="password" required
-                                    placeholder="Password">
-                            </div>
-                            <div class="flex items-center mt-4">
-                                <input type="checkbox" name="remember" id="remember" class="mr-2"> <label for="remember"
-                                    class="text-sm text-grey-dark">Remember Me</label>
-                            </div>
-                            <div class="flex flex-col mt-8">
-                                <button type="submit"
-                                    class="bg-blue-500 hover:bg-blue-700 text-white text-sm font-semibold py-2 px-4 rounded">
-                                    Login
-                                </button>
-                            </div>
-                        </form>
-                        <div class="text-center mt-4">
-                            <a class="no-underline hover:underline text-blue-dark text-xs" href="#">
-                                Forgot Your Password?
-                            </a>
-                        </div>
-                    </div>
+<div class="bg-gradient-to-b from-stone-800 to-black h-screen w-screen font-montserrat">
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+  <div class="flex flex-col items-center flex-1 h-full justify-center px-4 sm:px-0">
+    <div class="flex rounded-lg shadow-lg w-full sm:w-3/4 lg:w-2/3 bg-white sm:mx-0 sm:h-4/5 lg:h-4/5">
+      <div class="flex flex-col w-full md:w-1/2 p-4">
+        <div class="flex flex-col flex-1 justify-center">
+          <h1 class="text-4xl text-center font-thin mb-10">Zaloguj się</h1>
+          <div class="w-full mt-4">
+            <form #loginForm="ngForm" (ngSubmit)="onLoginFormSubmit(loginForm)" class="form-horizontal w-3/4 mx-auto">
+              <div class="flex flex-col mt-4">
+                <input id="email" type="email" class="flex-grow h-8 px-2 border rounded border-grey-400" ngModel
+                  required name="email" email placeholder="E-mail" #email="ngModel" autocomplete="email">
+              </div>
+              <div class="flex flex-col mt-4 relative">
+                <input id="password" type="password" class="flex-grow h-8 px-2 rounded border border-grey-400" ngModel
+                  name="password" required password minlength="6" placeholder="Hasło" #password="ngModel"
+                  type="{{PasswordVisible ? 'text' : 'password'}}" autocomplete="new-password">
+                <img src="./assets/icons/invisibility_icon.png" alt="invisible-icon"
+                  class="absolute z-10 w-8 h-8 right-2 my-auto hover:opacity-75" (click)="changeVisibilityofPassword()"
+                  *ngIf="!PasswordVisible">
+                <img src="./assets/icons/visibility_icon.png" alt="invisible-icon"
+                  class="absolute z-10 w-8 h-8 right-2 my-auto hover:opacity-75" (click)="changeVisibilityofPassword()"
+                  *ngIf="PasswordVisible">
+              </div>
+              <div *ngIf="isRegisterError" class="w-full flex justify-center items-center">
+                <p class="text-red-500 text-sm mt-3">{{registerError}}</p>
+              </div>
+              <!-- <div class="flex items-center mt-4">
+                <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                  <input type="checkbox" name="toggle" id="toggle"
+                    class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" />
+                  <label for="toggle"
+                    class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
                 </div>
+                <label for="toggle" class="text-xs text-gray-700">Zapamiętaj mnie</label>
+              </div> -->
+              <div class="flex flex-col mt-8">
+                <button type="submit" *ngIf="loginForm.valid"
+                  class="bg-blue-500 hover:bg-blue-700 text-white text-sm font-semibold py-2 px-4 rounded">
+                  Zaloguj
+                </button>
+                <button type="submit" *ngIf="!loginForm.valid"
+                  class="bg-blue-500 text-white text-sm font-semibold py-2 px-4 rounded cursor-not-allowed opacity-50">
+                  Zaloguj
+                </button>
+              </div>
+            </form>
+            <div class="text-center mt-4">
+              <a class="no-underline hover:underline text-blue-dark text-xs" href="#">
+                Odzyskaj hasło
+              </a>
             </div>
-            <div class="hidden md:block md:w-1/2 rounded-r-lg"
-                style="background: url('https://images.unsplash.com/photo-1515965885361-f1e0095517ea?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3300&q=80'); background-size: cover; background-position: center center;">
+            <div class="text-center mt-4">
+              <a class="no-underline hover:underline text-blue-dark text-xs" routerLink="/register">
+                Załóż konto
+              </a>
             </div>
+          </div>
         </div>
+      </div>
+      <div class="hidden md:block md:w-1/2 rounded-r-lg bg-stone-900">
+        <div class="h-full w-full flex flex-col justify-center items-center">
+          <img src="./assets/logo/logo_white.png" alt="logo" class="w-[80%]">
+        </div>
+      </div>
     </div>
+  </div>
 </div>
