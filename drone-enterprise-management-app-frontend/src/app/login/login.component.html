@@ -19,11 +19,11 @@
                   class="absolute z-10 w-8 h-8 right-2 my-auto hover:opacity-75" (click)="changeVisibilityofPassword()"
                   *ngIf="!PasswordVisible">
                 <img src="./assets/icons/visibility_icon.png" alt="invisible-icon"
-                  class="absolute z-10 w-8 h-8 right-2 my-auto hover:opacity-75" (click)="changeVisibilityofPassword()"
+                  class="absolute z-10 w-8 h-8 right-2 hover:opacity-75" (click)="changeVisibilityofPassword()"
                   *ngIf="PasswordVisible">
               </div>
-              <div *ngIf="isRegisterError" class="w-full flex justify-center items-center">
-                <p class="text-red-500 text-sm mt-3">{{registerError}}</p>
+              <div *ngIf="isLoginError" class="w-full flex justify-center items-center">
+                <p class="text-red-500 text-sm mt-3">{{loginError}}</p>
               </div>
               <!-- <div class="flex items-center mt-4">
                 <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">

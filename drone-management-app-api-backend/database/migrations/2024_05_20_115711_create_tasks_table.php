@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('priority')->default('medium');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

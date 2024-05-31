@@ -13,8 +13,8 @@ export class LoginComponent {
 
   loginForm: any;
   PasswordVisible: boolean = false;
-  isRegisterError: boolean = false;
-  registerError: string = "";
+  isLoginError: boolean = false;
+  loginError: string = "";
   isLoading: boolean = false;
 
 
@@ -23,7 +23,7 @@ export class LoginComponent {
     this.PasswordVisible = !this.PasswordVisible;
   }
 
-  onLoginFormSubmit(form: NgForm) {
+  async onLoginFormSubmit(form: NgForm) {
 
     if (!form.valid) {
       return;
@@ -35,27 +35,24 @@ export class LoginComponent {
     const email = form.value.email;
     const password = form.value.password;
 
+    // return this.http.get('http://127.0.0.1:8000/sanctum/csrf-cookie', { observe: 'response' }).toPromise()
+    //   .then(response => {
+    //     this.csrfToken = response.headers.get('X-CSRF-TOKEN');
+    //   });
+
+
     this.loginService.login(email, password).subscribe(responseData => {
       console.log(responseData);
       this.isLoading = false;
     },
-      // errorResponse => {
-      // switch (errorResponse.error.message) {
-      //   case "The email has already been taken.":
-      //     this.registerError = "Użytkownik o podanym adresie e-mail już istnieje";
-      // }
-
-      // },
       errorMessage => {
-        this.registerError = errorMessage;
+        this.isLoginError = true;
+        this.loginError = errorMessage;
         this.isLoading = false;
       }
     );
 
     console.log(form.value)
-
-    // console.log(form.value)
-
     form.reset();
   }
 

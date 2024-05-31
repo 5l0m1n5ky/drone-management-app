@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Contracts\Debug\ExceptionHandler;
-use Throwable;
+use DB;
+use \Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
@@ -25,14 +26,27 @@ class AuthController extends Controller
         $request->validated($request->all());
 
         if (!Auth::attempt($request->only(['email', 'password']))) {
-            return $this->error('', 'Credentials does not match', 401);
+            return $this->error([
+                'request' => [
+                    'email' => $request->email,
+                    'password' => $request->password
+                ]
+            ], 'CREDENTIALS_MISMATCH', 401);
         }
 
         $user = User::where('email', $request->email)->first();
+        $token = $user->createToken('API TOKEN', ['*'], now()->addHour())->plainTextToken;
+        $token_expiration = DB::table('personal_access_tokens')->where('id', auth::user()->tokens->first()->id)->first()->expires_at;
 
         return $this->success([
-            'user' => $user,
-            'token' => $user->createToken('API TOKEN')->plainTextToken
+            'user' => [
+                'id' => $user->id,
+                'email' => $user->email,
+                'email_verified_at' => $user->email_verified_at,
+
+            ],
+            'token' => $token,
+            'token_expiration' => $token_expiration,
         ]);
     }
 
@@ -47,7 +61,8 @@ class AuthController extends Controller
 
         return $this->success([
             'user' => $user,
-            'token' => $user->createToken('API TOKEN')->plainTextToken,
+            // 'token' => $user->createToken('API TOKEN')->plainTextToken,
+            // 'token_expiration' => $user->,
         ]);
 
     }

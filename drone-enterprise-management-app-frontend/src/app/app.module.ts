@@ -8,7 +8,7 @@ import { BannerComponent } from './banner/banner.component';
 import { FooterComponent } from './footer/footer.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { RouterModule, Routes } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { HomeDetailsComponent } from './home/home-details/home-details.component';
 import { HomeServicesComponent } from './home/home-services/home-services.component';
 import { HomePortfolioComponent } from './home/home-portfolio/home-portfolio.component';
@@ -16,6 +16,7 @@ import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+import { ServicesComponent } from './services/services.component';
 
 
 @NgModule({
@@ -27,18 +28,21 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
     NavbarComponent,
     HomeComponent,
     RegisterComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    ServicesComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    // HttpClientXsrfModule,
     HomeDetailsComponent,
     HomeServicesComponent,
     HomePortfolioComponent,
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
