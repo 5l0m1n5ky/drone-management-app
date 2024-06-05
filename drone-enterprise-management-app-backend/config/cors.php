@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['localhost'],
+    'allowed_origins' => [env(key: 'FRONTEND_URL')],
 
     'allowed_origins_patterns' => [],
 

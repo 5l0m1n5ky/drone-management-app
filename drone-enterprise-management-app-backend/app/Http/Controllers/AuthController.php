@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use Exception;
+use Illuminate\Session\TokenMismatchException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Http\Request;
 use App\Traits\HttpResponses;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\AuthorizationException;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 
 // use Illuminate\Contracts\Debug\ExceptionHandler;
 // use DB;
@@ -22,59 +24,67 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
 
-    use HttpResponses;
-    // use HttpResponses, HasApiTokens;
+    // use HttpResponses;
+    use HttpResponses, HasApiTokens;
 
+
+    // public function login(LoginUserRequest $request)
+    // {
+    //     $request->validated($request->all());
+
+    //     if (!Auth::attempt($request->only(['email', 'password']))) {
+    //         return $this->error([
+    //             'request' => [
+    //                 'email' => $request->email,
+    //                 'password' => $request->password
+    //             ]
+    //         ], 'CREDENTIALS_MISMATCH', 401);
+    //     }
+
+    //     $user = User::where('email', $request->email)->first();
+
+    //     return $this->success([
+    //         'user' => [
+    //             'id' => $user->id,
+    //             'email' => $user->email,
+    //             'email_verified_at' => $user->email_verified_at,
+    //         ],
+    //     ]);
+
+    // }
 
     public function login(LoginUserRequest $request)
     {
-        // $request->validated($request->all());
+        $request->validated($request->all());
 
-        // if (!Auth::attempt($request->only(['email', 'password']))) {
-        //     return $this->error([
-        //         'request' => [
-        //             'email' => $request->email,
-        //             'password' => $request->password
-        //         ]
-        //     ], 'CREDENTIALS_MISMATCH', 401);
-        // }
+        if (!Auth::attempt($request->only(['email', 'password']))) {
+            return $this->error('', 'Credentials does not match', 401);
+        }
 
-        // $user = User::where('email', $request->email)->first();
-        // // $token = $user->createToken('API TOKEN', ['*'], now()->addHour())->plainTextToken;
-        // // $token_expiration = DB::table('personal_access_tokens')->where('id', auth::user()->tokens->first()->id)->first()->expires_at;
+        $user = User::where('email', $request->email)->first();
 
-        // return $this->success([
-        //     'user' => [
-        //         'id' => $user->id,
-        //         'email' => $user->email,
-        //         'email_verified_at' => $user->email_verified_at,
+        return $this->success([
+            'user' => $user,
+            'token' => $user->createToken('API TOKEN')->plainTextToken
+        ]);
+    }
 
-        //     ],
-        //     // 'token' => $token,
-        //     // 'token_expiration' => $token_expiration,
-        // ]);
+    public function register(StoreUserRequest $request)
+    {
 
         try {
-
             $request->validated($request->all());
 
-            $AuthAttempt = Auth::attempt($request->only(['email', 'password']));
+            $user = User::create([
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-            if ($AuthAttempt) {
-                $user = User::where('email', $request->email)->first();
+            return $this->success([
+                'user' => $user,
+            ]);
 
-                return $this->success([
-                    'user' => [
-                        'id' => $user->id,
-                        'email' => $user->email,
-                        'email_verified_at' => $user->email_verified_at,
-
-                    ],
-                ]);
-            }
-
-        } catch (HttpException $httpException) {
-
+        } catch (AuthorizationException $authorizationException) {
             return $this->error(
                 [
                     'request' => [
@@ -82,38 +92,21 @@ class AuthController extends Controller
                         'password' => $request->password
                     ]
                 ],
-                $httpException->getMessage(),
+                $authorizationException->getMessage(),
                 401
             );
-
+        } catch (TokenMismatchException $tokenMismatchException) {
+            return $this->error(
+                [
+                    'request' => [
+                        'email' => $request->email,
+                        'password' => $request->password
+                    ]
+                ],
+                'TOKEN_MISMATCH',
+                401
+            );
         }
-        // } catch (ValidationException $e) {
-        //     return response()->json([
-        //         'message' => 'Validation failed',
-        //         'errors' => $e->errors()
-        //     ], 422);
-        // } catch (\Exception $e) {
-        //     return response()->json([
-        //         'message' => 'An error occurred',
-        //         'error' => $e->getMessage()
-        //     ], 500);
-        // }
-    }
-
-    public function register(StoreUserRequest $request)
-    {
-        $request->validated($request->all());
-
-        $user = User::create([
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        return $this->success([
-            'user' => $user,
-            // 'token' => $user->createToken('API TOKEN')->plainTextToken,
-            // 'token_expiration' => $user->,
-        ]);
 
     }
 

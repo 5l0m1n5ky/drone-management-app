@@ -7,8 +7,7 @@ import { LoginComponent } from './/login/login.component';
 import { BannerComponent } from './banner/banner.component';
 import { FooterComponent } from './footer/footer.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { RouterModule, Routes } from '@angular/router';
-import { HTTP_INTERCEPTORS, HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpClientXsrfModule, HttpXsrfTokenExtractor } from '@angular/common/http';
 import { HomeDetailsComponent } from './home/home-details/home-details.component';
 import { HomeServicesComponent } from './home/home-services/home-services.component';
 import { HomePortfolioComponent } from './home/home-portfolio/home-portfolio.component';
@@ -17,6 +16,7 @@ import { RegisterComponent } from './register/register.component';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { ServicesComponent } from './services/services.component';
+import { CsrfInterceptor } from './auth/csrf.interceptor';
 
 
 @NgModule({
@@ -36,12 +36,17 @@ import { ServicesComponent } from './services/services.component';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    // HttpClientXsrfModule,
+    HttpClientXsrfModule,
     HomeDetailsComponent,
     HomeServicesComponent,
     HomePortfolioComponent,
   ],
-  providers: [
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: CsrfInterceptor,
+    multi: true
+  },
+  // { provide: HttpXsrfTokenExtractor, useClass: HttpXsrfCookieExtractor }
   ],
   bootstrap: [AppComponent]
 })

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { LoginService } from './login.service';
+import { LoginService } from '../auth/login.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +10,7 @@ import { LoginService } from './login.service';
 })
 export class LoginComponent {
 
-  constructor(private loginService: LoginService) { }
+  constructor(private loginService: LoginService, private cookieService: CookieService) { }
 
   loginForm: any;
   PasswordVisible: boolean = false;
@@ -35,22 +36,28 @@ export class LoginComponent {
     const email = form.value.email;
     const password = form.value.password;
 
-    // return this.http.get('http://127.0.0.1:8000/sanctum/csrf-cookie', { observe: 'response' }).toPromise()
-    //   .then(response => {
-    //     this.csrfToken = response.headers.get('X-CSRF-TOKEN');
-    //   });
 
 
-    this.loginService.login(email, password).subscribe(responseData => {
-      console.log(responseData);
-      this.isLoading = false;
-    },
+    this.loginService.login(email, password).subscribe(
+      responseData => {
+        console.log(responseData);
+        this.isLoading = false;
+      },
       errorMessage => {
         this.isLoginError = true;
-        this.loginError = errorMessage;
+        this.loginError = errorMessage.error.message;
         this.isLoading = false;
       }
     );
+
+    // let cookie = this.cookieService.get('XSRF-TOKEN');
+    // console.log('cookie 2: ', cookie);
+
+
+
+
+    this.isLoading = false;
+
 
     console.log(form.value)
     form.reset();

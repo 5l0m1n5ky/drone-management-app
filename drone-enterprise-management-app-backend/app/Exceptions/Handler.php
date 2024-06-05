@@ -45,22 +45,4 @@ class Handler extends ExceptionHandler
             //
         });
     }
-
-    // public function render($request, Throwable $exception)
-    // {
-    //     // Check if the exception is an instance of HttpException
-    //     if ($exception instanceof HttpException) {
-    //         $statusCode = $exception->getStatusCode();
-    //         $message = $exception->getMessage();
-
-    //         // Return a JSON response with only the message
-    //         return response()->json([
-    //             'message' => $message,
-    //         ], $statusCode);
-    //     }
-
-    //     // Handle other exceptions...
-    //     return parent::render($request, $exception);
-    // }
-
 }
