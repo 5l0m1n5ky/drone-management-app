@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, throwError } from "rxjs";
 
@@ -22,10 +22,15 @@ export class RegisterService {
   constructor(private http: HttpClient) { }
 
   register(email: string, password: string, password_confirmation: string) {
-    return this.http.post<RegisterResponseData>('http://127.0.0.1:8000/api/register', {
+    return this.http.post<RegisterResponseData>('http://localhost:8000/api/register', {
       email: email,
       password: password,
       password_confirmation: password_confirmation
+    }, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      withCredentials: true
     }).pipe(catchError(errorResponse => {
       let errorMessage = 'Error occured';
 
@@ -41,13 +46,3 @@ export class RegisterService {
   }
 }
 
-// "status": "Succesful Request",
-// "message": null,
-// "data": {
-//     "user": {
-//         "email": "test@test.pl",
-//         "updated_at": "2024-05-20T13:01:18.000000Z",
-//         "created_at": "2024-05-20T13:01:18.000000Z",
-//         "id": 9
-//     },
-//     "token": "3|8Kp48kM2GYkmJ1r7IM5MM2emhzTgI2386kijGKLib5de15d2"

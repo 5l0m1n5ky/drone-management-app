@@ -3,6 +3,16 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EmailController;
+
+
+use App\Mail\InvoicePaid;
+use App\Models\Invoice;
+
+
+
+use App\Models\User;
+
 
 
 /*
@@ -22,9 +32,13 @@ use App\Http\Controllers\AuthController;
 
 // Public Routes
 
-Route::post('/login', [AuthController::class, 'login']);
+// Route::post('/login', [AuthController::class, 'login']);
 
 Route::post('/register', [AuthController::class, 'register']);
+
+Route::post('/verifyAccount', [AuthController::class, 'verifyAccount']);
+
+Route::post('/regenerateToken/{user_id}', [AuthController::class, 'regenerateToken']);
 
 // Protected Routes
 
@@ -32,4 +46,18 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::post('/logout', [AuthController::class, 'logout']);
+// Route::post('/logout', [AuthController::class, 'logout']);
+
+// Route::get('/email', [EmailController::class, 'sendMail']);
+
+Route::get('/email', [
+    function () {
+        $user = User::find(8);
+        return new \App\Mail\AccountVerificationEmail($user);
+    }
+]);
+
+
+
+
+

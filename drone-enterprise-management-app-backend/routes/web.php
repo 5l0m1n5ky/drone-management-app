@@ -1,7 +1,13 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EmailController;
 
+
+use App\Mail\InvoicePaid;
+use App\Models\Invoice;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +19,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+
+Route::post('/login', [AuthController::class, 'login']);
+
+
+// Route::post('/register', [AuthController::class, 'register']);
+

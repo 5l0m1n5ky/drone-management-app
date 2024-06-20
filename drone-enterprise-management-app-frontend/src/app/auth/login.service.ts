@@ -34,14 +34,15 @@ export class LoginService {
 
   login(email: string, password: string) {
 
-    return this.http.post<LoginResponseData>('http://localhost:8000/api/login', {
+    console.log('inside login service function');
+
+    return this.http.post<LoginResponseData>('http://localhost:8000/login', {
+    // return this.http.post<LoginResponseData>('http://localhost:8000/api/login', {
       email: email,
       password: password,
     }, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        // 'Access-Control-Allow-Credentials': 'true',
-        // 'X-XSRF-TOKEN': 'csrf_token_placeholder'
       }),
       withCredentials: true
     });

@@ -24,7 +24,7 @@ export class LoginComponent {
     this.PasswordVisible = !this.PasswordVisible;
   }
 
-  async onLoginFormSubmit(form: NgForm) {
+  onLoginFormSubmit(form: NgForm) {
 
     if (!form.valid) {
       return;
@@ -40,6 +40,7 @@ export class LoginComponent {
 
     this.loginService.login(email, password).subscribe(
       responseData => {
+        console.log('login function response');
         console.log(responseData);
         this.isLoading = false;
       },

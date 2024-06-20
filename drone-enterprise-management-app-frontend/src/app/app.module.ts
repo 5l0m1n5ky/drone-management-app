@@ -17,7 +17,9 @@ import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { ServicesComponent } from './services/services.component';
 import { CsrfInterceptor } from './auth/csrf.interceptor';
-
+import { CookieService } from 'ngx-cookie-service';
+import { AccountVerificationComponent } from './account-verification/account-verification.component';
+import { CodeInputModule } from 'angular-code-input';
 
 @NgModule({
   declarations: [
@@ -29,24 +31,25 @@ import { CsrfInterceptor } from './auth/csrf.interceptor';
     HomeComponent,
     RegisterComponent,
     LoadingSpinnerComponent,
-    ServicesComponent
+    ServicesComponent,
+    AccountVerificationComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    HttpClientXsrfModule,
     HomeDetailsComponent,
     HomeServicesComponent,
     HomePortfolioComponent,
+    CodeInputModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
     useClass: CsrfInterceptor,
     multi: true
   },
-  // { provide: HttpXsrfTokenExtractor, useClass: HttpXsrfCookieExtractor }
+    CookieService
   ],
   bootstrap: [AppComponent]
 })

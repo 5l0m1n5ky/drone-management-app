@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, OnInit, computed, signal } from '@angular/core';
+import { NgForm, NgModel } from '@angular/forms';
 import { RegisterService } from './register.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -9,8 +10,6 @@ import { RegisterService } from './register.service';
 })
 export class RegisterComponent {
 
-  constructor(private registerService: RegisterService) { }
-
   loginForm: any;
   isLoading: boolean = false;
   passwordVisible: boolean = false;
@@ -18,6 +17,9 @@ export class RegisterComponent {
   termsAccepted: boolean = false;
   passwordMismatch: boolean = false;
   registerError: string = '';
+  user_id: number;
+
+  constructor(private registerService: RegisterService, private router: Router) { }
 
   changeVisibilityofPassword() {
     this.passwordVisible = !this.passwordVisible;
@@ -27,37 +29,39 @@ export class RegisterComponent {
     this.confirmPasswordVisible = !this.confirmPasswordVisible;
   }
 
-  onRegisterFormSubmit(form: NgForm) {
+  onRegisterFormSubmit(registerForm: NgForm) {
 
-    if (!form.valid) {
+    if (!registerForm.valid) {
       return;
     }
 
-    const email = form.value.email;
-    const password = form.value.password;
-    const password_confirmation = form.value.password_confirmation;
+
+    if (registerForm.value.password !== registerForm.value.password_confirmation) {
+      this.passwordMismatch = true;
+      return;
+    }
+
+    const email = registerForm.value.email;
+    const password = registerForm.value.password;
+    const password_confirmation = registerForm.value.password_confirmation;
 
     this.isLoading = true;
 
     this.registerService.register(email, password, password_confirmation).subscribe(responseData => {
       console.log(responseData);
       this.isLoading = false;
-    },
-      // errorResponse => {
-      // switch (errorResponse.error.message) {
-      //   case "The email has already been taken.":
-      //     this.registerError = "Użytkownik o podanym adresie e-mail już istnieje";
-      // }
+      // this.user_id = responseData.data.user.user_id
 
-      // },
+      this.router.navigate(['account-verification',])
+    },
       errorMessage => {
         this.registerError = errorMessage;
         this.isLoading = false;
       }
     );
 
-    console.log(form.value)
-    form.reset();
+    console.log(registerForm.value)
+    registerForm.reset();
   }
 
 }
