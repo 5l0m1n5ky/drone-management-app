@@ -35,7 +35,6 @@ export class RegisterComponent {
       return;
     }
 
-
     if (registerForm.value.password !== registerForm.value.password_confirmation) {
       this.passwordMismatch = true;
       return;
@@ -50,9 +49,9 @@ export class RegisterComponent {
     this.registerService.register(email, password, password_confirmation).subscribe(responseData => {
       console.log(responseData);
       this.isLoading = false;
-      // this.user_id = responseData.data.user.user_id
-
-      this.router.navigate(['account-verification',])
+      this.user_id = +responseData.data!.user.id;
+      console.log('user id:', this.user_id);
+      this.router.navigate(['account-verification', this.user_id]);
     },
       errorMessage => {
         this.registerError = errorMessage;

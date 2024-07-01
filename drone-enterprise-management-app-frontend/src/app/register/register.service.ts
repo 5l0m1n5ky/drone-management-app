@@ -2,19 +2,24 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, throwError } from "rxjs";
 
-interface RegisterResponseData {
-  status: string,
-  message: string,
-  data: [
-    user: [
-      email: string,
-      updated_at: Date,
-      created_at: Date,
-      id: string
-    ],
-    token: string
-  ]
+interface User {
+  id: string,
+  email: string
 }
+
+interface UserData {
+  user: User
+}
+
+interface RegisterResponseData {
+  status?: string,
+  message: string,
+  data?: UserData
+}
+
+
+
+
 
 @Injectable({ providedIn: 'root' })
 

@@ -37,7 +37,6 @@ class AuthController extends Controller
         try {
             $request->validated($request->all());
 
-            // Auth::check();
 
             if (!Auth::attempt($request->only(['email', 'password']))) {
                 return $this->error(
@@ -57,7 +56,12 @@ class AuthController extends Controller
             $user = User::where('email', $request->email)->first();
 
             return $this->success([
-                'user' => $user,
+                [
+                    'user' => [
+                        'id' => $user->id,
+                        'email' => $user->email
+                    ],
+                ],
                 'LOGGED_IN',
                 200
             ]);
@@ -90,14 +94,20 @@ class AuthController extends Controller
             ]);
 
             if (!$user->hasVerifiedEmail()) {
-                $emailresponse = Mail::to($user->email)
+                Mail::to($user->email)
                     ->send(new AccountVerificationEmail($user));
             }
 
-            return $this->success([
-                'user' => $user,
-                'mail' => $emailresponse
-            ]);
+            return $this->success(
+                [
+                    'user' => [
+                        'id' => $user->id,
+                        'email' => $user->email
+                    ],
+                ],
+                'SIGNED_UP',
+                200
+            );
 
 
         } catch (Throwable $authorizationException) {
@@ -106,10 +116,9 @@ class AuthController extends Controller
                     'request' => [
                         'email' => $request->email,
                         'password' => $request->password
-                    ]
+                    ],
+                    $authorizationException->getMessage()
                 ],
-                $authorizationException->getMessage(),
-                401
             );
 
         }
@@ -133,7 +142,7 @@ class AuthController extends Controller
                 return $this->success(
                     [
                         'request' => [
-                            'user_id' => $user_id,
+                            'id' => $user_id,
                             'token' => $token
                         ],
                     ],
@@ -144,7 +153,7 @@ class AuthController extends Controller
                 return $this->error(
                     [
                         'request' => [
-                            'user_id' => $user_id,
+                            'id' => $user_id,
                             'token' => $token
                         ]
                     ],
@@ -156,7 +165,7 @@ class AuthController extends Controller
             return $this->error(
                 [
                     'request' => [
-                        'user_id' => $user_id,
+                        'id' => $user_id,
                         'token' => $token
                     ]
                 ],

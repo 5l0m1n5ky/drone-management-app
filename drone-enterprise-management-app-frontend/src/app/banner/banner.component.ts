@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'app-banner',
@@ -6,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrls: []
 })
 export class BannerComponent {
+
 
 }

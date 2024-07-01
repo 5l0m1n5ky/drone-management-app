@@ -1,44 +1,38 @@
-<header class="px-10 py-0 fixed z-50 w-full bg-black backdrop-filter backdrop-blur-sm bg-opacity-20">
-    <div class="flex flex-row justify-between items-center">
-        <div class="flex justify-start items-start w-72">
-            <img routerLink="/" src="./assets/logo/logo_white.png" alt="logo" class="h-[75px] hover:scale-105 ease-in duration-75">
-        </div>
-        <ul class="flex justify-center items-center gap-4 text-stone-400 font-montserrat lg:text-[16px]">
-            <li>
-                <a href="#"
-                    class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-75 max-lg:hidden">
-                    O MNIE
-                </a>
-            </li>
-            <li>
-                <a routerLink="/services" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-75 max-lg:hidden">
-                    USŁUGI
-                </a>
-            </li>
-            <li>
-                <a href="#"
-                    class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-75 max-lg:hidden">
-                    PORTFOLIO
-                </a>
-            </li>
-            <li>
-                <a href="#"
-                    class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-75 max-lg:hidden">
-                    KONTAKT
-                </a>
-            </li>
-        </ul>
-        <ul class="flex justify-center items-center gap-4 lg:text-[16px] w-72 text-stone-400 font-montserrat">
-            <li><a routerLink="/login" class="hover:text-stone-200 ease-in duration-75 max-lg:hidden">ZALOGUJ</a></li>
-            <li><a routerLink="/register" class="hover:text-stone-200 ease-in duration-75 max-lg:hidden">ZAREJESTRUJ SIĘ</a></li>
-        </ul>
-        <div
-            class="justify-center items-center gap-2 border-2 border-stone-400 px-2 py-1 rounded-lg sm:hidden md:flex lg:hidden">
-            <p class="font-montserrat leading-normal text-stone-400">MENU</p>
-            <img src="./assets/icons8-hamburger-menu.png" alt="menu" class="h-[25px] fill-stone-400">
-        </div>
-        <div class="justify-center items-center px-2 py-1 hidden max-md:flex">
-            <img src="./assets/icons8-hamburger-menu-outline.png" alt="menu" class="fill-stone-400" width="45" height="45">
-        </div>
+<header class="px-10 py-0 fixed z-50 min-w-full bg-black backdrop-filter backdrop-blur-sm bg-opacity-20 ">
+  <div class="flex flex-row justify-between items-center">
+    <div class="flex justify-start items-start w-72">
+      <img routerLink="/" src="./assets/logo/logo_white.png" alt="logo"
+        class="h-[75px] hover:scale-105 ease-in duration-75 opacity-50">
     </div>
+    <ul class="justify-center items-center gap-4 text-stone-400 font-montserrat text-[16px] hidden lg:flex">
+      <li>
+        <a href="#" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-75 ">
+          O MNIE
+        </a>
+      </li>
+      <li>
+        <a routerLink="/services" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-75 ">
+          USŁUGI
+        </a>
+      </li>
+      <li>
+        <a href="#" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-75 ">
+          PORTFOLIO
+        </a>
+      </li>
+      <li>
+        <a href="#" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-75 ">
+          KONTAKT
+        </a>
+      </li>
+    </ul>
+    <ul class="justify-center items-center gap-4 text-[16px] w-72 text-stone-400 font-montserrat hidden lg:flex">
+      <li><a routerLink="/login" class="hover:text-stone-200 ease-in duration-75">ZALOGUJ</a></li>
+      <li><a routerLink="/register" class="hover:text-stone-200 ease-in duration-75">ZAREJESTRUJ SIĘ</a>
+      </li>
+    </ul>
+    <div class="justify-center items-center px-2 py-1 flex lg:hidden">
+      <img src="./assets/icons8-hamburger-menu-outline.png" alt="menu" class="fill-stone-400 w-10 h-10">
+    </div>
+  </div>
 </header>

@@ -20,6 +20,12 @@ import { CsrfInterceptor } from './auth/csrf.interceptor';
 import { CookieService } from 'ngx-cookie-service';
 import { AccountVerificationComponent } from './account-verification/account-verification.component';
 import { CodeInputModule } from 'angular-code-input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatMenuModule} from '@angular/material/menu';
+// import { NgScrollbarModule } from 'ngx-scrollbar';
+
+
 
 @NgModule({
   declarations: [
@@ -42,7 +48,11 @@ import { CodeInputModule } from 'angular-code-input';
     HomeDetailsComponent,
     HomeServicesComponent,
     HomePortfolioComponent,
-    CodeInputModule
+    CodeInputModule,
+    BrowserAnimationsModule,
+    MatSlideToggleModule,
+    MatMenuModule,
+    // NgScrollbarModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
