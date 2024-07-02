@@ -21,10 +21,9 @@ import { CookieService } from 'ngx-cookie-service';
 import { AccountVerificationComponent } from './account-verification/account-verification.component';
 import { CodeInputModule } from 'angular-code-input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatMenuModule } from '@angular/material/menu';
 // import { NgScrollbarModule } from 'ngx-scrollbar';
-
 
 
 @NgModule({
@@ -33,21 +32,21 @@ import {MatMenuModule} from '@angular/material/menu';
     LoginComponent,
     BannerComponent,
     FooterComponent,
-    NavbarComponent,
     HomeComponent,
     RegisterComponent,
     LoadingSpinnerComponent,
-    ServicesComponent,
     AccountVerificationComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    NavbarComponent,
     HttpClientModule,
     HomeDetailsComponent,
     HomeServicesComponent,
     HomePortfolioComponent,
+    ServicesComponent,
     CodeInputModule,
     BrowserAnimationsModule,
     MatSlideToggleModule,
