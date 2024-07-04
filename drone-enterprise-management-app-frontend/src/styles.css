@@ -39,6 +39,7 @@
   background: linear-gradient(0deg, rgba(5, 5, 5, 1) 0%, rgba(64, 64, 64, 1) 100%);
 } */
 
+
 html,
 body {
   height: 100%;
@@ -50,5 +51,23 @@ body {
 }
 
 .highlight-shadow {
-  filter: drop-shadow(0px 0px 20px rgb(0, 204, 255));
+  filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 0.5));
+}
+
+@keyframes bounce {
+
+  0% {
+    transform: translateY(0);
+  }
+
+  80% {
+    transform: translateY(25px);
+  }
+}
+
+.notify-animation {
+  animation-name: bounce;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+  transition-timing-function: ease-out;
 }

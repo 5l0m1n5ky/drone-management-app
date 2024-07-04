@@ -1,14 +1,14 @@
 <section class="relative h-auto bg-gradient-to-t from-[#070707] to-stone-900 overflow-hidden">
   <div class="w-full absolute top-0 left-0 z-30 my-16 px-5">
-    <p
+    <p data-aos="fade-down" data-aos-duration="500" data-aos-once="true" data-aos-placement="bottom-center"
       class="bg-gradient-to-tl from-stone-800 via-stone-700 to-white-400 text-transparent bg-clip-text select-none font-montserrat text-[40px] lg:text-6xl font-semibold text-center text-wrap">
       Zobacz co możesz zlecić
     </p>
   </div>
-  <div class="w-full h-full hidden lg:block mt-40">
+  <div class="w-full h-full hidden lg:block mt-40 mb-20">
     <div
       class="w-[70%] h-full flex absolute right-0 bottom-0 z-20 bg-gradient-to-l from-black to-transparent flex-col justify-end items-end">
-      <div class="h-[700px] mb-20 flex flex-col justify-center items-center">
+      <div class="h-[700px] mb-40 flex flex-col justify-center items-center">
         <p routerLink="/services"
           class="text-stone-500 font-montserrat font-semibold mr-20 ring-1 ring-stone-500 backdrop-blur-2xl py-3 px-5 rounded-full hover:scale-105 ease-in duration-75 cursor-pointer">
           Zobacz więcej
@@ -23,7 +23,7 @@
             class="h-2/3 absolute right-[-90px] bottom-[-70px] z-10">
           <img src="./assets/drone_services.png" alt="camera-with-gimbal"
             class=" absolute top-[-15px] left-[-125px] z-10">
-          <div class="absolute left-0 bottom-0 pb-3 pl-3">
+          <div class="absolute left-0 bottom-0 pb-3 pl-3 z-20">
             <p class="text-stone-600 text-[50px] font-bold font-montserrat">FOTO/</p>
             <p class="text-stone-600 text-[75px] text-4xl font-bold font-montserrat">VIDEO</p>
           </div>
@@ -33,7 +33,7 @@
           <div class="w-[calc(100%+3rem)] h-[300px]">
             <img src="./assets/drone_pv_services.png" alt="pv-inspection" class="w-full z-10">
           </div>
-          <div class="absolute left-0 bottom-0 pb-3 pl-3">
+          <div class="absolute left-0 bottom-0 pb-3 pl-3 z-20">
             <p class="text-stone-600 text-[50px] font-bold font-montserrat">INSPEKCJE</p>
             <p class="text-stone-600 text-[75px] text-4xl font-bold font-montserrat">PV</p>
           </div>
@@ -43,7 +43,7 @@
           <div class="w-[calc(100%+3rem)] flex flex-col justify-center items-center h-auto">
             <img src="./assets/fotogrammetry-services.png" alt="pv-inspection" class="w-full z-10">
           </div>
-          <div class="absolute left-0 bottom-0 mb-3 pl-3 w-full ">
+          <div class="absolute left-0 bottom-0 mb-3 pl-3 w-full z-20">
             <p class="text-stone-600 text-[60px] font-bold font-montserrat">POMIARY</p>
             <p class="text-stone-600 text-[37px] text-4xl font-bold font-montserrat text-clip overflow-hidden">
               FOTOGRAMETRYCZNE</p>
@@ -62,7 +62,7 @@
       <p-carousel [value]="service" [numVisible]="1" [numScroll]="1" [circular]="true"
         [responsiveOptions]="responsiveOptions" autoplayInterval="3000">
         <ng-template let-service pTemplate="service">
-          <div class="w-full px-10 py-5 h-[500px] sm:h-[650px] flex flex-row justify-center items-center rounded-2xl">
+          <div class="w-full px-7 md:px-24 py-5 h-[500px] sm:h-[650px] flex flex-row justify-center items-center rounded-2xl">
             <div *ngIf="!service.discover"
               class="relative flex flex-1 flex-col justify-center items-center h-full w-full rounded-2xl ring-2 ring-stone-600">
               <div *ngIf="!service.image_2"
