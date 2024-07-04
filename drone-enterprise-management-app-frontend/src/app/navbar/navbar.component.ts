@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -15,6 +15,13 @@ export class NavbarComponent {
 
   onMenuToggled(): void {
     this.menuToggled = !this.menuToggled;
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    if (window.innerWidth > 1024) {
+      this.menuToggled = false;
+    }
   }
 
 }
