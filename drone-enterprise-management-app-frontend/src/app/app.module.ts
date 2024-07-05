@@ -23,16 +23,14 @@ import { CodeInputModule } from 'angular-code-input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatMenuModule } from '@angular/material/menu';
-// import { NgScrollbarModule } from 'ngx-scrollbar';
+import { FotoVideoServiceComponent } from './services/foto-video-service/foto-video-service.component';
+import { PortfolioComponent } from './portfolio/portfolio.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    BannerComponent,
-    FooterComponent,
-    HomeComponent,
     RegisterComponent,
     LoadingSpinnerComponent,
     AccountVerificationComponent,
@@ -41,17 +39,21 @@ import { MatMenuModule } from '@angular/material/menu';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    HomeComponent,
     NavbarComponent,
+    BannerComponent,
     HttpClientModule,
     HomeDetailsComponent,
     HomeServicesComponent,
     HomePortfolioComponent,
     ServicesComponent,
+    FooterComponent,
     CodeInputModule,
     BrowserAnimationsModule,
     MatSlideToggleModule,
     MatMenuModule,
-    // NgScrollbarModule
+    FotoVideoServiceComponent,
+    PortfolioComponent,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

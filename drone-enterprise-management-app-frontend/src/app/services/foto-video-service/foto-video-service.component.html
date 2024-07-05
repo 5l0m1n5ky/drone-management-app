@@ -1,0 +1,100 @@
+<app-navbar></app-navbar>
+<section class="relative min-h-screen w-full bg-neutral-900">
+  <div class="flex flex-col items-center justify-start w-full h-full">
+    <div class="relative mt-24 flex flex-col justify-start items-center w-[95%] h-[600px]">
+      <div class="h-full w-full rounded-xl bg-black overflow-hidden">
+        <img src="./assets/foto-video-service/shutter.png" alt="foto-video banner"
+          class="h-full w-full object-cover slow-zoom">
+      </div>
+      <div
+        class="absolute h-[600px] w-full left-0 top-0 flex flex-col justify-center items-center bg-black/60 rounded-xl">
+        <p
+          class="text-6xl font-semibold font-poppins bg-gradient-to-tl from-stone-800 via-stone-700 to-white-400 text-transparent bg-clip-text overflow-hidden select-none">
+          FOTO/VIDEO
+        </p>
+      </div>
+    </div>
+
+    <!-- description -->
+    <div class="w-full h-auto my-32 flex flex-col items-center">
+      <div class="relative w-[95%] ring-1 ring-neutral-600 rounded-2xl p-10 mb-16">
+        <p
+          class="absolute top-[-13px] bg-neutral-900 text-neutral-600 font-montserrat font-semibold text-[26px] leading-[26px] left-10 px-2">
+          O USŁUDZE
+        </p>
+        <p class="text-xl font-normal font-poppins text-justify text-neutral-500">
+          SlominSky oferuje usługę związaną z tworzeniem materiałów foto/video w wybranym przez Ciebie formacie i stylu
+          z
+          dbałością o każdy szczegół.
+          Zlecając mi usługę nie martwisz się o przebieg, czas czy jakość wykonania zlecenia. Dzięki panelowi
+          użytkownika
+          masz kontrolę nad swoim zleceniem,
+          mając przy tym do dyspozycji dwukierunkową komunikację ze zleceniobiorcą, aktualny status realizacji zlecenia
+          oraz możliwość zarządzania zleceniem.
+        </p>
+      </div>
+      <div class="mt-16 w-auto">
+        <p
+          class="text-xl ring-1 ring-stone-600 bg-neutral-400 font-semibold font-poppins text-justify text-stone-700 py-3 px-7 rounded-full hover:scale-105 hover:ring-stone-500 hover:text-stone-500 ease-in-out duration-150 cursor-pointer">
+          Zobacz jak wygląda proces realizacji zlecenia
+        </p>
+      </div>
+      <div class="mt-48 mb-10 w-[95%] flex flex-col justify-center items-start">
+        <p
+          class="text-6xl font-semibold font-poppins bg-gradient-to-tl from-stone-800 via-stone-700 to-white-400 text-transparent bg-clip-text overflow-hidden select-none">
+          To właśnie tutaj <br> możesz zlecić wykonanie
+        </p>
+        <div>
+          <p class="text-4xl font-poppins text-stone-600 mt-5">
+            {{ currentService }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- available photo/video services -->
+    <div class="w-full h-auto px-10 my-16 border-2">
+      <p></p>
+    </div>
+
+    <!-- feature 1 - camera -->
+    <div class="w-full h-auto px-10 my-16 border-2 flex flex-row justify-start items-center">
+      <img src="./assets/foto-video-service/camera.png" alt="camera-with-gimbal" class=" h-auto w-[30%] border-2">
+      <div class=" flex flex-col justify-start items-start">
+        <p class="">
+          Ujęcia stacjonarne
+        </p>
+        <p class="">
+          Opis ujęć stacjonarnych
+        </p>
+      </div>
+    </div>
+
+    <!-- feature 2 - drone -->
+    <div class="w-full h-auto px-10 my-16 border-2 flex flex-row justify-end items-center">
+      <img src="./assets/foto-video-service/camera.png" alt="camera-with-gimbal"
+        class=" h-auto w-[30%] order-1 border-2">
+      <div class=" flex flex-col justify-start items-start">
+        <p class="">
+          Ujęcia stacjonarne
+        </p>
+        <p class="">
+          Opis ujęć stacjonarnych
+        </p>
+      </div>
+    </div>
+
+    <!-- feature 3 - order steps -->
+    <div class="w-full h-auto px-10 my-16 border-2 flex flex-row justify-start items-center">
+      <p>
+
+      </p>
+    </div>
+
+
+
+
+
+
+  </div>
+</section>

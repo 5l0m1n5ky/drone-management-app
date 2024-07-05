@@ -33,8 +33,8 @@ export class HomeServicesComponent {
     {
       title_top: "FOTO",
       title_bottom: "/VIDEO",
-      title_top_size: "30px",
-      title_bottom_size: "40px",
+      title_top_size: "5vw",
+      title_bottom_size: "7vw",
       image: "./assets/drone_services.png",
       image_2: "./assets/camera_with_gimbal_services.png",
       discover: false
@@ -42,19 +42,19 @@ export class HomeServicesComponent {
     {
       title_top: "INSPEKCJE",
       title_bottom: "PV",
-      title_top_size: "30px",
-      title_bottom_size: "40px",
+      title_top_size: "5vw",
+      title_bottom_size: "7vw",
       image: "./assets/drone_pv_services.png",
       discover: false
     },
-    {
-      title_top: "POMIARY",
-      title_bottom: "FOTOGRAMETRYCZNE",
-      title_top_size: "30px",
-      title_bottom_size: "20px",
-      image: "./assets/fotogrammetry-services.png",
-      discover: false
-    },
+    // {
+    //   title_top: "POMIARY",
+    //   title_bottom: "FOTOGRAMETRYCZNE",
+    //   title_top_size: "5vw",
+    //   title_bottom_size: "3vw",
+    //   image: "./assets/fotogrammetry-services.png",
+    //   discover: false
+    // },
     {
       title: "Zobacz więcej",
       discover: true

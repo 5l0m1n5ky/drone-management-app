@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
+  standalone: true,
   selector: 'app-banner',
   templateUrl: './banner.component.html',
   styleUrls: []

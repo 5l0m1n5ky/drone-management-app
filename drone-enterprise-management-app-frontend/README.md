@@ -25,3 +25,11 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## attributions
+
+https://www.pexels.com/pl-pl/zdjecie/aparat-dslr-martwa-natura-gimbal-7443438/
+
+https://www.pexels.com/pl-pl/zdjecie/zblizenie-zdjecia-migawki-aparatu-414781/
+
+https://pixabay.com/pl/users/ln_photoart-2780243/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3198324"> Lars Nissen
