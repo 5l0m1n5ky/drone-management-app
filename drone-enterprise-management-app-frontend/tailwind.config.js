@@ -54,7 +54,7 @@ module.exports = {
       lg: ['18px', '21.94px'],
       xl: ['20px', '24.38px'],
       '2xl': ['24px', '29.26px'],
-      '3xl': ['28px', '50px'],
+      '3xl': ['28px', '35px'],
       '4xl': ['48px', '58px'],
       '6xl': ['72px', '81px'],
       '8xl': ['96px', '106px'],
@@ -91,7 +91,22 @@ module.exports = {
       },
     },
   },
-  plugins: [radialGradientPlugin],
+  plugins: [
+    radialGradientPlugin,
+    function ({ addUtilities }) {
+      addUtilities({
+        '.hyphens-auto': {
+          hyphens: 'auto',
+        },
+        '.hyphens-manual': {
+          hyphens: 'manual',
+        },
+        '.hyphens-none': {
+          hyphens: 'none',
+        },
+      })
+    }
+  ],
 }
 
 

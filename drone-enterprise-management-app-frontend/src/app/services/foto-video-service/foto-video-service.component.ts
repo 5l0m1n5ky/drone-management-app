@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Subscription, interval } from 'rxjs';
 import { IntersectionObserverDirective } from '../intersection-observer.directive';
 import { TimelineModule } from 'primeng/timeline';
+import { RouterLink } from '@angular/router';
 
 interface StepsData {
   icon: string,
@@ -14,7 +15,7 @@ interface StepsData {
 
 @Component({
   standalone: true,
-  imports: [NavbarComponent, CommonModule, IntersectionObserverDirective, TimelineModule],
+  imports: [NavbarComponent, CommonModule, IntersectionObserverDirective, TimelineModule, RouterLink],
   selector: 'app-foto-video-service',
   templateUrl: './foto-video-service.component.html',
   styleUrls: []
@@ -27,7 +28,7 @@ export class FotoVideoServiceComponent {
 
   services: string[] = [
     "Spotu reklamowego",
-    "Filmu prezentuającego nieruchomość",
+    "Prezentacji nieruchomości",
     "Relacji z eventu",
     "I wielu innych..."
   ];
