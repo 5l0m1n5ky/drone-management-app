@@ -32,4 +32,10 @@ https://www.pexels.com/pl-pl/zdjecie/aparat-dslr-martwa-natura-gimbal-7443438/
 
 https://www.pexels.com/pl-pl/zdjecie/zblizenie-zdjecia-migawki-aparatu-414781/
 
-https://pixabay.com/pl/users/ln_photoart-2780243/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3198324"> Lars Nissen
+https://pixabay.com/pl/users/ln_photoart-2780243/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3198324" by Lars Nissen
+
+https://pixabay.com/pl/users/paymaster_ukraine-27640709/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=7224727 by Eduard Skorov
+
+https://pixabay.com/pl/users/vale_photography-13626041/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=4923366 by Valentin J-W
+
+https://www.pexels.com/pl-pl/zdjecie/natura-pole-budowa-przemysl-4320449/ by Kelly

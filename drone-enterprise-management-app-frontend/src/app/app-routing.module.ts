@@ -7,6 +7,7 @@ import { ServicesComponent } from './services/services.component';
 import { AccountVerificationComponent } from './account-verification/account-verification.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
 import { FotoVideoServiceComponent } from './services/foto-video-service/foto-video-service.component';
+import { PvInspectionServiceComponent } from './services/pv-inspection-service/pv-inspection-service.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'account-verification/:user_id', component: AccountVerificationComponent },
   { path: 'portfolio', component: PortfolioComponent },
   { path: 'foto-video', component: FotoVideoServiceComponent },
+  { path: 'pv-inpection', component: PvInspectionServiceComponent },
   // { path: '*', component: ServicesComponent }, TODO ANY LINK
 ];
 

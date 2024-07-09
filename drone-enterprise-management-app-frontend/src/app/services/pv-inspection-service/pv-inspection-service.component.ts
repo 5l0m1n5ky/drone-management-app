@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { NavbarComponent } from 'src/app/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
-import { Subscription, interval } from 'rxjs';
 import { IntersectionObserverDirective } from '../intersection-observer.directive';
 import { TimelineModule } from 'primeng/timeline';
 
@@ -11,17 +10,13 @@ interface StepsData {
   description: string
   items: string
 }
-
 @Component({
   standalone: true,
-  imports: [NavbarComponent, CommonModule, IntersectionObserverDirective, TimelineModule],
-  selector: 'app-foto-video-service',
-  templateUrl: './foto-video-service.component.html',
-  styleUrls: []
+  selector: 'app-pv-inspection-service',
+  templateUrl: './pv-inspection-service.component.html',
+  imports: [NavbarComponent, NavbarComponent, CommonModule, IntersectionObserverDirective, TimelineModule]
 })
-
-
-export class FotoVideoServiceComponent {
+export class PvInspectionServiceComponent {
 
   @ViewChild(IntersectionObserverDirective) intersectionObserverDirective: IntersectionObserverDirective;
 
@@ -65,27 +60,6 @@ export class FotoVideoServiceComponent {
     },
   ]
 
-  currentService: string = this.services[0];
-  subscription: Subscription;
-
-  onElementInView(): void {
-    this.intersectionObserverDirective.scrollObserverDisconnect();
-    this.subscription = interval(1250).subscribe({
-      next: (val) => {
-        if ((val + 1) < this.services.length) {
-          this.currentService = this.services[val + 1];
-        } else {
-          this.subscription.unsubscribe();
-        }
-      }
-    });
-  }
-
-  // ngOnDestroy(): void {
-  //   if (this.subscription) {
-  //     this.subscription.unsubscribe();
-  //   }
-  // }
 
   onShowProcess(): void {
     document.getElementById("order-steps")?.scrollIntoView({
@@ -96,8 +70,3 @@ export class FotoVideoServiceComponent {
   }
 
 }
-
-
-
-
-

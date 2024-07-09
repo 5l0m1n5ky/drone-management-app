@@ -9,7 +9,14 @@ import { FooterComponent } from '../footer/footer.component';
 
 @Component({
   standalone: true,
-  imports: [NavbarComponent, BannerComponent, HomeDetailsComponent, HomeServicesComponent, HomePortfolioComponent, FooterComponent],
+  imports: [
+    NavbarComponent,
+    BannerComponent,
+    HomeDetailsComponent,
+    HomeServicesComponent,
+    HomePortfolioComponent,
+    FooterComponent,
+  ],
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: []

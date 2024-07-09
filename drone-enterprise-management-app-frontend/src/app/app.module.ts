@@ -25,6 +25,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatMenuModule } from '@angular/material/menu';
 import { FotoVideoServiceComponent } from './services/foto-video-service/foto-video-service.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
+import { PvInspectionServiceComponent } from './services/pv-inspection-service/pv-inspection-service.component';
+
 
 
 @NgModule({
@@ -54,6 +56,7 @@ import { PortfolioComponent } from './portfolio/portfolio.component';
     MatMenuModule,
     FotoVideoServiceComponent,
     PortfolioComponent,
+    PvInspectionServiceComponent,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

@@ -1,3 +1,4 @@
+import { ViewportScroller } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 
 @Component({
@@ -8,5 +9,21 @@ import { Component, ViewChild } from '@angular/core';
 })
 export class BannerComponent {
 
+  onBeginButton() {
+    document.getElementById("homeDetails")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+      inline: "nearest"
+    });
+  }
+
+  constructor(private scroller: ViewportScroller) { }
+
 
 }
+
+
+
+
+
+

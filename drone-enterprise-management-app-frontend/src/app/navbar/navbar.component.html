@@ -44,7 +44,7 @@
         (click)="onMenuToggled()"> -->
     </div>
   </div>
-  <div *ngIf="menuToggled" class="w-full grow flex flex-col justify-center items-center">
+  <div *ngIf="menuToggled" class="w-full grow flex flex-col justify-center items-center" (click)="onMenuToggled()">
     <ul class="justify-center flex flex-col items-center text-stone-400 font-montserrat text-xl">
       <div data-aos="fade-down" data-aos-duration="200" data-aos-once="true" data-aos-easing="ease">
         <li class="my-3 hover:my-5 ease-in duration-100 hover:scale-110">
