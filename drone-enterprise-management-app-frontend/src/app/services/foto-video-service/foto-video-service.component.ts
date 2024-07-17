@@ -5,6 +5,7 @@ import { Subscription, interval } from 'rxjs';
 import { IntersectionObserverDirective } from '../intersection-observer.directive';
 import { TimelineModule } from 'primeng/timeline';
 import { RouterLink } from '@angular/router';
+import { HomePortfolioComponent } from 'src/app/home/home-portfolio/home-portfolio.component';
 
 interface StepsData {
   icon: string,
@@ -15,7 +16,7 @@ interface StepsData {
 
 @Component({
   standalone: true,
-  imports: [NavbarComponent, CommonModule, IntersectionObserverDirective, TimelineModule, RouterLink],
+  imports: [NavbarComponent, CommonModule, IntersectionObserverDirective, TimelineModule, RouterLink, HomePortfolioComponent],
   selector: 'app-foto-video-service',
   templateUrl: './foto-video-service.component.html',
   styleUrls: []

@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'account-verification/:user_id', component: AccountVerificationComponent },
   { path: 'portfolio', component: PortfolioComponent },
   { path: 'foto-video', component: FotoVideoServiceComponent },
-  { path: 'pv-inpection', component: PvInspectionServiceComponent },
+  { path: 'pv-inspection', component: PvInspectionServiceComponent },
   // { path: '*', component: ServicesComponent }, TODO ANY LINK
 ];
 

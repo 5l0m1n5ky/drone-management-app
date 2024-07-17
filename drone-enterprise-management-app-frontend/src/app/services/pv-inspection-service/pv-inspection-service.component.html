@@ -1,61 +1,207 @@
 <app-navbar></app-navbar>
-<section class="relative min-h-screen w-full bg-neutral-900 overflow-x-hidden">
+<section class="relative min-h-screen w-full bg-neutral-900 overflow-x-hidden select-none">
   <div class="flex flex-col items-center justify-start w-full h-full">
     <div class="bg-fixed bg-cover bg-center flex flex-col justify-center items-center w-full h-screen"
       style="background-image: url(./assets/pv-inspection-service/pv-banner.png); object-fit: cover; width: 100%;">
-      <div class="h-full w-full flex flex-col items-center justify-center bg-black/30">
-        <p class="text-8xl font-bold font-montserrat select-none text-neutral-800">
-          INSPEKCJA
+      <div class="h-full w-full flex flex-col items-center justify-center bg-black/40">
+        <p class="text-6xl sm:text-8xl font-semibold font-poppins select-none text-neutral-400">
+          INSPEKCJE
         </p>
-        <p class="text-8xl font-bold font-montserrat select-none text-neutral-800">
+        <p class="text-6xl sm:text-8xl font-semibold font-poppins select-none text-neutral-500">
           PV
         </p>
       </div>
     </div>
-
-
     <!-- description -->
-    <div class="w-full h-auto mt-24 flex flex-col justify-center items-center">
-      <div class="relative w-[75%] h-auto flex flex-col justify-center items-start ">
-        <!-- <p
-          class="ring-1 bg-gradient-to-t from-blue-500/20 ring-blue-200 text-blue-200 font-montserrat font-semibold px-7 py-3 rounded-full text-[20px] my-16 shadow-md shadow-blue-100/50">
-          O USŁUDZE</p> -->
-        <p class="font-montserrat font-semibold text-4xl text-neutral-500">O Usłudze</p>
-        <p class="text-2xl text-left font-light mt-5 mb-16 font-poppins text-neutral-600 overflow-hidden select-none">
-          SlominSky oferuje usługę związaną z tworzeniem materiałów foto/video w wybranym przez Ciebie formacie i stylu
-          z dbałością o każdy szczegół.
-          Zlecając usługę nie martwisz się o przebieg, czas czy jakość wykonania zlecenia a dzięki panelowi
-          użytkownika z łatwością kontrolujesz stan swojego zlecenia.
+    <div class="w-full h-auto mt-10 flex flex-col justify-center items-center">
+      <div class="mb-16 w-[90%] flex flex-row text-base font-montserrat justify-start items-center text-neutral-600">
+        <img routerLink="/" src="./assets/icons/home-icon.svg" alt="home"
+          class="h-[25px] w-[25px] cursor-pointer hover:brightness-150 ease-in-out duration-150">
+        <img src="./assets/icons/arrow-right-icon.svg" alt="arrow" class="h-[25px] w-[25px]">
+        <p routerLink="/services" class="cursor-pointer hover:text-neutral-400 ease-in-out duration-150">
+          USŁUGI
         </p>
+        <img src="./assets/icons/arrow-right-icon.svg" alt="arrow" class="h-[25px] w-[25px]">
+        <p>
+          INSPEKCJE PV
+        </p>
+      </div>
+      <div class="relative w-[75%] h-auto flex flex-col justify-center items-start ">
+        <p class="font-montserrat font-semibold text-3xl sm:text-4xl text-neutral-500">
+          O Usłudze
+        </p>
+        <p
+          class="text-xl sm:text-2xl text-justify font-light mt-5 font-poppins text-neutral-600 overflow-hidden select-none">
+          SlominSky oferuje usługę związaną z inspekcją efektywności paneli fotowoltaicznych z wykorzystaniem
+          bezzałogowych statków powietrznych i zaawansowanych narzędzi analizujących otrzymane wyniki pomiarów.
+          Poniżej znajdziesz informacje dotyczące inspekcji oraz parametrów technicznych wykorzystywanego do pomarów
+          sprzętu.
+        </p>
+      </div>
+      <div class="w-[75%] h-auto flex flex-col justify-center items-center mt-32">
+        <p class="w-full text-left font-montserrat font-semibold text-3xl sm:text-4xl text-neutral-500">
+          Dlaczego warto przeprowadzać inspekcję swojej instalacji?
+        </p>
+        <div data-aos="fade-up" data-aos-duration="500" data-aos-once="true" data-aos-easing="ease"
+          class="my-10 w-full h-auto flex flex-row justify-around items-start">
+          <div
+            class="mr-10 flex flex-col justify-center items-center h-[60px] w-[60px] ring-1 ring-blue-300 bg-gradient-to-t from-blue-500/30 to-transparent shadow-md shadow-blue-500/50 text-neutral-500 rounded-full text-center align-middle font-montserrat font-semibold text-[45px] leading-[45px]">
+            <p class="text-neutral-400 text-center align-middle font-montserrat font-semibold text-[30px]">
+              1
+            </p>
+          </div>
+          <p
+            class="max-w-[80%] text-xl sm:text-2xl text-justify font-light font-poppins text-neutral-600 text-wrap overflow-hidden">
+            Inspekcje paneli fotowoltaicznych przy użyciu dronów przynoszą szereg korzyści, które znacząco przewyższają
+            tradycyjne metody inspekcji. Przede wszystkim, drony pozwalają na szybkie i efektywne przeprowadzanie
+            inspekcji na dużych powierzchniach, co jest kluczowe zwłaszcza w przypadku farm fotowoltaicznych. Tradycyjne
+            metody, takie jak inspekcje ręczne lub z wykorzystaniem podnośników, są czasochłonne i kosztowne. W związku
+            z
+            tym, bezzałogowce mogą przeprowadzić inspekcję całej farmy znacznie krócej w porównaniu z tradycyjnymi
+            metodami.
+          </p>
+        </div>
+        <div data-aos="fade-up" data-aos-duration="500" data-aos-once="true" data-aos-easing="ease"
+          class="my-10 w-full h-auto flex flex-row justify-around items-start">
+          <div
+            class="mr-10 flex flex-col justify-center items-center h-[60px] w-[60px] ring-1 ring-blue-300 bg-gradient-to-t from-blue-500/30 to-transparent shadow-md shadow-blue-500/50 text-neutral-500 rounded-full text-center align-middle font-montserrat font-semibold text-[45px] leading-[45px]">
+            <p class="text-neutral-400 text-center align-middle font-montserrat font-semibold text-[30px]">
+              2
+            </p>
+          </div>
+          <p
+            class="max-w-[80%] text-xl sm:text-2xl text-left font-light font-poppins text-neutral-600 text-wrap overflow-hidden">
+            Kolejną zaletą jest dokładność i szczegółowość danych zbieranych przez drony. Wyposażone w wysokiej jakości
+            kamery oraz czujniki termowizyjne, drony mogą wykrywać uszkodzenia paneli, takie jak mikropęknięcia,
+            zabrudzenia, czy problemy z połączeniami elektrycznymi, które mogą prowadzić do spadku wydajności całego
+            systemu. Dzięki możliwości wykonywania zdjęć w wysokiej rozdzielczości oraz analiz termowizyjnych, drony
+            dostarczają dane, które są trudne do uzyskania w inny sposób.
+          </p>
+        </div>
+        <div data-aos="fade-up" data-aos-duration="500" data-aos-once="true" data-aos-easing="ease"
+          class="my-10 w-full h-auto flex flex-row justify-around items-start">
+          <div
+            class="mr-10 flex flex-col justify-center items-center h-[60px] w-[60px] ring-1 ring-blue-300 bg-gradient-to-t from-blue-500/30 to-transparent shadow-md shadow-blue-500/50 text-neutral-500 rounded-full text-center align-middle font-montserrat font-semibold text-[45px] leading-[45px]">
+            <p class="text-neutral-400 text-center align-middle font-montserrat font-semibold text-[30px]">
+              3
+            </p>
+          </div>
+          <p
+            class="max-w-[80%] text-xl sm:text-2xl text-justify font-light font-poppins text-neutral-600 text-wrap overflow-hidden">
+            Dodatkowo, inspekcje za pomocą dronów zwiększają bezpieczeństwo pracowników. Praca na wysokościach i w
+            trudnych warunkach terenowych zawsze wiąże się z ryzykiem. Drony eliminują potrzebę fizycznego dostępu do
+            paneli, co zmniejsza ryzyko wypadków i urazów. Operatorzy dronów mogą przeprowadzać inspekcje z bezpiecznej
+            odległości, co jest szczególnie istotne w trudnych warunkach pogodowych czy na trudno dostępnych terenach.
+          </p>
+        </div>
+        <div data-aos="fade-up" data-aos-duration="500" data-aos-once="true" data-aos-easing="ease"
+          class="my-10 w-full h-auto flex flex-row justify-around items-start">
+          <div
+            class="mr-10 flex flex-col justify-center items-center h-[60px] w-[60px] ring-1 ring-blue-300 bg-gradient-to-t from-blue-500/30 to-transparent shadow-md shadow-blue-500/50 text-neutral-500 rounded-full text-center align-middle font-montserrat font-semibold text-[45px] leading-[45px]">
+            <p class="text-neutral-400 text-center align-middle font-montserrat font-semibold text-[30px]">
+              4
+            </p>
+          </div>
+          <p
+            class="max-w-[80%] text-xl sm:text-2xl text-left font-light font-poppins text-neutral-600 text-wrap overflow-hidden">
+            Ekonomiczny aspekt również przemawia za wykorzystaniem dronów. Choć początkowy koszt zakupu i wyposażenia
+            drona może być wysoki, długoterminowe oszczędności są znaczące. Redukcja czasu potrzebnego na inspekcję oraz
+            zmniejszenie liczby potrzebnych pracowników przekłada się na niższe koszty operacyjne. Ponadto, szybkie
+            wykrywanie i naprawa problemów mogą zapobiec poważnym awariom i utracie przychodów z produkcji energii.
+          </p>
+        </div>
+        <div data-aos="fade-up" data-aos-duration="500" data-aos-once="true" data-aos-easing="ease"
+          class="my-10 w-full h-auto flex flex-row justify-around items-start">
+          <div
+            class="mr-10 flex flex-col justify-center items-center h-[60px] w-[60px] ring-1 ring-blue-300 bg-gradient-to-t from-blue-500/30 to-transparent shadow-md shadow-blue-500/50 text-neutral-500 rounded-full text-center align-middle font-montserrat font-semibold text-[45px] leading-[45px]">
+            <p class="text-neutral-400 text-center align-middle font-montserrat font-semibold text-[30px]">
+              5
+            </p>
+          </div>
+          <p
+            class="max-w-[80%] text-xl sm:text-2xl text-left font-light font-poppins text-neutral-600 text-wrap overflow-hidden">
+            Wreszcie, nowoczesne technologie związane z dronami, takie jak sztuczna inteligencja i uczenie maszynowe,
+            umożliwiają automatyzację analizy zebranych danych. Algorytmy mogą szybko identyfikować anomalie i generować
+            raporty, co dodatkowo zwiększa efektywność całego procesu inspekcji. W ten sposób, właściciele farm
+            fotowoltaicznych mogą szybko reagować na problemy i optymalizować wydajność swoich instalacji.
+          </p>
+        </div>
+        <div data-aos="fade-up" data-aos-duration="500" data-aos-once="true" data-aos-easing="ease"
+          class="mt-20 w-full h-auto flex flex-row justify-start items-start">
+          <p
+            class="w-full text-xl sm:text-2xl text-left font-light font-poppins text-neutral-600 text-wrap overflow-hidden">
+            Podsumowując, inspekcje paneli fotowoltaicznych przy użyciu dronów to nowoczesne, efektywne i bezpieczne
+            rozwiązanie, które zapewnia dokładność, oszczędności kosztów, zwiększa bezpieczeństwo oraz jest przyjazne
+            dla
+            środowiska. Wykorzystanie dronów do tego celu to inwestycja, która przynosi wymierne korzyści zarówno w
+            krótkim, jak i długim okresie.
+          </p>
+        </div>
       </div>
     </div>
 
-    <div data-aos="fade-up" data-aos-duration="750" data-aos-once="true" data-aos-easing="ease" class="my-40 w-auto">
+    <div data-aos="fade-up" data-aos-duration="750" data-aos-once="true" data-aos-easing="ease"
+      class="my-40 lg:my-52 w-auto">
       <p (click)="onShowProcess()"
-        class="ring-1 bg-gradient-to-t from-blue-500/20 ring-blue-200 text-blue-200 font-montserrat font-semibold px-7 py-3 rounded-full text-[20px] hover:scale-105 cursor-pointer ease-in-out duration-150 shadow-md shadow-blue-100/50">
+        class="ring-1 bg-gradient-to-t from-blue-500/20 ring-blue-200 text-blue-200 font-montserrat font-semibold px-7 py-3 rounded-full text-[10px] sm:text-[20px] hover:scale-105 cursor-pointer ease-in-out duration-150 shadow-md shadow-blue-100/50">
         Zobacz jak wygląda proces realizacji zlecenia
       </p>
     </div>
 
     <!-- feature 1 - camera -->
     <div data-aos="fade-right" data-aos-duration="750" data-aos-once="true" data-aos-easing="ease"
-      class="w-[80%] h-auto flex flex-col items-center">
+      class="w-[80%] h-auto flex flex-col items-center mb-32 mt-10 md:my-0">
       <div
-        class="relative w-full ring-2 bg-gradient-to-t from-blue-200/5 via-transparent to-transparent ring-neutral-800 rounded-2xl p-10 mb-16">
+        class="relative w-full ring-2 bg-gradient-to-t from-blue-200/5 via-transparent to-transparent ring-neutral-800 rounded-2xl p-10 lg:mb-16">
         <p
-          class="absolute top-[-13px] bg-neutral-900 rounded-full text-neutral-600 font-montserrat font-semibold text-[26px] leading-[26px] left-10 px-2">
-          UJĘCIA STACJONARNE
+          class="absolute bg-neutral-900 rounded-full text-neutral-600 font-montserrat font-semibold text-[20px] leading-[20px] left-5 top-[-10px] sm:text-[26px] sm:leading-[26px] sm:left-10 sm:top-[-13px] px-2">
+          INSPEKCJA
         </p>
-        <div class="w-full h-auto flex flex-row justify-start items-center">
-          <!-- <div class="h-[700px] w-auto overflow-hidden rounded-2xl"> -->
-          <img src="./assets/foto-video-service/camera.png" alt="camera-with-gimbal" class=" h-[700px] opacity-75">
-          <!-- </div> -->
-          <div class="flex flex-col justify-start items-start pl-10 max-w-[70%]">
-            <p class="font-poppins text-neutral-600 font-normal text-2xl">
-              Ujęcia stacjonarne tworzone są za pomocą odpowiedniego sprzętu wyposażonego w odpowiednią optykę -
-              wszystko po to, aby uchwycić i podkreślić wszystkie elementy kadru na których Ci zależy.
-              Za płynność ujęć odpowiada gimbal.
+        <div class="w-full h-auto flex flex-col lg:flex-row justify-start items-center">
+          <div class="h-[55%] my-10 lg:my-20 md:h-auto w-auto md:w-[55%] lg:h-auto flex justify-center">
+            <img src="./assets/pv-inspection-service/pv-panels.png" alt="pv-panels" class="h-full w-auto opacity-50">
+          </div>
+          <div class="flex flex-col justify-start items-start lg:pl-10 w-full lg:max-w-[60%]">
+            <p class="font-poppins text-neutral-600 font-normal text-md md:text-xl text-pretty">
+              Inspekcja paneli fotowoltaiczych realizowana jest z wykorzystaniem profesjonalnego sprzętu.
+              Główny nacisk kładzie się na pomiary termowizyjne, które umożliwiają wykrycie defektów, uszkodzeń
+              lub nieprawidłowej pracy co ma bezpośrednie przełożenie na bezpieczeństwo i efektywność.
             </p>
+            <!-- <hr class="w-full mt-10 "> -->
+            <p class="mt-10 text-3xl font-bold font-montserrat text-neutral-600">
+              INSPEKCJA POZWALA WYKRYĆ
+            </p>
+            <hr>
+            <div class="mt-5 w-full flex flex-row items-center justify-start flex-wrap text-sm md:text-lg">
+              <div
+                class="mr-3 my-2 md:my-3 flex flex-row justify-center items-center ring-1 ring-neutral-600 font-poppins text-md md:text-lg font-light text-neutral-600 rounded-full py-1 px-3">
+                <p>
+                  rozdzielczość
+                </p>
+                <img src="./assets/icons/4k-icon.svg" alt="4k" class="ml-2 h-8 w-8">
+              </div>
+              <div
+                class="mr-3 my-2 md:my-3 flex flex-row justify-center items-center ring-1 ring-neutral-600 font-poppins text-md md:text-lg font-light text-neutral-600 rounded-full py-1 px-3">
+                <p>
+                  dowolny format
+                </p>
+                <img src="./assets/icons/aspect-ratio-icon.svg" alt="aspect-ratio" class="ml-2 h-8 w-8">
+              </div>
+              <div
+                class="mr-3 my-2 md:my-3 flex flex-row justify-center items-center ring-1 ring-neutral-600 font-poppins text-md md:text-lg font-light text-neutral-600 rounded-full py-1 px-3">
+                <p>
+                  wysoka jakość
+                </p>
+                <img src="./assets/icons/hq-icon.svg" alt="hq" class="ml-2 h-8 w-8">
+              </div>
+              <div
+                class="mr-2 my-1 md:my-3 flex flex-row justify-center items-center ring-1 ring-neutral-600 font-poppins text-md md:text-lg font-light text-neutral-600 rounded-full py-1 px-3">
+                <p>
+                  stabilizacja
+                </p>
+                <img src="./assets/icons/stability-icon.svg" alt="stability" class="ml-2 h-8 w-8">
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -64,49 +210,81 @@
 
     <!-- feature 2 - drone -->
     <div data-aos="fade-left" data-aos-duration="750" data-aos-once="true" data-aos-easing="ease"
-      class="w-[80%] h-auto mt-48 flex flex-col items-center">
+      class="w-[80%] h-auto flex flex-col items-center">
       <div
-        class="relative w-full ring-2 ring-neutral-800 bg-gradient-to-t from-blue-200/5 via-transparent to-transparent rounded-2xl pt-10 pb-10 pl-10 pr-3 mb-16">
+        class="relative w-full ring-2 bg-gradient-to-t from-blue-200/5 via-transparent to-transparent ring-neutral-800 rounded-2xl p-10 mb-32 lg:mb-16">
         <p
-          class="absolute top-[-13px] bg-neutral-900 rounded-full text-neutral-700 font-montserrat font-semibold text-[26px] leading-[26px] left-10 px-2">
-          UJĘCIA Z POWIETRZA
+          class="absolute bg-neutral-900 rounded-full text-neutral-600 font-montserrat font-semibold text-[20px] leading-[20px] left-5 top-[-10px] sm:text-[26px] sm:leading-[26px] sm:left-10 sm:top-[-13px] px-2">
+          PARAMETRY KAMERY
         </p>
-        <div class="w-full h-auto flex flex-row justify-end items-center">
-          <!-- <div class="h-[700px] w-auto overflow-hidden rounded-2xl"> -->
-          <img src="./assets/foto-video-service/drone.png" alt="camera-with-gimbal"
-            class=" h-[700px] opacity-75 order-1">
-          <!-- </div> -->
-          <div class="flex flex-col justify-start items-start pl-10 max-w-[70%]">
-            <p class="font-poppins text-neutral-600 font-normal text-2xl">
+        <div class="w-full h-auto flex flex-col lg:flex-row justify-start lg:justify-end items-center">
+          <div
+            class="h-[55%] mt-5 lg:mt-0 md:h-auto w-auto md:w-[70%] lg:h-auto flex justify-center mb-10 lg:mb-0 lg:order-1">
+            <img src="./assets/pv-inspection-service/pv-camera.png" alt="camera-with-gimbal" class="h-full w-auto opacity-75">
+          </div>
+          <div class="flex md:mt-20 flex-col justify-start items-start lg:pl-10 w-full lg:max-w-[45%]">
+            <p class="font-poppins text-neutral-600 font-normal text-md md:text-xl text-pretty">
               Ujęcia z powietrza mogą być kluczowym aspektem Twojej realizacji. Tu nie chodzi wyłącznie o inną
               perspektywę ujęć - prezentacja ważnych aspektów obiektu zlecenia z wysokości to furtka do innych
               możliwości, które odkryjesz w ramach naszej współpracy.
             </p>
+            <div class="mt-10 w-full flex flex-row items-center justify-start flex-wrap">
+              <div
+                class="mr-3 my-2 md:my-3 flex flex-row justify-center items-center ring-1 ring-neutral-600 font-poppins text-md md:text-lg font-light text-neutral-600 rounded-full py-1 px-3">
+                <p class="">
+                  rozdzielczość
+                </p>
+                <img src="./assets/icons/4k-icon.svg" alt="4k" class="ml-2 h-8 w-8">
+              </div>
+              <div
+                class="mr-3 my-2 md:my-3 flex flex-row justify-center items-center ring-1 ring-neutral-600 font-poppins text-md md:text-lg font-light text-neutral-600 rounded-full py-1 px-3">
+                <p class="">
+                  dowolny format
+                </p>
+                <img src="./assets/icons/aspect-ratio-icon.svg" alt="aspect-ratio" class="ml-2 h-8 w-8">
+              </div>
+              <div
+                class="mr-3 my-2 md:my-3 flex flex-row justify-center items-center ring-1 ring-neutral-600 font-poppins text-md md:text-lg font-light text-neutral-600 rounded-full py-1 px-3">
+                <p class="">
+                  wysoka jakość
+                </p>
+                <img src="./assets/icons/hq-icon.svg" alt="hq" class="ml-2 h-8 w-8">
+              </div>
+              <div
+                class="mr-2 my-1 md:my-3 flex flex-row justify-center items-center ring-1 ring-neutral-600 font-poppins text-md md:text-lg font-light text-neutral-600 rounded-full py-1 px-3">
+                <p>
+                  długi czas lotu
+                </p>
+                <img src="./assets/icons/flight-time-icon.svg" alt="stability" class="ml-2 h-8 w-8">
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- feature 3 - order steps -->
-    <div id="order-steps" class="w-[80%] h-auto mt-48 flex flex-col items-center">
+    <div id="order-steps" class="w-[95%] sm:w-[80%] h-auto mt-0 md:mt-36 flex flex-col items-center">
       <div
         class="relative w-full h-full ring-2 ring-neutral-800 bg-gradient-to-t from-blue-200/5 via-transparent to-transparent rounded-2xl p-0">
         <p
-          class="absolute top-[-13px] bg-neutral-900 rounded-full text-neutral-700 font-montserrat font-semibold text-[26px] leading-[26px] left-10 px-2">
+          class="absolute w-[230px] sm:w-auto bg-neutral-900 rounded-full text-neutral-600 font-montserrat font-semibold text-[20px] leading-[20px] left-5 top-[-20px] sm:top-[-10px] md:text-[26px] md:leading-[26px] md:left-10 md:top-[-13px] px-2">
           PROCES REALIZACJI ZAMÓWIENIA
         </p>
-
         <div class="w-full h-full mt-32">
           <p-timeline [value]="steps" align="alternate" styleClass="customized-timeline" class="">
             <ng-template pTemplate="marker" let-step>
-              <span class="flex justify-center items-center h-16 w-16 m-3 rounded-full  ring-blue-400 shadow-2xl">
+              <span class="flex justify-center items-center h-12 w-12 sm:h-16 sm:w-16 m-1 lg:m-2">
                 <img [src]="step.icon" alt="send">
               </span>
             </ng-template>
             <ng-template pTemplate="content" let-step>
-              <div class="w-auto min-h-[300px] p-10 pt-0 flex flex-col items-{{step.items}} justify-start">
-                <p class="text-3xl font-semibold text-neutral-400 font-montserrat">{{step.title}}</p>
-                <p class="mt-3 max-w-[450px] text-md font-light text-left text-neutral-500 font-poppins">
+              <div
+                class="w-auto min-h-[400px] sm:min-h-[300px] px-2 lg:px-10 pt-0 flex flex-col items-{{step.items}} justify-start">
+                <p class="hyphens-auto text-xl sm:text-2xl lg:text-3xl font-semibold text-neutral-400 font-montserrat">
+                  {{step.title}}</p>
+                <p
+                  class="mt-3 text-xs sm:text-sm text-pretty lg:text-base max-w-[450px] font-light text-left text-neutral-500 font-poppins">
                   {{step.description}}</p>
               </div>
             </ng-template>
@@ -121,7 +299,7 @@
     <div data-aos="fade-up" data-aos-duration="750" data-aos-once="true" data-aos-easing="ease" class="my-40 w-auto">
       <div
         class="flex flex-row items-center ring-1 bg-gradient-to-t from-blue-500/20 ring-blue-200 px-7 py-3 rounded-full hover:scale-105 cursor-pointer ease-in-out duration-150 shadow-md shadow-blue-100/50 select-none">
-        <p class="text-blue-200 font-montserrat font-semibold text-[25px]">
+        <p class="text-blue-200 font-montserrat font-semibold  text-[18px] min-[450px]:text-[25px] lg:text-[30px]">
           Zamawiam usługę
         </p>
         <img src="./assets/icons/arrow-icon.svg" alt="arrow" class="h-10 w-10 ml-2">
@@ -129,11 +307,12 @@
     </div>
 
     <!-- contact -->
-    <div class="w-[80%] h-auto mb-16 flex flex-row items-center justify-center">
-      <img src="./assets/chat.png" alt="chat" class="h-[600px] w-auto">
-      <div class="w-auto ml-16 h-full flex flex-col items-start justify-center">
-        <p class="font-montserrat text-6xl text-neutral-500 font-semibold my-2">Masz pytania?</p>
+    <div class="w-[80%] h-auto mb-16 flex flex-col md:flex-row items-center justify-center">
+      <img src="./assets/chat.png" alt="chat" class="hidden md:block md:h-[500px] lg:h-[600px] w-auto">
+      <div class="w-auto ml-8 lg:ml-16 h-full flex flex-col items-center md:items-start justify-center">
+        <p class="font-montserrat text-4xl lg:text-6xl text-neutral-500 font-semibold my-2">Masz pytania?</p>
         <p class="font-poppins text-3xl text-neutral-600 font-light my-2">Zapraszam do kontaktu</p>
+        <img src="./assets/chat.png" alt="chat" class="block md:hidden md:h-[500px] lg:h-[600px] w-auto">
         <p
           class="ring-1 my-10 bg-gradient-to-t from-blue-500/20 ring-blue-200 text-blue-200 font-montserrat font-semibold px-7 py-3 rounded-full text-[20px] hover:scale-105 cursor-pointer ease-in-out duration-150 shadow-md shadow-blue-100/50">
           Skontaktuj się

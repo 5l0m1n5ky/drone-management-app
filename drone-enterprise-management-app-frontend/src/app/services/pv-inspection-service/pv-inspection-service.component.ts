@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { NavbarComponent } from 'src/app/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
-import { IntersectionObserverDirective } from '../intersection-observer.directive';
 import { TimelineModule } from 'primeng/timeline';
+import { RouterLink } from '@angular/router';
 
 interface StepsData {
   icon: string,
@@ -14,18 +14,10 @@ interface StepsData {
   standalone: true,
   selector: 'app-pv-inspection-service',
   templateUrl: './pv-inspection-service.component.html',
-  imports: [NavbarComponent, NavbarComponent, CommonModule, IntersectionObserverDirective, TimelineModule]
+  imports: [NavbarComponent, NavbarComponent, CommonModule, TimelineModule, RouterLink]
 })
 export class PvInspectionServiceComponent {
 
-  @ViewChild(IntersectionObserverDirective) intersectionObserverDirective: IntersectionObserverDirective;
-
-  services: string[] = [
-    "Spotu reklamowego",
-    "Filmu prezentuającego nieruchomość",
-    "Relacji z eventu",
-    "I wielu innych..."
-  ];
 
   steps: StepsData[] = [
     {

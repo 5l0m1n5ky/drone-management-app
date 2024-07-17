@@ -38,4 +38,8 @@ https://pixabay.com/pl/users/paymaster_ukraine-27640709/?utm_source=link-attribu
 
 https://pixabay.com/pl/users/vale_photography-13626041/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=4923366 by Valentin J-W
 
-https://www.pexels.com/pl-pl/zdjecie/natura-pole-budowa-przemysl-4320449/ by Kelly
+https://unsplash.com/@markusspiske?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash by Markus Spiske
+  
+https://www.pexels.com/pl-pl/zdjecie/pole-srodowisko-elektrycznosc-energia-odnawialna-16586163/ by Diego Vivanco
+
+https://www.pexels.com/pl-pl/zdjecie/czarny-aparat-fotograficzny-w-skali-szarosci-2050720/ by Tembela Bohle
