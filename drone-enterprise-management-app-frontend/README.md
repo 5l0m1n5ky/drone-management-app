@@ -43,3 +43,7 @@ https://unsplash.com/@markusspiske?utm_content=creditCopyText&utm_medium=referra
 https://www.pexels.com/pl-pl/zdjecie/pole-srodowisko-elektrycznosc-energia-odnawialna-16586163/ by Diego Vivanco
 
 https://www.pexels.com/pl-pl/zdjecie/czarny-aparat-fotograficzny-w-skali-szarosci-2050720/ by Tembela Bohle
+
+https://www.pexels.com/pl-pl/video/dach-zielony-trzymajacy-samochod-sportowy-16000242/ by paashu
+
+https://www.pexels.com/pl-pl/video/zaglowa-lodz-rybacka-2257010/ by Kelly

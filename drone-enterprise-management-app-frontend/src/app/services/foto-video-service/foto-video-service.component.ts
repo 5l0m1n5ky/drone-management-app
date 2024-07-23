@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, Renderer2, ViewChild } from '@angular/core';
 import { NavbarComponent } from 'src/app/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
 import { Subscription, interval } from 'rxjs';
@@ -26,6 +26,7 @@ interface StepsData {
 export class FotoVideoServiceComponent {
 
   @ViewChild(IntersectionObserverDirective) intersectionObserverDirective: IntersectionObserverDirective;
+
 
   services: string[] = [
     "Spotu reklamowego",
@@ -70,18 +71,20 @@ export class FotoVideoServiceComponent {
   currentService: string = this.services[0];
   subscription: Subscription;
 
-  onElementInView(): void {
-    this.intersectionObserverDirective.scrollObserverDisconnect();
+  onServicesInView(): void {
+    // this.intersectionObserverDirective.scrollObserverDisconnect();
     this.subscription = interval(1250).subscribe({
       next: (val) => {
         if ((val + 1) < this.services.length) {
           this.currentService = this.services[val + 1];
-        } else {
+        }
+        else {
           this.subscription.unsubscribe();
         }
       }
     });
   }
+
 
   // ngOnDestroy(): void {
   //   if (this.subscription) {

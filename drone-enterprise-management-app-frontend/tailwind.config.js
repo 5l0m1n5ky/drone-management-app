@@ -58,14 +58,16 @@ module.exports = {
       '4xl': ['48px', '58px'],
       '6xl': ['72px', '81px'],
       '8xl': ['96px', '106px'],
-      '10xl': ['125px', '135px']
+      '10xl': ['125px', '135px'],
+      '12xl': ['150px', '165px'],
+      '16xl': ['200px', '215px']
     },
     extend: {
       fontFamily: {
         palanquin: ['Palanquin', 'sans-serif'],
         montserrat: ['Montserrat', 'sans-serif'],
         poppins: ["Poppins", "sans-serif"],
-        roboto: ["Roboto", "sans-serif"]
+        oxygen: ["Oxygen", "sans-serif"]
       },
       colors: {
         'primary': "#ECEEFF",

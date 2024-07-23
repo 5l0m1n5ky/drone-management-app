@@ -27,13 +27,12 @@ export class IntersectionObserverDirective implements OnInit, OnDestroy {
 
   scrollObserverDisconnect() {
     this.observer.disconnect();
-    this.isActive = false;
-    console.log("observer disconnected");
+    // this.isActive = false;
   }
 
   ngOnDestroy(): void {
-    if (!this.isActive) {
-      this.scrollObserverDisconnect();
-    }
+    // if (!this.isActive) {
+    this.scrollObserverDisconnect();
+    // }
   }
 }
