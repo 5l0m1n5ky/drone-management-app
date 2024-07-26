@@ -47,3 +47,9 @@ https://www.pexels.com/pl-pl/zdjecie/czarny-aparat-fotograficzny-w-skali-szarosc
 https://www.pexels.com/pl-pl/video/dach-zielony-trzymajacy-samochod-sportowy-16000242/ by paashu
 
 https://www.pexels.com/pl-pl/video/zaglowa-lodz-rybacka-2257010/ by Kelly
+
+https://www.pexels.com/pl-pl/zdjecie/brown-electricity-post-230518/ by Miguel Á. Padriñán
+
+https://www.pexels.com/pl-pl/zdjecie/bialy-wiatrak-z-trzema-ostrzami-pod-zachmurzonym-niebem-744344/ by Expect Best
+
+https://www.pexels.com/pl-pl/zdjecie/trzy-szare-turbiny-wiatrowe-243138/ by Sam Forson

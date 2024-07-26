@@ -26,6 +26,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { FotoVideoServiceComponent } from './services/foto-video-service/foto-video-service.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
 import { PvInspectionServiceComponent } from './services/pv-inspection-service/pv-inspection-service.component';
+import { ElectricDistributionServiceComponent } from './services/electric-distribution-service/electric-distribution-service.component';
+import { WindmillServiceComponent } from './services/windmill-service/windmill-service.component';
 
 
 
@@ -57,6 +59,8 @@ import { PvInspectionServiceComponent } from './services/pv-inspection-service/p
     FotoVideoServiceComponent,
     PortfolioComponent,
     PvInspectionServiceComponent,
+    ElectricDistributionServiceComponent,
+    WindmillServiceComponent
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

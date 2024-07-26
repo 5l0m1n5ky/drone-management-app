@@ -8,6 +8,8 @@ import { AccountVerificationComponent } from './account-verification/account-ver
 import { PortfolioComponent } from './portfolio/portfolio.component';
 import { FotoVideoServiceComponent } from './services/foto-video-service/foto-video-service.component';
 import { PvInspectionServiceComponent } from './services/pv-inspection-service/pv-inspection-service.component';
+import { ElectricDistributionServiceComponent } from './services/electric-distribution-service/electric-distribution-service.component';
+import { WindmillServiceComponent } from './services/windmill-service/windmill-service.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -18,6 +20,8 @@ const routes: Routes = [
   { path: 'portfolio', component: PortfolioComponent },
   { path: 'foto-video', component: FotoVideoServiceComponent },
   { path: 'pv-inspection', component: PvInspectionServiceComponent },
+  { path: 'electric-distribution-inspection', component: ElectricDistributionServiceComponent },
+  { path: 'windmill-inspection', component: WindmillServiceComponent },
   // { path: '*', component: ServicesComponent }, TODO ANY LINK
 ];
 
