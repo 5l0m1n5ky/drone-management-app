@@ -10,6 +10,8 @@ import { FotoVideoServiceComponent } from './services/foto-video-service/foto-vi
 import { PvInspectionServiceComponent } from './services/pv-inspection-service/pv-inspection-service.component';
 import { ElectricDistributionServiceComponent } from './services/electric-distribution-service/electric-distribution-service.component';
 import { WindmillServiceComponent } from './services/windmill-service/windmill-service.component';
+import { PhotogrammetryServiceComponent } from './services/photogrammetry-service/photogrammetry-service.component';
+import { PreviewMobileComponent } from './portfolio/preview-mobile/preview-mobile.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -18,10 +20,12 @@ const routes: Routes = [
   { path: 'services', component: ServicesComponent },
   { path: 'account-verification/:user_id', component: AccountVerificationComponent },
   { path: 'portfolio', component: PortfolioComponent },
+  { path: 'portfolio/mobile/:post_id', component: PreviewMobileComponent },
   { path: 'foto-video', component: FotoVideoServiceComponent },
   { path: 'pv-inspection', component: PvInspectionServiceComponent },
   { path: 'electric-distribution-inspection', component: ElectricDistributionServiceComponent },
   { path: 'windmill-inspection', component: WindmillServiceComponent },
+  { path: 'photogrammetry-service', component: PhotogrammetryServiceComponent },
   // { path: '*', component: ServicesComponent }, TODO ANY LINK
 ];
 

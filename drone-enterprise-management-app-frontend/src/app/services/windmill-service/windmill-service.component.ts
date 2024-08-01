@@ -84,5 +84,4 @@ export class WindmillServiceComponent {
       inline: "nearest"
     });
   }
-
 }

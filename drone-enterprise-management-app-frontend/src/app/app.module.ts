@@ -13,7 +13,7 @@ import { HomeServicesComponent } from './home/home-services/home-services.compon
 import { HomePortfolioComponent } from './home/home-portfolio/home-portfolio.component';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { ServicesComponent } from './services/services.component';
 import { CsrfInterceptor } from './auth/csrf.interceptor';
@@ -28,6 +28,8 @@ import { PortfolioComponent } from './portfolio/portfolio.component';
 import { PvInspectionServiceComponent } from './services/pv-inspection-service/pv-inspection-service.component';
 import { ElectricDistributionServiceComponent } from './services/electric-distribution-service/electric-distribution-service.component';
 import { WindmillServiceComponent } from './services/windmill-service/windmill-service.component';
+import { PhotogrammetryServiceComponent } from './services/photogrammetry-service/photogrammetry-service.component';
+import { PreviewMobileComponent } from './portfolio/preview-mobile/preview-mobile.component';
 
 
 
@@ -36,7 +38,6 @@ import { WindmillServiceComponent } from './services/windmill-service/windmill-s
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    LoadingSpinnerComponent,
     AccountVerificationComponent,
   ],
   imports: [
@@ -60,7 +61,11 @@ import { WindmillServiceComponent } from './services/windmill-service/windmill-s
     PortfolioComponent,
     PvInspectionServiceComponent,
     ElectricDistributionServiceComponent,
-    WindmillServiceComponent
+    WindmillServiceComponent,
+    PhotogrammetryServiceComponent,
+    ReactiveFormsModule,
+    LoadingSpinnerComponent,
+    PreviewMobileComponent,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

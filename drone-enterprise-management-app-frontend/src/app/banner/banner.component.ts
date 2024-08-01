@@ -17,7 +17,7 @@ export class BannerComponent {
     });
   }
 
-  constructor(private scroller: ViewportScroller) { }
+  // constructor(private scroller: ViewportScroller) { }
 
 
 }

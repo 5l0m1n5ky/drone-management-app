@@ -1,0 +1,43 @@
+<!-- mobile device -->
+<div *ngIf="loadedPosts.length >= 1"
+  class="absolute flex flex-col justify-start items-center z-50 top-0 left-0 h-screen w-screen bg-neutral-900 backdrop-blur-sm overflow-y-auto overflow-x-hidden no-scrollbar">
+
+  <div class="sticky top-0 py-2 pl-2 w-full h-10 flex flex-row text-base font-montserrat justify-start items-center text-neutral-600 bg-black/75 backdrop-blur-lg">
+    <img routerLink="/" src="./assets/icons/home-icon.svg" alt="home"
+      class="h-[25px] w-[25px] cursor-pointer hover:brightness-150 ease-in-out duration-150">
+    <img src="./assets/icons/arrow-right-icon.svg" alt="arrow" class="h-[25px] w-[25px]">
+    <p routerLink="/portfolio" class="cursor-pointer hover:text-neutral-400 ease-in-out duration-150">
+      PORTFOLIO
+    </p>
+    <img src="./assets/icons/arrow-right-icon.svg" alt="arrow" class="h-[25px] w-[25px]">
+    <p>
+      POSTY
+    </p>
+  </div>
+
+  <!-- card -->
+  <div *ngFor="let post of loadedPosts" id="{{'item_' + post.id }}"
+    class="mb-5 flex flex-col items-center justify-center w-auto h-auto">
+    <div class="mt-10 flex flex-col justify-start items-center h-full w-auto bg-neutral-950 rounded-lg">
+      <div class="flex flex-row justify-between items-center h-auto w-full py-2">
+        <div class="pl-3 flex flex-row justify-start items-center">
+          <img src="./assets/icons/location-icon.svg" alt="location-icon" class="w-8 h-8 mr-1">
+          <span class="font-montserrat text-neutral-600 text-base font-normal">{{ post.location }}</span>
+        </div>
+        <img src="./assets/icons/preferences-icon.svg" alt="preferences-icon"
+          class="w-10 h-10 mr-2 cursor-pointer hover:brightness-150 transition-all ease-in-out duration-75">
+      </div>
+      <div class="w-full h-auto bg-black flex flex-col items-center">
+        <img src="{{ post.path }}" alt="gallery-item" class="max-h-[80vh] w-auto object-contain">
+      </div>
+      <div class="w-full py-2 flex flex-row items-center justify-start">
+        <img src="./assets/icons/heart-icon.png" alt="heart-icon"
+          class="w-8 h-8 ml-5 hover:brightness-150 cursor-pointer transition-all ease-in-out duration-75">
+        <p *ngIf="!post.hidden_reactions" class="text-neutral-500 text-base font-montserrat ml-3">
+          {{ post.reactions }}</p>
+      </div>
+      <p class="mx-5 my-5 text-neutral-600 text-sm font-montserrat text-justify text-pretty">
+        {{ post.description }}
+      </p>
+    </div>
+  </div>

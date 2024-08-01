@@ -94,6 +94,9 @@ module.exports = {
       },
     },
   },
+  corePlugins: {
+    aspectRatio: false,
+  },
   plugins: [
     radialGradientPlugin,
     function ({ addUtilities }) {
@@ -108,7 +111,8 @@ module.exports = {
           hyphens: 'none',
         },
       })
-    }
+    },
+    require('@tailwindcss/aspect-ratio'),
   ],
 }
 

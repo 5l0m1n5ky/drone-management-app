@@ -53,3 +53,7 @@ https://www.pexels.com/pl-pl/zdjecie/brown-electricity-post-230518/ by Miguel Á
 https://www.pexels.com/pl-pl/zdjecie/bialy-wiatrak-z-trzema-ostrzami-pod-zachmurzonym-niebem-744344/ by Expect Best
 
 https://www.pexels.com/pl-pl/zdjecie/trzy-szare-turbiny-wiatrowe-243138/ by Sam Forson
+
+https://pixabay.com/pl/users/paulbr75-2938186/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=2871079 by Paul Brennan
+
+https://icons8.com/icon/87/heart icon by Icons8
