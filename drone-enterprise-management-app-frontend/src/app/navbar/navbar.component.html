@@ -30,8 +30,17 @@
       </li>
     </ul>
     <ul class="justify-center items-center gap-4 text-[16px] w-72 text-stone-400 font-montserrat hidden lg:flex">
-      <li><a routerLink="/login" class="hover:text-stone-200 ease-in duration-75">ZALOGUJ</a></li>
-      <li><a routerLink="/register" class="hover:text-stone-200 ease-in duration-75">ZAREJESTRUJ SIĘ</a>
+      <li *ngIf="isAuthenticated">
+        <a routerLink="/login" class="hover:text-stone-200 ease-in duration-75">PANEL</a>
+      </li>
+      <li *ngIf="!isAuthenticated">
+        <a routerLink="/login" class="hover:text-stone-200 ease-in duration-75">ZALOGUJ</a>
+      </li>
+      <li *ngIf="isAuthenticated" (click)="onLogout()">
+        <a class="hover:text-stone-200 ease-in duration-75 cursor-pointer">WYLOGUJ</a>
+      </li>
+      <li *ngIf="!isAuthenticated">
+        <a routerLink="/register" class="hover:text-stone-200 ease-in duration-75">ZAREJESTRUJ SIĘ</a>
       </li>
     </ul>
     <div class="justify-center items-center px-2 py-1 flex lg:hidden">

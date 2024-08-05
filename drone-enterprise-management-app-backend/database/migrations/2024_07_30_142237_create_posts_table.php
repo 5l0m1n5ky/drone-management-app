@@ -14,7 +14,6 @@ return new class extends Migration {
             $table->id();
             $table->boolean('hidden');
             $table->string('location');
-            $table->integer('type_id');
             $table->string('path');
             $table->longText('description');
             $table->integer('reactions');

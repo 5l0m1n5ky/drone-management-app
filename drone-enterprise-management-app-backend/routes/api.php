@@ -43,10 +43,6 @@ Route::post('/regenerateToken/{user_id}', [AuthController::class, 'regenerateTok
 
 // Protected Routes
 
-Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-});
-
 // Route::post('/logout', [AuthController::class, 'logout']);
 
 // Route::get('/email', [EmailController::class, 'sendMail']);

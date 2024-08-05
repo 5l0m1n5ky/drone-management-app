@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -6,15 +6,17 @@ import { MatMenuModule } from '@angular/material/menu';
 import { PortfolioService } from './portfolio.service';
 import { Post } from './portfolio.model';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner.component';
-import { FormControl, FormGroup } from '@angular/forms'
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms'
 import { NavigationExtras, Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { StepperModule } from 'primeng/stepper';
 import { Button } from 'primeng/button';
-import { FileUploadModule } from 'primeng/fileupload';
-import { every } from 'rxjs';
-
-
+import { FileSendEvent, FileUploadEvent, FileUploadModule } from 'primeng/fileupload';
+import { every, Observable, Subject, Subscription } from 'rxjs';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { CancelDialogComponent } from '../shared/cancel-dialog/cancel-dialog.component';
 
 
 
@@ -32,6 +34,9 @@ import { every } from 'rxjs';
     StepperModule,
     Button,
     FileUploadModule,
+    MatStepperModule,
+    MatSlideToggleModule,
+    MatDialogModule
   ],
   providers: [
     PortfolioService
@@ -48,10 +53,28 @@ export class PortfolioComponent implements OnInit {
   screenWidth: number;
   isMobile: boolean;
   isEditMode: boolean = false;
-  isCreateMode: boolean = false;
-  createPostForm: FormGroup;
+  isCreateMode: boolean = true;
 
-  constructor(private portfolioService: PortfolioService, private router: Router) { }
+  postFileForm: FormGroup;
+  postLocationForm: FormGroup;
+  postDescriptionForm: FormGroup;
+  postVisibilityForm: FormGroup;
+
+  @ViewChild('fileInput') fileInput: HTMLElement;
+  fileName: string = '';
+  fileSize: string;
+  fileSrc: string | undefined;
+
+  visibilityToggled: boolean = false;
+
+  dialogSubscription = new Subscription;
+  dialogActionSubscription = new Subscription;
+
+  private actionSubject = new Subject<any>();
+  action$: Observable<any> = this.actionSubject.asObservable();
+
+
+  constructor(private portfolioService: PortfolioService, private router: Router, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.updateScreenSize();
@@ -61,15 +84,39 @@ export class PortfolioComponent implements OnInit {
       this.isLoading = false;
     });
 
-
-    this.createPostForm = new FormGroup({
-      'postFile': new FormControl(null),
-      'location': new FormControl(null),
-      'description': new FormControl(null),
-      'visibility': new FormControl(true),
-      'reactionsVisibility': new FormControl(true),
+    this.postFileForm = new FormGroup({
+      file: new FormControl(null, Validators.required)
     });
 
+    this.postLocationForm = new FormGroup({
+      location: new FormControl(null, Validators.required)
+    });
+
+    this.postDescriptionForm = new FormGroup({
+      description: new FormControl(null, Validators.required)
+    });
+
+    this.postVisibilityForm = new FormGroup({
+      visibility: new FormControl(true)
+    });
+  }
+
+  onFileSelected(event: any) {
+    const file: File = event.target?.files[0];
+    if (file) {
+      this.fileName = file.name;
+      if ((file.size / 1024) < 1000) {
+        this.fileSize = Number(file.size / 1024).toFixed(2).toString() + ' KB';
+      } else {
+        this.fileSize = Number(file.size / (1024 * 1024)).toFixed(2).toString() + ' MB';
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.fileSrc = reader.result?.toString();
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   updateScreenSize() {
@@ -114,16 +161,35 @@ export class PortfolioComponent implements OnInit {
 
   }
 
-  onUpload(file: any) {
-    return
-  }
-
   onCreate() {
     this.isCreateMode = true;
   }
 
+  onPostCreate() {
+    const formData = {
+      ...this.postFileForm.value,
+      ...this.postLocationForm.value,
+      ...this.postDescriptionForm.value,
+      ...this.postVisibilityForm.value,
+    }
+  }
+
   onCancelCreateMode() {
-    this.isCreateMode = false;
+    if (!this.postFileForm.value.file) {
+      this.isCreateMode = false;
+    } else {
+      this.openDialog();
+      this.dialogActionSubscription = this.action$.subscribe(action => {
+        if (action === 'confirm') {
+          this.postFileForm.reset();
+          this.postLocationForm.reset();
+          this.postDescriptionForm.reset();
+          this.postVisibilityForm.reset();
+          this.isCreateMode = false;
+        }
+        this.dialogActionSubscription.unsubscribe();
+      });
+    }
   }
 
   onGalleryItemClose(): void {
@@ -167,6 +233,31 @@ export class PortfolioComponent implements OnInit {
     }
     this.checkSwipeRight();
     this.checkSwipeLeft();
+  }
+
+  onToggleChange() {
+    this.visibilityToggled = !this.visibilityToggled;
+  }
+
+  openDialog() {
+    let dialogReference = this.dialog.open(
+      CancelDialogComponent,
+      {
+        width: '30%',
+        height: '30%',
+        data: {
+          title: 'Anulować?',
+          content: 'Wszystkie zmiany zostaną utracone',
+          cancellation: 'WRÓĆ',
+          confirmation: 'ANULUJ'
+        }
+      }
+    );
+
+    this.dialogSubscription = dialogReference.afterClosed().subscribe(action => {
+      this.dialogSubscription.unsubscribe();
+      this.actionSubject.next(action);
+    });
   }
 
 }

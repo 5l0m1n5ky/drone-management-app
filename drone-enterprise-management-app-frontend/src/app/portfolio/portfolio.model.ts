@@ -2,7 +2,6 @@ export interface Post {
   id: number,
   hidden: boolean,
   location: string,
-  type_id: string,
   path: string,
   description: string,
   reactions: number,

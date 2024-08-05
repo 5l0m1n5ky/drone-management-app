@@ -17,10 +17,6 @@ interface RegisterResponseData {
   data?: UserData
 }
 
-
-
-
-
 @Injectable({ providedIn: 'root' })
 
 export class RegisterService {

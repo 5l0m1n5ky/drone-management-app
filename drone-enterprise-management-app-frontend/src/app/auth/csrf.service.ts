@@ -9,11 +9,10 @@ export class CsrfService {
 
   constructor(private http: HttpClient, private cookieService: CookieService) { }
 
-  private csrfToken: string | null = this.cookieService.get('XSRF-TOKEN');
-
+  private csrfToken: string = this.cookieService.get('XSRF-TOKEN');
 
   async fetchCsrfToken(): Promise<void> {
-    if (!this.csrfToken) {
+    // if (!this.csrfToken) {
       try {
         // Make the request to get the CSRF token
         console.log('inside fetch csrf method');
@@ -30,7 +29,7 @@ export class CsrfService {
       } catch (error) {
         console.error('Failed to fetch CSRF token', error);
       }
-    }
+    // }
   }
 
   getCsrfToken(): string | null {

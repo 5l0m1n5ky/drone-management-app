@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Post } from '../portfolio.model';
 import { ActivatedRoute, Router, RouterEvent, RouterLink } from '@angular/router';
 import { Location } from '@angular/common';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -13,15 +14,16 @@ import { CommonModule } from '@angular/common';
     RouterLink
   ]
 })
-export class PreviewMobileComponent implements OnInit, AfterViewInit {
+export class PreviewMobileComponent implements OnInit, AfterViewInit, OnDestroy {
 
   loadedPosts: Post[] = [];
   postIdToPreview: number;
+  private postsSubsription: Subscription;
 
   constructor(private route: ActivatedRoute, private router: Router, private location: Location) { }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
+    this.postsSubsription = this.route.queryParams.subscribe(params => {
       if (params['loadedPostPayload']) {
         this.loadedPosts = JSON.parse(params['loadedPostPayload']);
       } else {
@@ -46,5 +48,9 @@ export class PreviewMobileComponent implements OnInit, AfterViewInit {
         });
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    this.postsSubsription.unsubscribe()
   }
 }

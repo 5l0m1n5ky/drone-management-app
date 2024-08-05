@@ -17,7 +17,6 @@ class Post extends Model
     protected $fillable = [
         'hidden',
         'location',
-        'type_id',
         'path',
         'description',
         'reactions',

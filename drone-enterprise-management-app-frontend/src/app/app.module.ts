@@ -30,13 +30,13 @@ import { ElectricDistributionServiceComponent } from './services/electric-distri
 import { WindmillServiceComponent } from './services/windmill-service/windmill-service.component';
 import { PhotogrammetryServiceComponent } from './services/photogrammetry-service/photogrammetry-service.component';
 import { PreviewMobileComponent } from './portfolio/preview-mobile/preview-mobile.component';
+import { CancelDialogComponent } from './shared/cancel-dialog/cancel-dialog.component';
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     RegisterComponent,
     AccountVerificationComponent,
   ],
@@ -47,6 +47,7 @@ import { PreviewMobileComponent } from './portfolio/preview-mobile/preview-mobil
     HomeComponent,
     NavbarComponent,
     BannerComponent,
+    LoginComponent,
     HttpClientModule,
     HomeDetailsComponent,
     HomeServicesComponent,
@@ -66,6 +67,7 @@ import { PreviewMobileComponent } from './portfolio/preview-mobile/preview-mobil
     ReactiveFormsModule,
     LoadingSpinnerComponent,
     PreviewMobileComponent,
+    CancelDialogComponent,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
@@ -73,6 +75,9 @@ import { PreviewMobileComponent } from './portfolio/preview-mobile/preview-mobil
     multi: true
   },
     CookieService
+  ],
+  exports: [
+    // MatDialogModule,
   ],
   bootstrap: [AppComponent]
 })

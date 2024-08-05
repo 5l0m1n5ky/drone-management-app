@@ -55,16 +55,17 @@ class AuthController extends Controller
 
             $user = User::where('email', $request->email)->first();
 
-            return $this->success([
+            return $this->success(
                 [
                     'user' => [
                         'id' => $user->id,
-                        'email' => $user->email
+                        'email' => $user->email,
+                        'privileges' => $user->role
                     ],
                 ],
                 'LOGGED_IN',
                 200
-            ]);
+            );
 
         } catch (Throwable $loginException) {
             return $this->error(
@@ -185,12 +186,12 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::user()->currentAccessToken()->delete();
+        // Auth::user()->currentAccessToken()->delete();
 
-        $request->session()->token();
+        $request->session()->invalidate();
 
         return $this->success([
-            'You have successufully been logged out and your session is no longer available'
+            'SUCCESSFUL_LOGOUT'
         ]);
     }
 
