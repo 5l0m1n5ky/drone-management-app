@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as Aos from 'aos';
 import { LoginService } from './login/login.service';
 import { Subscription } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import { Subscription } from 'rxjs';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private loginService: LoginService) { }
+  constructor(private loginService: LoginService, private cookieService: CookieService) { }
 
   private userSubscription: Subscription
 
@@ -20,9 +21,9 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     Aos.init();
-    console.log('app component init');
     this.userSubscription = this.loginService.getUserData().subscribe(user => {
       this.isAuthenticated = !!user;
+      this.cookieService.set('user', JSON.stringify({ id: user.id, email: user.email, privileges: user.privileges }));
     });
   }
 

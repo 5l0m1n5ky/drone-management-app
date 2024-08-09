@@ -12,7 +12,6 @@ use App\Traits\HttpResponses;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Auth\Access\AuthorizationException;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AccountVerificationEmail;
@@ -91,7 +90,7 @@ class AuthController extends Controller
             $user = User::create([
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'verification_token' => random_int(100000, 999999)
+                'verification_token' => random_int(100000, 999999),
             ]);
 
             if (!$user->hasVerifiedEmail()) {
@@ -103,7 +102,8 @@ class AuthController extends Controller
                 [
                     'user' => [
                         'id' => $user->id,
-                        'email' => $user->email
+                        'email' => $user->email,
+                        'role' => $user->role
                     ],
                 ],
                 'SIGNED_UP',
@@ -111,7 +111,7 @@ class AuthController extends Controller
             );
 
 
-        } catch (Throwable $authorizationException) {
+        } catch (ValidationException $authorizationException) {
             return $this->error(
                 [
                     'request' => [
@@ -181,8 +181,6 @@ class AuthController extends Controller
     {
 
     }
-
-
 
     public function logout(Request $request)
     {

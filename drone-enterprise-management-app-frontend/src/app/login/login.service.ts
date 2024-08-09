@@ -3,6 +3,8 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, Subject, catchError, tap, throwError } from "rxjs";
 import { User } from "../user/user.model";
 import { CookieService } from "ngx-cookie-service";
+import { ToastModule } from 'primeng/toast';
+
 
 interface LoginUserData {
   id: string,

@@ -12,12 +12,10 @@ return new class extends Migration {
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->boolean('hidden');
+            $table->boolean('visibility')->default(true);
             $table->string('location');
             $table->string('path');
             $table->longText('description');
-            $table->integer('reactions');
-            $table->boolean('hidden_reactions');
             $table->timestampsTz();
         });
     }

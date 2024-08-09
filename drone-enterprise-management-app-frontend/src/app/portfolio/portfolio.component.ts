@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -6,18 +6,19 @@ import { MatMenuModule } from '@angular/material/menu';
 import { PortfolioService } from './portfolio.service';
 import { Post } from './portfolio.model';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner.component';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms'
-import { NavigationExtras, Router } from '@angular/router';
+import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { StepperModule } from 'primeng/stepper';
 import { Button } from 'primeng/button';
-import { FileSendEvent, FileUploadEvent, FileUploadModule } from 'primeng/fileupload';
-import { every, Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CancelDialogComponent } from '../shared/cancel-dialog/cancel-dialog.component';
-
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { ToastService } from '../shared/toast/toast.service';
 
 
 @Component({
@@ -33,15 +34,18 @@ import { CancelDialogComponent } from '../shared/cancel-dialog/cancel-dialog.com
     ReactiveFormsModule,
     StepperModule,
     Button,
-    FileUploadModule,
     MatStepperModule,
     MatSlideToggleModule,
-    MatDialogModule
+    MatDialogModule,
+    ToastModule,
   ],
   providers: [
-    PortfolioService
+    PortfolioService,
+    MessageService,
+    ToastService,
   ]
 })
+
 export class PortfolioComponent implements OnInit {
 
   loadedPosts: Post[] = [];
@@ -53,12 +57,11 @@ export class PortfolioComponent implements OnInit {
   screenWidth: number;
   isMobile: boolean;
   isEditMode: boolean = false;
-  isCreateMode: boolean = true;
+  isCreateMode: boolean = false;
 
-  postFileForm: FormGroup;
-  postLocationForm: FormGroup;
-  postDescriptionForm: FormGroup;
-  postVisibilityForm: FormGroup;
+  createPostForm: FormGroup
+
+  isUploading: boolean = false;
 
   @ViewChild('fileInput') fileInput: HTMLElement;
   fileName: string = '';
@@ -73,8 +76,9 @@ export class PortfolioComponent implements OnInit {
   private actionSubject = new Subject<any>();
   action$: Observable<any> = this.actionSubject.asObservable();
 
+  file: File;
 
-  constructor(private portfolioService: PortfolioService, private router: Router, private dialog: MatDialog) { }
+  constructor(private portfolioService: PortfolioService, private router: Router, private dialog: MatDialog, private toastService: ToastService) { }
 
   ngOnInit() {
     this.updateScreenSize();
@@ -84,38 +88,37 @@ export class PortfolioComponent implements OnInit {
       this.isLoading = false;
     });
 
-    this.postFileForm = new FormGroup({
-      file: new FormControl(null, Validators.required)
-    });
-
-    this.postLocationForm = new FormGroup({
-      location: new FormControl(null, Validators.required)
-    });
-
-    this.postDescriptionForm = new FormGroup({
-      description: new FormControl(null, Validators.required)
-    });
-
-    this.postVisibilityForm = new FormGroup({
-      visibility: new FormControl(true)
+    this.createPostForm = new FormGroup({
+      postFileForm: new FormGroup({
+        file: new FormControl(null, Validators.required)
+      }),
+      postLocationForm: new FormGroup({
+        location: new FormControl(null, Validators.required)
+      }),
+      postDescriptionForm: new FormGroup({
+        description: new FormControl(null, Validators.required)
+      }),
+      postVisibilityForm: new FormGroup({
+        visibility: new FormControl(true)
+      }),
     });
   }
 
   onFileSelected(event: any) {
-    const file: File = event.target?.files[0];
-    if (file) {
-      this.fileName = file.name;
-      if ((file.size / 1024) < 1000) {
-        this.fileSize = Number(file.size / 1024).toFixed(2).toString() + ' KB';
+    this.file = event.target?.files[0];
+    if (this.file) {
+      this.fileName = this.file.name;
+      if ((this.file.size / 1024) < 1000) {
+        this.fileSize = Number(this.file.size / 1024).toFixed(2).toString() + ' KB';
       } else {
-        this.fileSize = Number(file.size / (1024 * 1024)).toFixed(2).toString() + ' MB';
+        this.fileSize = Number(this.file.size / (1024 * 1024)).toFixed(2).toString() + ' MB';
       }
 
       const reader = new FileReader();
       reader.onload = () => {
         this.fileSrc = reader.result?.toString();
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(this.file);
     }
   }
 
@@ -166,25 +169,41 @@ export class PortfolioComponent implements OnInit {
   }
 
   onPostCreate() {
-    const formData = {
-      ...this.postFileForm.value,
-      ...this.postLocationForm.value,
-      ...this.postDescriptionForm.value,
-      ...this.postVisibilityForm.value,
+
+    if (this.createPostForm.valid) {
+      console.log(this.createPostForm.value);
     }
+
+    this.isUploading = true;
+    this.portfolioService.uploadPost(
+
+      // this.createPostForm.get('postFileForm.file')?.value,
+      this.file,
+      this.createPostForm.get('postLocationForm.location')?.value,
+      this.createPostForm.get('postDescriptionForm.description')?.value,
+      this.createPostForm.get('postVisibilityForm.visibility')?.value,
+      // this.createPostForm
+    ).subscribe(responseData => {
+      this.isUploading = false;
+      this.toastService.generateToast('success', 'Publikacja Posta', responseData.toString());
+      console.log(responseData);
+      this.createPostForm.reset();
+    }, errorMessage => {
+      this.toastService.generateToast('error', 'Publikacja Posta', errorMessage);
+      this.isUploading = false;
+      console.log(errorMessage);
+    });
+
   }
 
   onCancelCreateMode() {
-    if (!this.postFileForm.value.file) {
+    if (!this.createPostForm.value) {
       this.isCreateMode = false;
     } else {
       this.openDialog();
       this.dialogActionSubscription = this.action$.subscribe(action => {
         if (action === 'confirm') {
-          this.postFileForm.reset();
-          this.postLocationForm.reset();
-          this.postDescriptionForm.reset();
-          this.postVisibilityForm.reset();
+          this.createPostForm.reset();
           this.isCreateMode = false;
         }
         this.dialogActionSubscription.unsubscribe();

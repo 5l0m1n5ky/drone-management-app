@@ -5,7 +5,7 @@
 @import "tailwindcss/base" layer(tailwindcss);
 @import "tailwindcss/components" layer(tailwindcss);
 @import "tailwindcss/utilities" layer(tailwindcss);
-@import "primeng/resources/themes/viva-dark/theme.css";
+@import "primeng/resources/themes/lara-dark-blue/theme.css";
 @import "primeng/resources/primeng.css";
 
 /* @layer tailwind-base, primeng, tailwind-utilities;
@@ -101,3 +101,23 @@ body {
   animation: slow-zoom 20s forwards;
 }
 
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 3px solid #FFF;
+  border-right: 3px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

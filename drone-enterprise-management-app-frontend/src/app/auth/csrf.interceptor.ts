@@ -19,7 +19,6 @@ export class CsrfInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (req.method === 'POST') {
-      // Fetch CSRF token before handling the request
       return from(this.csrfService.fetchCsrfToken()).pipe(
         switchMap(() => {
           const csrfToken = this.csrfService.getCsrfToken();

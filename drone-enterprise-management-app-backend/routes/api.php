@@ -56,6 +56,16 @@ Route::get('/email', [
 
 Route::get('/posts', [PostController::class, 'index']);
 
+Route::post('/posts/create', [PostController::class, 'store']);
+
+
+
+
+
+
+
+
+
 
 
 

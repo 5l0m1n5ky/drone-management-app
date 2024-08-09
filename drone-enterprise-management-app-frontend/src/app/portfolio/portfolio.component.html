@@ -1,20 +1,26 @@
 <main [ngClass]="onShow || isCreateMode ? 'w-screen h-screen overflow-hidden' : 'w-screen h-screen overflow-x-hidden'">
+  <p-toast />
   <app-navbar></app-navbar>
-  <section class="relative h-screen w-full bg-neutral-950 overflow-y-hidden select-none">
-
+  <section class="relative h-auto w-full bg-neutral-950 overflow-y-hidden select-none">
     <!-- create overlay -->
     <div *ngIf="isCreateMode"
-      class="absolute flex flex-col justify-center items-center z-50 top-0 left-0 h-screen w-screen overflow-hidden">
+      class="absolute flex flex-col justify-center items-center z-40 top-0 left-0 h-screen w-screen overflow-hidden">
       <div
         class="relative w-[80%] h-[80%] bg-neutral-900/95 ring-1 ring-neutral-800 rounded-2xl flex flex-col justify-between items-center">
+        <div *ngIf="isUploading"
+          class="absolute flex flex-col gap-5 justify-center items-center left-0 top-0 rounded-2xl z-50 w-full h-full bg-black/70">
+          <span class="loader"></span>
+          <p class="text-sm text-neutral-600 font-montserrat font-normal">Publikowanie posta...</p>
+        </div>
         <img src="./assets/icons/cancel-icon.png" alt="cancel-icon" (click)="onCancelCreateMode()"
           class="absolute right-4 top-4 w-5 h-5 brightness-75 hover:brightness-100 transition-all ease-in-out duration-100 cursor-pointer">
         <div class="w-full h-auto mt-10 px-10">
-          <mat-horizontal-stepper
-            style="background-color: transparent; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-            <mat-step [stepControl]="postFileForm" label="PLIK">
-              <form [formGroup]="postFileForm">
-                <div class="font-montserrat flex flex-col justify-start items-start">
+          <form id="form" [formGroup]="createPostForm" (ngSubmit)="onPostCreate()">
+            <mat-horizontal-stepper #stepper
+              style="background-color: transparent; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+              <mat-step>
+                <ng-template matStepLabel>PLIK</ng-template>
+                <div class="font-montserrat flex flex-col justify-start items-start" formGroupName="postFileForm">
                   <p class="text-3xl font-normal text-neutral-600">Wybierz plik foto/video</p>
                   <div (click)="inputFile.click()"
                     class="flex flex-col justify-center items-center h-[300px] mt-2 w-full border-dashed border-2 rounded-xl border-neutral-600 cursor-pointer">
@@ -26,28 +32,27 @@
                   </div>
                   <div
                     class="flex flex-row justify-between items-center w-full h-[75px] mt-5 text-neutral-600 font-montserrat text-base font-normal">
-                    <img [src]="fileSrc" class="h-full w-auto">
+                    <img [src]="createPostForm.get('postFileForm.file') ? fileSrc : ''" class="h-full w-auto">
                     <p>
-                      {{ fileName }}
+                      {{ createPostForm.get('postFileForm.file') ? fileName : '' }}
                     </p>
                     <p>
-                      {{ fileSize }}
+                      {{ createPostForm.get('postFileForm.file') ? fileSize : '' }}
                     </p>
                   </div>
                   <div class="w-full flex justify-end mt-5">
-                    <button matStepperNext>
+                    <button matStepperNext type="button">
                       <p
-                        [ngClass]="!postFileForm.valid ? 'text-neutral-900 font-semibold text-sm bg-neutral-800 px-7 py-1 rounded-md cursor-not-allowed' : 'text-neutral-900 font-semibold text-sm bg-neutral-600 px-7 py-1 rounded-md hover:bg-neutral-500 ease-in-out transition-all duration-150'">
+                        [ngClass]="!createPostForm.get('postFileForm.file')?.valid ? 'text-neutral-900 font-semibold text-sm bg-neutral-800 px-7 py-1 rounded-md cursor-not-allowed' : 'text-neutral-900 font-semibold text-sm bg-neutral-600 px-7 py-1 rounded-md hover:bg-neutral-500 ease-in-out transition-all duration-150'">
                         DALEJ
                       </p>
                     </button>
                   </div>
                 </div>
-              </form>
-            </mat-step>
-            <mat-step [stepControl]="postLocationForm" label="LOKALIZACJA">
-              <form [formGroup]="postLocationForm">
-                <div class="font-montserrat flex flex-col justify-start items-start">
+              </mat-step>
+              <mat-step>
+                <ng-template matStepLabel>LOKALIZACJA</ng-template>
+                <div class="font-montserrat flex flex-col justify-start items-start" formGroupName="postLocationForm">
                   <p class="text-3xl font-normal text-neutral-600">Dodaj lokalizację</p>
                   <div class="h-[300px] mt-5 w-full">
                     <div class="flex flex-row items-center justify-start">
@@ -57,50 +62,24 @@
                     </div>
                   </div>
                   <div class="w-full flex justify-end gap-2">
-                    <button matStepperPrevious>
+                    <button matStepperPrevious type="button">
                       <p
                         class="text-neutral-600 font-semibold ring-2 text-sm ring-neutral-600 px-4 py-1 rounded-md hover:text-neutral-500 hover:ring-neutral-500 ease-in-out transition-all duration-150">
                         POWRÓT
                       </p>
                     </button>
-                    <button matStepperNext>
+                    <button matStepperNext type="button">
                       <p
-                        [ngClass]="!postLocationForm.valid ? 'text-neutral-900 font-semibold text-sm bg-neutral-800 px-7 py-1 rounded-md cursor-not-allowed' : 'text-neutral-900 font-semibold text-sm bg-neutral-600 px-7 py-1 rounded-md hover:bg-neutral-500 ease-in-out transition-all duration-150'">
+                        [ngClass]="!createPostForm.get('postLocationForm.location')?.valid ? 'text-neutral-900 font-semibold text-sm bg-neutral-800 px-7 py-1 rounded-md cursor-not-allowed' : 'text-neutral-900 font-semibold text-sm bg-neutral-600 px-7 py-1 rounded-md hover:bg-neutral-500 ease-in-out transition-all duration-150'">
                         DALEJ
                       </p>
                     </button>
                   </div>
                 </div>
-              </form>
-            </mat-step>
-            <mat-step [stepControl]="postDescriptionForm" label="OPIS">
-              <form [formGroup]="postDescriptionForm">
-                <div class="font-montserrat flex flex-col justify-start items-start">
-                  <p class="text-3xl font-normal text-neutral-600">Dodaj opis</p>
-                  <div class="h-[300px] w-full mt-5">
-                    <textarea autocapitalize="true" spellcheck="false" id="description" formControlName="description"
-                      class="w-full h-[90%] ring-1 ring-neutral-600 bg-black/15 rounded-md text-neutral-500 text-base outline-none resize-none p-2"></textarea>
-                  </div>
-                  <div class="w-full flex justify-end gap-2">
-                    <button matStepperPrevious>
-                      <p
-                        class="text-neutral-600 font-semibold ring-2 text-sm ring-neutral-600 px-4 py-1 rounded-md hover:text-neutral-500 hover:ring-neutral-500 ease-in-out transition-all duration-150">
-                        POWRÓT
-                      </p>
-                    </button>
-                    <button matStepperNext>
-                      <p
-                        [ngClass]="!postDescriptionForm.valid ? 'text-neutral-900 font-semibold text-sm bg-neutral-800 px-7 py-1 rounded-md cursor-not-allowed' : 'text-neutral-900 font-semibold text-sm bg-neutral-600 px-7 py-1 rounded-md hover:bg-neutral-500 ease-in-out transition-all duration-150'">
-                        DALEJ
-                      </p>
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </mat-step>
-            <mat-step [stepControl]="postVisibilityForm" label="WIDOCZNOŚĆ">
-              <form [formGroup]="postVisibilityForm">
-                <div class="font-montserrat flex flex-col justify-start items-start">
+              </mat-step>
+              <mat-step>
+                <ng-template matStepLabel>WIDOCZNOŚĆ</ng-template>
+                <div class="font-montserrat flex flex-col justify-start items-start" formGroupName="postVisibilityForm">
                   <p class="text-3xl font-normal text-neutral-600">Widoczność posta</p>
                   <div class="h-[300px] mt-5">
                     <!-- <input type="checkbox" id="visibility" formControlName="visibility"> -->
@@ -112,13 +91,39 @@
                     </p>
                   </div>
                   <div class="w-full flex justify-end gap-2">
-                    <button matStepperPrevious>
+                    <button matStepperPrevious type="button">
+                      <p
+                        class="text-neutral-600 font-semibold ring-2 text-sm ring-neutral-600 px-4 py-1 rounded-md hover:text-neutral-500 hover:ring-neutral-500 ease-in-out transition-all duration-150">
+                        POWRÓT
+                      </p>
+                    </button>
+                    <button matStepperNext type="button">
+                      <p
+                        [ngClass]="!createPostForm.get('postVisibilityForm.visibility')?.valid ? 'text-neutral-900 font-semibold text-sm bg-neutral-800 px-7 py-1 rounded-md cursor-not-allowed' : 'text-neutral-900 font-semibold text-sm bg-neutral-600 px-7 py-1 rounded-md hover:bg-neutral-500 ease-in-out transition-all duration-150'">
+                        DALEJ
+                      </p>
+                    </button>
+                  </div>
+                </div>
+              </mat-step>
+              <mat-step>
+                <ng-template matStepLabel>OPIS</ng-template>
+                <div class="font-montserrat flex flex-col justify-start items-start"
+                  formGroupName="postDescriptionForm">
+                  <p class="text-3xl font-normal text-neutral-600">Dodaj opis</p>
+                  <div class="h-[300px] w-full mt-5">
+                    <textarea autocapitalize="true" spellcheck="false" id="description" formControlName="description"
+                      class="w-full h-[90%] ring-1 ring-neutral-600 bg-black/15 rounded-md text-neutral-500 text-base outline-none resize-none p-2"></textarea>
+                  </div>
+                  <div class="w-full flex justify-end gap-2">
+                    <button matStepperPrevious type="button">
                       <p
                         class="text-neutral-900 font-semibold text-sm bg-neutral-600 px-7 py-1 rounded-md hover:bg-neutral-500 ease-in-out transition-all duration-150">
                         POWRÓT
                       </p>
                     </button>
-                    <button (click)="onPostCreate()">
+                    <button type="submit">
+                      <!-- <button type="submit" (click)="onPostCreate()"> -->
                       <p
                         class="text-neutral-600 font-semibold ring-2 text-sm ring-neutral-600 px-4 py-1 rounded-md hover:text-neutral-500 hover:ring-neutral-500 ease-in-out transition-all duration-150">
                         PUBLIKUJ
@@ -126,9 +131,9 @@
                     </button>
                   </div>
                 </div>
-              </form>
-            </mat-step>
-          </mat-horizontal-stepper>
+              </mat-step>
+            </mat-horizontal-stepper>
+          </form>
         </div>
       </div>
     </div>
@@ -215,7 +220,9 @@
     </div>
   </section>
   <app-footer></app-footer>
+
 </main>
+
 
 
 

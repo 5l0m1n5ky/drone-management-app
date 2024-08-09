@@ -15,12 +15,10 @@ class Post extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'hidden',
+        'visibility',
         'location',
         'path',
         'description',
-        'reactions',
-        'hidden_reactions',
     ];
 
 }

@@ -17,14 +17,12 @@ class GalleryFactory extends Factory
     public function definition(): array
     {
         return [
-            'hidden' => false,
+            'visibility' => true,
             'location' => 'Zalew Koronowski',
             'path' => '',
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
             dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
             ex',
-            'reactions' => 154,
-            'hidden_reactions' => false,
         ];
     }
 }
