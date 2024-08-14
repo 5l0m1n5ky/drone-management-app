@@ -1,9 +1,10 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { LoginService } from "../login/login.service";
 import { User } from "../user/user.model";
 import { Router } from "@angular/router";
 import { catchError, tap, throwError } from "rxjs";
+import { CookieService } from "ngx-cookie-service";
 
 interface LogoutResponse {
   data: string,
@@ -15,24 +16,30 @@ interface LogoutResponse {
 
 export class LogoutService {
 
-  constructor(private http: HttpClient, private loginService: LoginService, private router: Router) { }
+  constructor(private http: HttpClient, private loginService: LoginService, private router: Router, private cookieService: CookieService) { }
 
   logoutHandle() {
-    this.http.post<LogoutResponse>('http://localhost:8000/logout', {
-    }, {
+    return this.http.post<LogoutResponse>('http://localhost:8000/logout', null, {
       headers: new HttpHeaders({
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       }),
       withCredentials: true
-    }).subscribe(response => {
-      console.log(response);
-    })
+    }).pipe(catchError(this.handleError),
+      tap(response => {
+        this.loginService.user.next({} as User);
+        this.cookieService.deleteAll();
+        if (response) {
+          return response
+        }
+        return 'Wylogowano pomyślnie'
+      }
+      ));
   }
 
-  logout() {
-    this.loginService.user.next({} as User);
-    this.logoutHandle();
+  private handleError() {
+    let errorMessage = 'Wystapił błąd. Spróbuj ponownie';
+    return throwError(errorMessage);
   }
 
 }

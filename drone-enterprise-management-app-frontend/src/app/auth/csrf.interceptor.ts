@@ -18,7 +18,7 @@ export class CsrfInterceptor implements HttpInterceptor {
   constructor(private csrfService: CsrfService, private cookieService: CookieService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (req.method === 'POST') {
+    if (req.method !== 'GET') {
       return from(this.csrfService.fetchCsrfToken()).pipe(
         switchMap(() => {
           const csrfToken = this.csrfService.getCsrfToken();

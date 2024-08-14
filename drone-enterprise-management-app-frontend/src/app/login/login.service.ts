@@ -5,7 +5,6 @@ import { User } from "../user/user.model";
 import { CookieService } from "ngx-cookie-service";
 import { ToastModule } from 'primeng/toast';
 
-
 interface LoginUserData {
   id: string,
   email: string,
@@ -32,7 +31,7 @@ export class LoginService {
   getUserData(): Observable<User> {
     return this.user.asObservable();
   }
-  constructor(private http: HttpClient, private cookieService: CookieService) { }
+  constructor(private http: HttpClient) { }
 
   login(email: string, password: string) {
     return this.http.post<LoginResponseData>('http://localhost:8000/login', {

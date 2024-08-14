@@ -1,10 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { LoginService } from './login.service';
 import { CookieService } from 'ngx-cookie-service';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { Subscription } from 'rxjs';
+import { ToastService } from '../shared/toast/toast.service';
+
 
 @Component({
   standalone: true,
@@ -14,11 +19,27 @@ import { Router } from '@angular/router';
     LoadingSpinnerComponent,
     FormsModule,
     CommonModule,
-  ]
+    ToastModule
+  ],
+  providers: [ToastService]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
-  constructor(private loginService: LoginService, private cookieService: CookieService, private router: Router) { }
+  queryParams: any = {};
+
+  constructor(private loginService: LoginService, private cookieService: CookieService, private router: Router, private activatedRoute: ActivatedRoute, private toastService: ToastService) { }
+
+  queryParamsSubscriber: Subscription;
+
+  ngOnInit(): void {
+    this.queryParamsSubscriber = this.activatedRoute.queryParams.subscribe(params => {
+      this.queryParams = params;
+
+      if (this.queryParams['action'] && this.queryParams['action'] === 'logout') {
+        this.toastService.generateToast('success', 'Wylogowywanie', 'Wylogowano pomyślnie');
+      }
+    });
+  }
 
   loginForm: any;
   PasswordVisible: boolean = false;
@@ -43,7 +64,7 @@ export class LoginComponent {
     this.loginService.login(email, password).subscribe(
       responseData => {
         this.isLoading = false;
-        this.router.navigate(['/']);
+        this.router.navigate(['/'], { queryParams: { result: 'success' } });
       },
       errorMessage => {
         this.isLoginError = true;

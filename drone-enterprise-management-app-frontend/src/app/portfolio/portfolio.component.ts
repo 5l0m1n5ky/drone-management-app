@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -19,7 +19,6 @@ import { CancelDialogComponent } from '../shared/cancel-dialog/cancel-dialog.com
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ToastService } from '../shared/toast/toast.service';
-
 
 @Component({
   standalone: true,
@@ -60,6 +59,7 @@ export class PortfolioComponent implements OnInit {
   isCreateMode: boolean = false;
 
   createPostForm: FormGroup
+  editPostForm: FormGroup
 
   isUploading: boolean = false;
 
@@ -76,7 +76,7 @@ export class PortfolioComponent implements OnInit {
   private actionSubject = new Subject<any>();
   action$: Observable<any> = this.actionSubject.asObservable();
 
-  file: File;
+  file: File | null;
 
   constructor(private portfolioService: PortfolioService, private router: Router, private dialog: MatDialog, private toastService: ToastService) { }
 
@@ -153,14 +153,80 @@ export class PortfolioComponent implements OnInit {
       this.checkSwipeRight();
       this.checkSwipeLeft();
     } else {
-
       const loadedPostPayload = this.loadedPosts;
-
       this.router.navigate(['portfolio/mobile', id], { queryParams: { loadedPostPayload: JSON.stringify(loadedPostPayload) } });
     }
   }
 
+  onEditMode() {
+    this.isEditMode = true;
+
+    this.editPostForm = new FormGroup({
+      postFileForm: new FormGroup({
+        file: new FormControl(null)
+      }),
+      postLocationForm: new FormGroup({
+        location: new FormControl(this.currentPost.location, Validators.required)
+      }),
+      postDescriptionForm: new FormGroup({
+        description: new FormControl(this.currentPost.description, Validators.required)
+      }),
+      postVisibilityForm: new FormGroup({
+        visibility: new FormControl(this.currentPost.visibility)
+      }),
+    });
+  }
+
   onEdit() {
+    this.isUploading = true;
+    console.log(this.editPostForm);
+    this.portfolioService.updatePost(
+      this.currentPost.id,
+      this.file,
+      this.editPostForm.get('postLocationForm.location')?.value,
+      this.editPostForm.get('postDescriptionForm.description')?.value,
+      this.editPostForm.get('postVisibilityForm.visibility')?.value,
+    ).subscribe(responseData => {
+      this.isUploading = false;
+      this.toastService.generateToast('success', 'Edycja Posta', responseData.message.toString());
+      this.editPostForm.reset();
+      this.isEditMode = false;
+      this.onShow = false;
+
+      this.portfolioService.fetchPosts().subscribe(posts => {
+        this.loadedPosts = posts;
+        this.isLoading = false;
+      });
+    }, errorMessage => {
+      this.toastService.generateToast('error', 'Edycja Posta', errorMessage.toString());
+      this.isUploading = false;
+    });
+  }
+
+  onDelete() {
+    this.openDialog(30, 30, 'Usunąć post?', 'Post zostanie trwale usunięty z portfolio', 'WRÓĆ', 'USUŃ');
+    this.dialogActionSubscription = this.action$.subscribe(action => {
+      if (action === 'confirm') {
+
+        this.isUploading = true;
+
+        this.portfolioService.deletePost(this.currentPost.id).subscribe(responseData => {
+          this.isUploading = false;
+          this.onShow = false;
+          this.toastService.generateToast('success', 'Usuwanie Posta', responseData.data.toString());
+
+          this.portfolioService.fetchPosts().subscribe(posts => {
+            this.loadedPosts = posts;
+            this.isLoading = false;
+          });
+        }, errorMessage => {
+          this.toastService.generateToast('error', 'Usuwanie Posta', errorMessage);
+          this.onShow = false;
+          this.isUploading = false;
+        });
+      }
+      this.dialogActionSubscription.unsubscribe();
+    });
 
   }
 
@@ -170,37 +236,41 @@ export class PortfolioComponent implements OnInit {
 
   onPostCreate() {
 
-    if (this.createPostForm.valid) {
-      console.log(this.createPostForm.value);
-    }
-
     this.isUploading = true;
     this.portfolioService.uploadPost(
 
-      // this.createPostForm.get('postFileForm.file')?.value,
       this.file,
       this.createPostForm.get('postLocationForm.location')?.value,
       this.createPostForm.get('postDescriptionForm.description')?.value,
       this.createPostForm.get('postVisibilityForm.visibility')?.value,
-      // this.createPostForm
     ).subscribe(responseData => {
       this.isUploading = false;
-      this.toastService.generateToast('success', 'Publikacja Posta', responseData.toString());
+      this.toastService.generateToast('success', 'Publikacja Posta', responseData.message.toString());
       console.log(responseData);
+      this.file = {} as File;
       this.createPostForm.reset();
+
+      this.portfolioService.fetchPosts().subscribe(posts => {
+        this.loadedPosts = posts;
+        this.isLoading = false;
+        this.isCreateMode = false
+      });
+
     }, errorMessage => {
-      this.toastService.generateToast('error', 'Publikacja Posta', errorMessage);
+      this.toastService.generateToast('error', 'Publikacja Posta', errorMessage.data);
       this.isUploading = false;
-      console.log(errorMessage);
+      this.isCreateMode = false
+
     });
 
   }
 
   onCancelCreateMode() {
-    if (!this.createPostForm.value) {
+
+    if (!this.createPostForm.touched) {
       this.isCreateMode = false;
     } else {
-      this.openDialog();
+      this.openDialog(30, 30, 'Anulować?', 'Wszystkie zmiany zostaną utracone', 'WRÓĆ', 'ANULUJ');
       this.dialogActionSubscription = this.action$.subscribe(action => {
         if (action === 'confirm') {
           this.createPostForm.reset();
@@ -208,6 +278,32 @@ export class PortfolioComponent implements OnInit {
         }
         this.dialogActionSubscription.unsubscribe();
       });
+
+      this.fileName = '';
+      this.fileSize = '';
+      this.fileSrc = undefined;
+    }
+  }
+
+  onCancelEditMode() {
+
+    if (!this.editPostForm.touched) {
+      this.isEditMode = false;
+      console.log('didnt touched');
+    } else {
+      console.log('touched');
+      this.openDialog(30, 30, 'Anulować?', 'Wszystkie zmiany zostaną utracone', 'WRÓĆ', 'ANULUJ');
+      this.dialogActionSubscription = this.action$.subscribe(action => {
+        if (action === 'confirm') {
+          this.editPostForm.reset();
+          this.isEditMode = false;
+        }
+        this.dialogActionSubscription.unsubscribe();
+      });
+
+      this.fileName = '';
+      this.fileSize = '';
+      this.fileSrc = undefined;
     }
   }
 
@@ -258,17 +354,17 @@ export class PortfolioComponent implements OnInit {
     this.visibilityToggled = !this.visibilityToggled;
   }
 
-  openDialog() {
+  openDialog(widthInPercent: number, heightInPercent: number, title: string, content: string, cancellation: string, confirmation: string) {
     let dialogReference = this.dialog.open(
       CancelDialogComponent,
       {
-        width: '30%',
-        height: '30%',
+        width: widthInPercent.toString() + '%',
+        height: heightInPercent.toString() + '%',
         data: {
-          title: 'Anulować?',
-          content: 'Wszystkie zmiany zostaną utracone',
-          cancellation: 'WRÓĆ',
-          confirmation: 'ANULUJ'
+          title: title,
+          content: content,
+          cancellation: cancellation,
+          confirmation: confirmation
         }
       }
     );

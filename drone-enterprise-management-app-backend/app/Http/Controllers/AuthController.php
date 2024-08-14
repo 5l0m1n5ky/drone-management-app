@@ -188,9 +188,11 @@ class AuthController extends Controller
 
         $request->session()->invalidate();
 
-        return $this->success([
-            'SUCCESSFUL_LOGOUT'
-        ]);
+        return $this->success(
+            'Wylogowano pomyślnie',
+            'SUCCESSFUL_LOGOUT',
+            200
+        );
     }
 
 }

@@ -15,8 +15,9 @@ interface PostData {
   post_id: number
 }
 
-interface PostErrorResponse {
-  errors: string[],
+
+interface PostManagementResponse {
+  data: string,
   message: string
 }
 
@@ -38,54 +39,80 @@ export class PortfolioService {
     );
   }
 
-  // uploadPost(postBody: any) {
-  uploadPost(file: File, location: string, description: string, visibility: string) {
+  uploadPost(file: File | null, location: string, description: string, visibility: string) {
     const formData: FormData = new FormData();
-    formData.append('file', file, file.name);
+    if (file) {
+      formData.append('file', file, file.name);
+    }
     formData.append('description', description);
     formData.append('location', location);
     formData.append('visibility', visibility);
-    // var body = { content: formData };
 
     return this.http.post<PostHandleResponseData>('http://localhost:8000/posts/create',
-      // file: file,
-      // location: location,
-      // description: description,
-      // visibility: visibility
       formData,
       {
-        // headers: new HttpHeaders({
-        //   // 'Content-Type': 'multi-part/form-data',
-        //   'Accept': 'application/json',
-        //   // 'enctype': 'multipart/form-data',
-        // }),
         withCredentials: true,
         reportProgress: true
       }
     ).pipe(catchError(this.handleError),
       tap(response => {
-        if (response.message === 'PUBLISHED') {
-          this.router.navigate(['/portfolio']);
-          // this.toast.generateToast('success', 'Publikacja Posta', 'Post został opublikowany');
-        } else {
-          // this.toast.generateToast('warn', 'Publikacja Posta', 'Wystąpił problem z publikacją posta');
-        }
+        // this.router.navigate(['/portfolio']);
+        return response.message;
       }
       ));
   }
 
-  private handleError(errorResponse: PostErrorResponse) {
-    let errorMessage = 'Wystapił błąd w publikacji posta';
+  private handleError(errorResponse: HttpErrorResponse) {
 
-    // this.toast.generateToast('error', 'Publikacja Posta', 'Wystąpił problem z publikacją posta');
-
-    // if (!errorResponse || !errorResponse.errors) {
-    //   return throwError(errorMessage);
-    // }
-
-    errorMessage = errorResponse.message;
+    let errorMessage = 'Wystapił błąd';
+    if (errorResponse.error.data) {
+      errorMessage = errorResponse.error.data;
+    } else {
+      errorMessage = errorResponse.error.message;
+    }
 
     return throwError(errorMessage);
+  }
+
+
+  updatePost(id: number, file: File | null, location: string, description: string, visibility: string) {
+    const endpointUrl = 'http://localhost:8000/posts/update/' + id.toString()
+    const formData: FormData = new FormData();
+
+    if (file) {
+      formData.append('file', file, file.name);
+    }
+    formData.append('description', description);
+    formData.append('location', location);
+    formData.append('visibility', visibility);
+
+    //POST method works with usage of Angular FormData body unlike to PUT or PATCH
+    return this.http.post<PostHandleResponseData>(endpointUrl,
+      formData,
+      {
+        withCredentials: true,
+        reportProgress: true
+      }
+    ).pipe(catchError(this.handleError),
+      tap(response => {
+        return response.message;
+      }
+      ));
+  }
+
+  deletePost(id: number) {
+    const endpointUrl = 'http://localhost:8000/posts/delete/' + id.toString();
+    return this.http.delete<PostManagementResponse>(endpointUrl,
+      {
+        withCredentials: true,
+        reportProgress: true
+      }
+    ).pipe(catchError(this.handleError),
+      tap(response => {
+        // this.router.navigate(['/portfolio']);
+        return response.message;
+      }
+      ));
   }
 
 }

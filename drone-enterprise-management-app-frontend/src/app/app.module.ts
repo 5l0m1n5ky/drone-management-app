@@ -31,6 +31,9 @@ import { WindmillServiceComponent } from './services/windmill-service/windmill-s
 import { PhotogrammetryServiceComponent } from './services/photogrammetry-service/photogrammetry-service.component';
 import { PreviewMobileComponent } from './portfolio/preview-mobile/preview-mobile.component';
 import { CancelDialogComponent } from './shared/cancel-dialog/cancel-dialog.component';
+import { ToastService } from './shared/toast/toast.service';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 
 
@@ -68,13 +71,16 @@ import { CancelDialogComponent } from './shared/cancel-dialog/cancel-dialog.comp
     LoadingSpinnerComponent,
     PreviewMobileComponent,
     CancelDialogComponent,
+    ToastModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
     useClass: CsrfInterceptor,
     multi: true
   },
-    CookieService
+    CookieService,
+    ToastService,
+    MessageService
   ],
   exports: [
     // MatDialogModule,

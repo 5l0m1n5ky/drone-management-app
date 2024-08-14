@@ -3,7 +3,9 @@ import { MessageService } from 'primeng/api';
 
 type severityTypes = 'success' | 'info' | 'warn' | 'error' | 'secondary' | 'contrast'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class ToastService {
 
   constructor(private messageService: MessageService) { }

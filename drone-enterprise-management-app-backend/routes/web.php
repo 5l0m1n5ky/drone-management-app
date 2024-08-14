@@ -22,9 +22,9 @@ use App\Models\Invoice;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('welcome');
+});
 
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -39,7 +39,8 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/posts/create', [PostController::class, 'store'])->middleware('restrictRole:admin');
 
-Route::put('/posts/modify/{post_id}', [PostController::class, 'update'])->middleware('restrictRole:admin');
+//POST method works with usage of Angular FormData body unlike to PUT or PATCH
+Route::post('/posts/update/{post_id}', [PostController::class, 'update'])->middleware('restrictRole:admin');
 
 Route::delete('/posts/delete/{post_id}', [PostController::class, 'delete'])->middleware('restrictRole:admin');
 

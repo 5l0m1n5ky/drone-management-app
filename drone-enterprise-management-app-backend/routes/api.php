@@ -58,6 +58,12 @@ Route::get('/posts', [PostController::class, 'index']);
 
 Route::post('/posts/create', [PostController::class, 'store']);
 
+Route::delete('/posts/delete/{post_id}', [PostController::class, 'delete']);
+
+Route::put('/posts/update/{post_id}', [PostController::class, 'update']);
+
+
+
 
 
 
