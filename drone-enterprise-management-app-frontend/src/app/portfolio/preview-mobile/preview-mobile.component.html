@@ -29,7 +29,12 @@
           class="w-10 h-10 mr-2 cursor-pointer hover:brightness-150 transition-all ease-in-out duration-75">
       </div>
       <div class="w-full h-auto bg-black flex flex-col items-center">
-        <img src="{{ post.path }}" alt="gallery-item" class="max-h-[80vh] w-auto object-contain">
+        <!-- <img src="{{ post.path }}" alt="gallery-item" class="max-h-[80vh] w-auto object-contain"> -->
+        <img *ngIf="isImage(post.path)" src="{{post.path}}" alt="gallery-item"
+          class="max-h-[80vh] w-auto object-contain">
+        <video onscrollAutoplay controls loop *ngIf="!isImage(post.path)" src="{{post.path}}" poster="{{post.cover}}"
+          alt="gallery-item" class="max-h-[80vh] w-auto object-contain">
+        </video>
       </div>
       <p class="mx-5 my-5 text-neutral-600 text-sm font-montserrat text-justify text-pretty">
         {{ post.description }}

@@ -21,6 +21,11 @@ interface LoginResponseData {
   message: string,
 }
 
+interface checkSessionResponseData {
+  data: string
+  message: string,
+}
+
 @Injectable({ providedIn: 'root' })
 
 export class LoginService {
@@ -49,6 +54,22 @@ export class LoginService {
       ));
   }
 
+  checkSession() {
+    return this.http.post<checkSessionResponseData>('http://localhost:8000/user/check', null,
+      {
+        headers: new HttpHeaders({
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }),
+        withCredentials: true
+      }
+    ).pipe(catchError(this.handleError),
+      tap(response => {
+        return response;
+      }
+      ));
+  }
+
   private handleError(errorResponse: HttpErrorResponse) {
     let errorMessage = 'Wystapił błąd. Spróbuj ponownie';
     if (!errorResponse || !errorResponse.error) {
@@ -65,5 +86,6 @@ export class LoginService {
     const user = new User(id, email, privileges);
     this.user.next(user);
   }
+
 
 }

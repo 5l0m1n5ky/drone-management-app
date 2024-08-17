@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->boolean('visibility')->default(true);
             $table->string('location');
             $table->string('path');
+            $table->string('cover')->nullable();
             $table->longText('description');
             $table->timestampsTz();
         });

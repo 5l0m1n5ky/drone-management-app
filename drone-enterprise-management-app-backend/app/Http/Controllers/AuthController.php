@@ -195,4 +195,12 @@ class AuthController extends Controller
         );
     }
 
+    public function check(Request $request)
+    {
+        return $this->success(
+            'Your session is active',
+            'ACTIVE_SESSION',
+            200
+        );
+    }
 }

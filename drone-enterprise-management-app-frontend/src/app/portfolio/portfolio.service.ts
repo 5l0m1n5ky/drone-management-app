@@ -15,7 +15,6 @@ interface PostData {
   post_id: number
 }
 
-
 interface PostManagementResponse {
   data: string,
   message: string
@@ -39,10 +38,13 @@ export class PortfolioService {
     );
   }
 
-  uploadPost(file: File | null, location: string, description: string, visibility: string) {
+  uploadPost(file: File | null, cover: File | null, location: string, description: string, visibility: string) {
     const formData: FormData = new FormData();
     if (file) {
       formData.append('file', file, file.name);
+    }
+    if (cover) {
+      formData.append('cover', cover, cover.name);
     }
     formData.append('description', description);
     formData.append('location', location);
@@ -75,12 +77,15 @@ export class PortfolioService {
   }
 
 
-  updatePost(id: number, file: File | null, location: string, description: string, visibility: string) {
+  updatePost(id: number, file: File | null, cover: File | null, location: string, description: string, visibility: string) {
     const endpointUrl = 'http://localhost:8000/posts/update/' + id.toString()
     const formData: FormData = new FormData();
 
     if (file) {
       formData.append('file', file, file.name);
+    }
+    if (cover) {
+      formData.append('file', cover, cover.name);
     }
     formData.append('description', description);
     formData.append('location', location);
@@ -109,10 +114,8 @@ export class PortfolioService {
       }
     ).pipe(catchError(this.handleError),
       tap(response => {
-        // this.router.navigate(['/portfolio']);
         return response.message;
       }
       ));
   }
-
 }

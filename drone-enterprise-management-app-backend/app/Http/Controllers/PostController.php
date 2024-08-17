@@ -28,16 +28,22 @@ class PostController extends Controller
 
     public function store(ValidatePostRequest $request)
     {
-        error_log($request);
-
         $request->validated($request->all());
 
         $file = $request->file('file');
         $urToStore = 'public/posts';
         $path = Str::replace('public/', '', env('APP_ADDRESS') . '/storage' . '/' . Storage::putFile($urToStore, $file));
+        $cover = null;
+
+        if ($request->hasFile('cover')) {
+            $coverFile = $request->file('cover');
+            $urToStoreCover = 'public/posts/covers';
+            $cover = Str::replace('public/', '', env('APP_ADDRESS') . '/storage' . '/' . Storage::putFile($urToStoreCover, $coverFile));
+        }
 
         $post = Post::create([
             'path' => $path,
+            'cover' => $cover,
             'location' => $request->location,
             'description' => $request->description,
             'visibility' => $request->visibility,
@@ -59,7 +65,10 @@ class PostController extends Controller
         $request->validated($request->all());
 
         $post = Post::find($post_id);
-        $post_filepath = $post->file;
+        // $post_filepath = $post->file;
+        $path = $post->path;
+        $cover = $post->cover;
+
 
         if ($request->hasFile('file')) {
 
@@ -72,22 +81,50 @@ class PostController extends Controller
 
             $file = $request->file('file');
             $urToStore = 'public/posts';
-            $path = Str::replace('public/', '', env('APP_ADDRESS') . '/storage' . '/' . Storage::putFile($urToStore, $file));
+            // $path = Str::replace('public/', '', env('APP_ADDRESS') . '/storage' . '/' . Storage::putFile($urToStore, $file));
+            $this->path = Str::replace('public/', '', env('APP_ADDRESS') . '/storage' . '/' . Storage::putFile($urToStore, $file));
 
-            $post->update([
-                'path' => $path,
-                'location' => $request->location,
-                'description' => $request->description,
-                'visibility' => $request->visibility,
-            ]);
+            // $post->update([
+            //     'path' => $path,
+            //     'location' => $request->location,
+            //     'description' => $request->description,
+            //     'visibility' => $request->visibility,
+            // ]);
 
-        } else {
-            $post->update([
-                'location' => $request->location,
-                'description' => $request->description,
-                'visibility' => $request->visibility,
-            ]);
         }
+        // else {
+        // $post->update([
+        //     'location' => $request->location,
+        //     'description' => $request->description,
+        //     'visibility' => $request->visibility,
+        // ]);
+        // }
+
+
+
+
+        if ($request->hasFile('cover')) {
+
+            $cover_filepath = $post->path;
+            $cover_filename = Str::replace('http://127.0.0.1:8000/storage', 'public', $cover_filepath);
+
+            if (Storage::exists($cover_filename)) {
+                Storage::delete($cover_filename);
+            }
+
+            $cover = $request->file('cover');
+            $urToStore = 'public/posts/cover';
+            $this->cover = Str::replace('public/', '', env('APP_ADDRESS') . '/storage' . '/' . Storage::putFile($urToStore, $file));
+        }
+
+
+        $post->update([
+            'path' => $path,
+            'cover' => $cover,
+            'location' => $request->location,
+            'description' => $request->description,
+            'visibility' => $request->visibility,
+        ]);
 
         return $this->success(
             'Post is succesuffly edited',
@@ -105,8 +142,15 @@ class PostController extends Controller
             $post_filepath = $post->path;
             $post_filename = Str::replace('http://127.0.0.1:8000/storage', 'public', $post_filepath);
 
+            $post_coverpath = $post->cover;
+            $post_covername = Str::replace('http://127.0.0.1:8000/storage', 'public', $post_coverpath);
+
             if (Storage::exists($post_filename)) {
                 Storage::delete($post_filename);
+            }
+
+            if (Storage::exists($post_covername)) {
+                Storage::delete($post_covername);
             }
 
             $post->delete();

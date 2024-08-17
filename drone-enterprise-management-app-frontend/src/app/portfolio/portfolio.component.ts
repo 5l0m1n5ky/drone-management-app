@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, Input, OnInit, QueryList, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -19,6 +19,7 @@ import { CancelDialogComponent } from '../shared/cancel-dialog/cancel-dialog.com
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ToastService } from '../shared/toast/toast.service';
+import { LoginService } from '../login/login.service';
 
 @Component({
   standalone: true,
@@ -42,6 +43,7 @@ import { ToastService } from '../shared/toast/toast.service';
     PortfolioService,
     MessageService,
     ToastService,
+    LoginService
   ]
 })
 
@@ -68,6 +70,11 @@ export class PortfolioComponent implements OnInit {
   fileSize: string;
   fileSrc: string | undefined;
 
+  @ViewChild('coverInput') coverInput: HTMLElement;
+  coverName: string = '';
+  coverSize: string;
+  coverSrc: string | undefined;
+
   visibilityToggled: boolean = false;
 
   dialogSubscription = new Subscription;
@@ -77,8 +84,9 @@ export class PortfolioComponent implements OnInit {
   action$: Observable<any> = this.actionSubject.asObservable();
 
   file: File | null;
+  cover: File | null;
 
-  constructor(private portfolioService: PortfolioService, private router: Router, private dialog: MatDialog, private toastService: ToastService) { }
+  constructor(private portfolioService: PortfolioService, private router: Router, private dialog: MatDialog, private toastService: ToastService, private loginService: LoginService) { }
 
   ngOnInit() {
     this.updateScreenSize();
@@ -89,8 +97,11 @@ export class PortfolioComponent implements OnInit {
     });
 
     this.createPostForm = new FormGroup({
-      postFileForm: new FormGroup({
-        file: new FormControl(null, Validators.required)
+      // postFileForm: new FormGroup({
+      //   file: new FormControl(null, Validators.required)
+      // }),
+      postCoverForm: new FormGroup({
+        cover: new FormControl(null)
       }),
       postLocationForm: new FormGroup({
         location: new FormControl(null, Validators.required)
@@ -119,6 +130,24 @@ export class PortfolioComponent implements OnInit {
         this.fileSrc = reader.result?.toString();
       };
       reader.readAsDataURL(this.file);
+    }
+  }
+
+  onCoverSelected(event: any) {
+    this.cover = event.target?.files[0];
+    if (this.cover) {
+      this.coverName = this.cover.name;
+      if ((this.cover.size / 1024) < 1000) {
+        this.coverSize = Number(this.cover.size / 1024).toFixed(2).toString() + ' KB';
+      } else {
+        this.coverSize = Number(this.cover.size / (1024 * 1024)).toFixed(2).toString() + ' MB';
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.coverSrc = reader.result?.toString();
+      };
+      reader.readAsDataURL(this.cover);
     }
   }
 
@@ -162,8 +191,11 @@ export class PortfolioComponent implements OnInit {
     this.isEditMode = true;
 
     this.editPostForm = new FormGroup({
-      postFileForm: new FormGroup({
-        file: new FormControl(null)
+      // postFileForm: new FormGroup({
+      //   file: new FormControl(null)
+      // }),
+      postCoverForm: new FormGroup({
+        cover: new FormControl(null)
       }),
       postLocationForm: new FormGroup({
         location: new FormControl(this.currentPost.location, Validators.required)
@@ -183,6 +215,7 @@ export class PortfolioComponent implements OnInit {
     this.portfolioService.updatePost(
       this.currentPost.id,
       this.file,
+      this.cover,
       this.editPostForm.get('postLocationForm.location')?.value,
       this.editPostForm.get('postDescriptionForm.description')?.value,
       this.editPostForm.get('postVisibilityForm.visibility')?.value,
@@ -190,6 +223,7 @@ export class PortfolioComponent implements OnInit {
       this.isUploading = false;
       this.toastService.generateToast('success', 'Edycja Posta', responseData.message.toString());
       this.editPostForm.reset();
+      this.file = {} as File;
       this.isEditMode = false;
       this.onShow = false;
 
@@ -200,6 +234,9 @@ export class PortfolioComponent implements OnInit {
     }, errorMessage => {
       this.toastService.generateToast('error', 'Edycja Posta', errorMessage.toString());
       this.isUploading = false;
+      this.isEditMode = false;
+      this.editPostForm.reset();
+      this.file = {} as File;
     });
   }
 
@@ -231,15 +268,25 @@ export class PortfolioComponent implements OnInit {
   }
 
   onCreate() {
-    this.isCreateMode = true;
+    this.isLoading = true;
+    this.loginService.checkSession().subscribe(responseData => {
+      console.log('session state: ', responseData);
+      if (responseData && responseData.message && responseData.message.toString() === 'ACTIVE_SESSION') {
+        this.isCreateMode = true;
+        this.isLoading = false;
+      }
+    }, errorMessage => {
+      this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
+      this.isLoading = false;
+    })
   }
 
   onPostCreate() {
 
     this.isUploading = true;
     this.portfolioService.uploadPost(
-
       this.file,
+      this.cover,
       this.createPostForm.get('postLocationForm.location')?.value,
       this.createPostForm.get('postDescriptionForm.description')?.value,
       this.createPostForm.get('postVisibilityForm.visibility')?.value,
@@ -247,7 +294,8 @@ export class PortfolioComponent implements OnInit {
       this.isUploading = false;
       this.toastService.generateToast('success', 'Publikacja Posta', responseData.message.toString());
       console.log(responseData);
-      this.file = {} as File;
+      this.file = null;
+      this.file = null;
       this.createPostForm.reset();
 
       this.portfolioService.fetchPosts().subscribe(posts => {
@@ -260,6 +308,8 @@ export class PortfolioComponent implements OnInit {
       this.toastService.generateToast('error', 'Publikacja Posta', errorMessage.data);
       this.isUploading = false;
       this.isCreateMode = false
+      this.file = null;
+      this.file = null;
 
     });
 
@@ -267,7 +317,7 @@ export class PortfolioComponent implements OnInit {
 
   onCancelCreateMode() {
 
-    if (!this.createPostForm.touched) {
+    if (!this.file) {
       this.isCreateMode = false;
     } else {
       this.openDialog(30, 30, 'Anulować?', 'Wszystkie zmiany zostaną utracone', 'WRÓĆ', 'ANULUJ');
@@ -277,11 +327,17 @@ export class PortfolioComponent implements OnInit {
           this.isCreateMode = false;
         }
         this.dialogActionSubscription.unsubscribe();
-      });
 
-      this.fileName = '';
-      this.fileSize = '';
-      this.fileSrc = undefined;
+        this.fileName = '';
+        this.fileSize = '';
+        this.fileSrc = undefined;
+        this.file = null;
+
+        this.coverName = '';
+        this.coverSize = '';
+        this.coverSrc = undefined;
+        this.cover = null;
+      });
     }
   }
 
@@ -304,6 +360,8 @@ export class PortfolioComponent implements OnInit {
       this.fileName = '';
       this.fileSize = '';
       this.fileSrc = undefined;
+      this.file = null;
+      this.file = null;
     }
   }
 
@@ -373,6 +431,19 @@ export class PortfolioComponent implements OnInit {
       this.dialogSubscription.unsubscribe();
       this.actionSubject.next(action);
     });
+  }
+
+  public getFileExtension(url: string): string | null {
+
+    const matches = url.match(/\.([a-zA-Z0-9]+)(?:[\?#]|$)/);
+    return matches ? matches[1].toLowerCase() : null;
+  }
+
+  public isImage(url: string): boolean {
+
+    const imageExtensions = ['jpg', 'jpeg', 'png'];
+    const extension = this.getFileExtension(url);
+    return extension ? imageExtensions.includes(extension) : false;
   }
 
 }

@@ -34,6 +34,7 @@ import { CancelDialogComponent } from './shared/cancel-dialog/cancel-dialog.comp
 import { ToastService } from './shared/toast/toast.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { OnscrollAutoplay } from './portfolio/onscroll-autoplay.directive';
 
 
 
@@ -72,6 +73,7 @@ import { ToastModule } from 'primeng/toast';
     PreviewMobileComponent,
     CancelDialogComponent,
     ToastModule,
+    OnscrollAutoplay
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

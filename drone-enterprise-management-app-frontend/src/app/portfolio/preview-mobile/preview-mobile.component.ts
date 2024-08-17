@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterEvent, RouterLink } from '@angular/router
 import { Location } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { OnscrollAutoplay } from '../onscroll-autoplay.directive';
 
 @Component({
   standalone: true,
@@ -11,8 +12,9 @@ import { Subscription } from 'rxjs';
   templateUrl: './preview-mobile.component.html',
   imports: [
     CommonModule,
-    RouterLink
-  ]
+    RouterLink,
+    OnscrollAutoplay
+  ],
 })
 export class PreviewMobileComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -52,5 +54,18 @@ export class PreviewMobileComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngOnDestroy(): void {
     this.postsSubsription.unsubscribe()
+  }
+
+  public getFileExtension(url: string): string | null {
+
+    const matches = url.match(/\.([a-zA-Z0-9]+)(?:[\?#]|$)/);
+    return matches ? matches[1].toLowerCase() : null;
+  }
+
+  public isImage(url: string): boolean {
+
+    const imageExtensions = ['jpg', 'jpeg', 'png'];
+    const extension = this.getFileExtension(url);
+    return extension ? imageExtensions.includes(extension) : false;
   }
 }

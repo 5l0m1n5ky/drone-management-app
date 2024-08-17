@@ -38,6 +38,10 @@ export class LoginComponent implements OnInit {
       if (this.queryParams['action'] && this.queryParams['action'] === 'logout') {
         this.toastService.generateToast('success', 'Wylogowywanie', 'Wylogowano pomyślnie');
       }
+
+      if (this.queryParams['action'] && this.queryParams['action'] === 'session_expired') {
+        this.toastService.generateToast('warn', 'Wymagane zalogowanie', 'Twoja sesja wygasła');
+      }
     });
   }
 

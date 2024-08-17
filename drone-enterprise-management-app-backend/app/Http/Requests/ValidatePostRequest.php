@@ -31,7 +31,8 @@ class ValidatePostRequest extends FormRequest
             //     File::types(['jpg', 'jpeg', 'png', 'mp4', 'mov'])
             //         ->max(10 * 1024),
             // ],
-            'file' => 'file|required|mimes:png,jpg,jpeg,mp4,mov|max:10000',
+            'file' => 'file|required|mimes:png,jpg,jpeg,mp4,mov|max:51200',
+            'cover' => 'file|mimes:png,jpg,jpeg,mp4,mov|max:5120',
             'location' => ['required', 'string', 'max:50'],
             'description' => ['required', 'string', 'max:500'],
             'visibility' => ['required']

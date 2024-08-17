@@ -18,7 +18,8 @@ class Post extends Model
         'visibility',
         'location',
         'path',
-        'description',
+        'cover',
+        'description'
     ];
 
 }
