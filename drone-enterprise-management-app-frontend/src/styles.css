@@ -121,3 +121,34 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.routing-indicator {
+  background-color: #60a5fa;
+}
+
+.routing-highlight {
+  filter: brightness(1.25);
+}
+
+.mat-step-header-selected {
+  background-color: green;
+}
+
+.sidebar-show {
+  animation: show 0.5s linear forwards;
+}
+
+@keyframes show {
+  0% {
+    visibility: hidden;
+  }
+
+  75% {
+    visibility: hidden;
+  }
+
+  100% {
+    visibility: visible;
+  }
+}
+

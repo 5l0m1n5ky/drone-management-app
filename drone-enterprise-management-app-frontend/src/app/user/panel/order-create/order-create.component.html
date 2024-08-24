@@ -1,0 +1,333 @@
+<div
+  class="hidden min-[1024px]:block absolute top-0 left-0 z-0 w-full h-full bg-neutral-800 pl-[6.5rem] py-5 pr-5 overflow-hidden">
+  <div class="relative w-full h-full bg-neutral-900 rounded-xl p-5">
+    <app-loading-spinner *ngIf="isProcessing"></app-loading-spinner>
+    <form id="form" [formGroup]="placeOrderForm" (ngSubmit)="onPlaceOrder()">
+      <mat-horizontal-stepper #stepper [selectedIndex]="4"
+        style="background-color: transparent; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+        <mat-step>
+          <ng-template matStepLabel>USŁUGA
+          </ng-template>
+          <div matStepContent class="flex flex-col items-start justify-center">
+            <section class="flex flex-row justify-start items-center gap-5">
+              <h2 class="py-5 font-montserrat text-base text-neutral-200">Wybrana usługa: {{ currentServiceName }}</h2>
+              <p routerLink="/choose-service"
+                class="text-xs font-montserrat font-normal text-neutral-500 px-3 py-1 ring-1 ring-neutral-500 rounded-full cursor-pointer hover:brightness-125">
+                ZMIEŃ
+              </p>
+            </section>
+            <mat-form-field style="width: 450px;">
+              <mat-label>Rodzaj usługi</mat-label>
+              <mat-select (valueChange)="setCurrentSubservice($event)">
+                <mat-option *ngFor="let currentSubservice of currentSubservices" value="{{ currentSubservice.id }}">{{
+                  currentSubservice.subservice }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <div *ngIf="currentServiceName === 'foto/video'">
+              <mat-form-field *ngIf="currentSubserviceName !== 'fotografia' && currentSubserviceName !== undefined"
+                style="width: 450px;">
+                <mat-label>Podkałd muzyczny</mat-label>
+                <mat-select (valueChange)="setCurrentBgMusic($event)">
+                  <mat-option *ngFor="let music of bgMusic" value="{{music.id}}">{{ music.type }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div *ngIf="currentSubserviceName !== 'fotografia' && currentSubserviceName !== undefined">
+                <mat-form-field style="width: 450px;">
+                  <mat-label>Format</mat-label>
+                  <mat-select>
+                    <mat-option *ngFor="let format of formats" value="{{ format }}">{{ format }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-slide-toggle *ngIf="" [checked]="true" color="accent">
+                  <p class="font-montserrat text-sm ml-5 text-neutral-600">Generowanie raportu z inspekcji</p>
+                </mat-slide-toggle>
+              </div>
+              <div *ngIf="currentSubserviceName !== 'fotografia' && currentSubserviceName !== undefined"
+                class="flex flex-col justify-end items-end">
+                <h2 class="py-2 font-montserrat text-xs text-neutral-200 w-full text-left">
+                  Podaj długość spodziewanego materiału wyrażonego
+                  w minutach
+                </h2>
+                <mat-slider min="{{ currentSubserviceUnitAmountMin }}" max="{{ currentSubserviceUnitAmountMax }}"
+                  step="1" class="material-slider" style="width: 450px;">
+                  <input matSliderThumb #slider>
+                </mat-slider>
+                <p class="mr-5 font-montserrat text-base text-neutral-200">{{slider.value}} min</p>
+              </div>
+              <div *ngIf="currentSubserviceName === 'fotografia'" class="flex flex-col justify-end items-end">
+                <h2 class="py-2 font-montserrat text-xs text-neutral-200 w-full text-left">
+                  Podaj spodziewaną ilość zdjęć
+                </h2>
+                <mat-slider min="{{ currentSubserviceUnitAmountMin }}" max="{{ currentSubserviceUnitAmountMax }}"
+                  step="1" class="material-slider" style="width: 450px;">
+                  <input matSliderThumb #slider>
+                </mat-slider>
+                <p class="mr-5 font-montserrat text-base text-neutral-200">ilość zdjęć: {{slider.value}}</p>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="currentServiceName !== 'foto/video'" class="flex flex-col justify-start items-start gap-5">
+            <mat-slide-toggle class="font-montserrat text-sm text-neutral-600 ml-5" [checked]="true">
+              Generowanie raportu
+            </mat-slide-toggle>
+            <div *ngIf="currentServiceName === 'inspekcja PV'" class="flex flex-col justify-end items-end">
+              <h2 class="py-2 font-montserrat text-xs text-neutral-200 w-full text-left">
+                Podaj wielkość farmy PV wyrażoną w MW
+              </h2>
+              <mat-slider min="{{ currentSubserviceUnitAmountMin }}" max="{{ currentSubserviceUnitAmountMax }}" step="1"
+                class="material-slider" style="width: 450px;">
+                <input matSliderThumb #slider>
+              </mat-slider>
+              <p class="mr-5 font-montserrat text-base text-neutral-200">{{slider.value}} MW</p>
+            </div>
+
+            <div *ngIf="currentServiceName === 'fotogrametria' && currentServiceName !== undefined"
+              class="flex flex-col justify-end items-end">
+              <h2 *ngIf="currentSubserviceName !== 'model 3D' && currentServiceName !== undefined"
+                class="py-2 font-montserrat text-xs text-neutral-200 w-full text-left">
+                Podaj wielkość obszaru skanowania wyrażoną w arach
+              </h2>
+              <h2 *ngIf="currentSubserviceName === 'model 3D' && currentServiceName !== undefined"
+                class="py-2 font-montserrat text-xs text-neutral-200 w-full text-left">
+                Podaj wielkość budynku wyrażonego w m<sup>2</sup>
+              </h2>
+              <mat-slider min="{{ currentSubserviceUnitAmountMin }}" max="{{ currentSubserviceUnitAmountMax }}" step="1"
+                class="material-slider" style="width: 450px;">
+                <input matSliderThumb #slider>
+              </mat-slider>
+              <p *ngIf="currentSubserviceName !== 'model 3D' && currentServiceName !== undefined"
+                class="mr-5 font-montserrat text-base text-neutral-200">{{slider.value}} [AR]</p>
+              <p *ngIf="currentSubserviceName === 'model 3D' && currentServiceName !== undefined"
+                class="mr-5 font-montserrat text-base text-neutral-200">{{slider.value}} m<sup>2</sup></p>
+            </div>
+
+            <div *ngIf="currentServiceName === 'inspekcja energetyczna' && currentServiceName !== undefined"
+              class="flex flex-col justify-end items-end">
+              <h2 class="py-2 font-montserrat text-xs text-neutral-200 w-full text-left">
+                Podaj ilość słupów energetycznych
+              </h2>
+              <mat-slider min="{{ currentSubserviceUnitAmountMin }}" max="{{ currentSubserviceUnitAmountMax }}" step="1"
+                class="material-slider" style="width: 450px;">
+                <input matSliderThumb #slider>
+              </mat-slider>
+              <p class="mr-5 font-montserrat text-base text-neutral-200">ilość słupów: {{slider.value}}</p>
+            </div>
+
+            <div *ngIf="currentServiceName === 'inspekcja turbin' && currentServiceName !== undefined"
+              class="flex flex-col justify-end items-end">
+              <h2 class="py-2 font-montserrat text-xs text-neutral-200 w-full text-left">
+                Podaj ilość elektrowni wiatrowych
+              </h2>
+              <mat-slider min="{{ currentSubserviceUnitAmountMin }}" max="{{ currentSubserviceUnitAmountMax }}" step="1"
+                class="material-slider" style="width: 450px;">
+                <input matSliderThumb #slider>
+              </mat-slider>
+              <p class="mr-5 font-montserrat text-base text-neutral-200">ilość elektrowni: {{slider.value}}</p>
+            </div>
+          </div>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>
+            LOKALIZACJA
+          </ng-template>
+          <div matStepContent class="flex flex-col justify-center items-center">
+            <google-map height="600px" width="800px" [options]="options" (mapClick)="addMarker($event)">
+              <map-advanced-marker *ngFor="let position of markerPositions" [position]="position" />
+            </google-map>
+          </div>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>TERMIN</ng-template>
+          <div matStepContent class="w-full">
+            <section class="mt-5 w-full flex flex-row justify-start items-center">
+              <mat-card style="width: 500px;">
+                <mat-calendar [(selected)]="selected" [minDate]="minDate"></mat-calendar>
+              </mat-card>
+              <div class="flex flex-col justify-center items-start ml-16 gap-5">
+                <p class="font-montserrat text-3xl text-neutral-500">Wybrany termin:</p>
+                <p class="font-montserrat text-base text-neutral-200">{{selected}}</p>
+              </div>
+            </section>
+          </div>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>FV</ng-template>
+          <div matStepContent class="w-full">
+
+
+            <div class="flex flex-row items-center justify-start gap-2 py-2">
+              <p class="font-montserrat text-sm text-neutral-500">
+                Osoba fizyczna
+              </p>
+              <mat-slide-toggle [checked]="isEnterprise" color="primary" hideIcon="true"
+                (change)="isEnterprise = !isEnterprise">
+              </mat-slide-toggle>
+              <p class="font-montserrat text-sm text-neutral-500">
+                Firma
+              </p>
+            </div>
+
+            <section *ngIf="isEnterprise" class="mt-5 w-full flex flex-col justify-start items-start gap-3">
+
+              <div class="flex flex-row items-center gap-5">
+                <mat-form-field style="width: 450px;">
+                  <mat-label>Nazwa Firmy</mat-label>
+                  <input matInput>
+                </mat-form-field>
+                <mat-form-field style="width: 450px;">
+                  <mat-label>NIP</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </div>
+
+              <div class="flex flex-row items-center gap-5">
+                <mat-form-field style="width: 450px;">
+                  <mat-label>Ulica</mat-label>
+                  <input matInput>
+                </mat-form-field>
+                <mat-form-field style="width: 215px;">
+                  <mat-label>Nr budynku</mat-label>
+                  <input matInput>
+                </mat-form-field>
+                <mat-form-field style="width: 215px;">
+                  <mat-label>Nr lokalu</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </div>
+
+              <div class="flex flex-row items-center gap-5">
+                <mat-form-field style="width: 450px;">
+                  <mat-label>Miasto</mat-label>
+                  <input matInput>
+                </mat-form-field>
+                <mat-form-field style="width: 450px;">
+                  <mat-label>Kod pocztowy</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </div>
+
+              <div class=" flex flex-row items-center gap-5">
+                <mat-form-field style="width: 450px;">
+                  <mat-label>Telefon</mat-label>
+                  <input matInput>
+                </mat-form-field>
+                <mat-form-field style="width: 450px;">
+                  <mat-label>E-mail</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </div>
+            </section>
+
+            <section *ngIf="!isEnterprise" class="mt-5 w-full flex flex-col justify-start items-start gap-3">
+              <div class="flex flex-row items-center gap-5">
+                <mat-form-field style="width: 450px;">
+                  <mat-label>Imię</mat-label>
+                  <input matInput>
+                </mat-form-field>
+                <mat-form-field style="width: 450px;">
+                  <mat-label>Nazwisko</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </div>
+
+              <div class="flex flex-row items-center gap-5">
+                <mat-form-field style="width: 450px;">
+                  <mat-label>Ulica</mat-label>
+                  <input matInput>
+                </mat-form-field>
+                <mat-form-field style="width: 215px;">
+                  <mat-label>Nr budynku</mat-label>
+                  <input matInput>
+                </mat-form-field>
+                <mat-form-field style="width: 215px;">
+                  <mat-label>Nr lokalu</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </div>
+
+              <div class="flex flex-row items-center gap-5">
+                <mat-form-field style="width: 450px;">
+                  <mat-label>Miasto</mat-label>
+                  <input matInput>
+                </mat-form-field>
+                <mat-form-field style="width: 450px;">
+                  <mat-label>Kod pocztowy</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </div>
+
+              <div class=" flex flex-row items-center gap-5">
+                <mat-form-field style="width: 450px;">
+                  <mat-label>Telefon</mat-label>
+                  <input matInput>
+                </mat-form-field>
+                <mat-form-field style="width: 450px;">
+                  <mat-label>E-mail</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </div>
+            </section>
+
+          </div>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>FINALIZACJA</ng-template>
+          <div matStepContent class="w-full flex items-start justify-between">
+            <section class="w-full h-[600px] flex flex-col items-start justify-start gap-5 mt-5">
+              <mat-form-field style="width: 450px;">
+                <mat-label>Nazwa Twojego zlecenia</mat-label>
+                <input matInput value="{{ orderAlias }}">
+              </mat-form-field>
+              <mat-form-field style="width: 450px;">
+                <mat-label>Uwagi do zlecenia</mat-label>
+                <input matInput>
+              </mat-form-field>
+            </section>
+            <section
+              class="w-[30%] h-[600px] flex flex-col items-start justify-start gap-2 rounded-2xl bg-neutral-800 font-montserrat">
+              <h2 class="p-5 text-3xl text-neutral-300">Podsumowanie</h2>
+              <div class="pl-5 flex flex-col gap-2 mt-5">
+                <h4 class="text-sm text-neutral-500">Kwota netto</h4>
+                <p class="text-2xl text-neutral-400 font-semibold">1500 PLN</p>
+                <h4 class="text-sm text-neutral-500">Kwota brutto</h4>
+                <p class="text-2xl text-neutral-400 font-semibold">2000 PLN</p>
+                <h5 class="text-xs text-neutral-500">Cena zwiera podatek VAT 23%</h5>
+              </div>
+            </section>
+          </div>
+        </mat-step>
+      </mat-horizontal-stepper>
+    </form>
+  </div>
+</div>
+
+<div class="block min-[1024px]:hidden absolute top-0 left-0 z-0 w-full h-screen bg-neutral-800 p-5 overflow-hidden">
+  <div class="w-full h-full bg-[#202020] rounded-xl p-5">
+    <form id="form" [formGroup]="placeOrderForm" (ngSubmit)="onPlaceOrder()">
+      <mat-vertical-stepper #stepper color="accent"
+        style="background-color: transparent; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+        <mat-step>
+          <ng-template matStepLabel>USŁUGA
+          </ng-template>
+          <div matStepContent>
+            <mat-form-field color="accent">
+              <mat-label>Select</mat-label>
+              <mat-select>
+                <mat-option value="one">First option</mat-option>
+                <mat-option value="two">Second option</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>LOKALIZACJA</ng-template>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>TERMIN</ng-template>
+        </mat-step>
+      </mat-vertical-stepper>
+    </form>
+  </div>
+</div>

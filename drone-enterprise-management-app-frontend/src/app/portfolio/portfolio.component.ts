@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit, QueryList, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -9,9 +9,8 @@ import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinn
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { StepperModule } from 'primeng/stepper';
 import { Button } from 'primeng/button';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { exhaustMap, Observable, Subject, Subscription, take } from 'rxjs';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -20,6 +19,8 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ToastService } from '../shared/toast/toast.service';
 import { LoginService } from '../login/login.service';
+import { AppComponent } from '../app.component';
+import { User } from '../user/user.model';
 
 @Component({
   standalone: true,
@@ -32,7 +33,6 @@ import { LoginService } from '../login/login.service';
     MatMenuModule,
     LoadingSpinnerComponent,
     ReactiveFormsModule,
-    StepperModule,
     Button,
     MatStepperModule,
     MatSlideToggleModule,
@@ -43,11 +43,12 @@ import { LoginService } from '../login/login.service';
     PortfolioService,
     MessageService,
     ToastService,
-    LoginService
+    // LoginService,
+    AppComponent
   ]
 })
 
-export class PortfolioComponent implements OnInit {
+export class PortfolioComponent implements OnInit, OnDestroy {
 
   loadedPosts: Post[] = [];
   isLoading: boolean = false;
@@ -86,23 +87,24 @@ export class PortfolioComponent implements OnInit {
   file: File | null;
   cover: File | null;
 
-  constructor(private portfolioService: PortfolioService, private router: Router, private dialog: MatDialog, private toastService: ToastService, private loginService: LoginService) { }
+  onCreateSubscription: Subscription;
+  onEditSubscription: Subscription;
+  onFetchSubscription: Subscription;
+  onDeleteSubscription: Subscription;
+  onCheckSubscription: Subscription;
+
+
+  constructor(private portfolioService: PortfolioService, private router: Router, private dialog: MatDialog, private toastService: ToastService, private loginService: LoginService, private appComponent: AppComponent) { }
 
   ngOnInit() {
     this.updateScreenSize();
     this.isLoading = true;
-    this.portfolioService.fetchPosts().subscribe(posts => {
+    this.onFetchSubscription = this.portfolioService.fetchPosts().subscribe(posts => {
       this.loadedPosts = posts;
       this.isLoading = false;
     });
 
     this.createPostForm = new FormGroup({
-      // postFileForm: new FormGroup({
-      //   file: new FormControl(null, Validators.required)
-      // }),
-      postCoverForm: new FormGroup({
-        cover: new FormControl(null)
-      }),
       postLocationForm: new FormGroup({
         location: new FormControl(null, Validators.required)
       }),
@@ -113,6 +115,7 @@ export class PortfolioComponent implements OnInit {
         visibility: new FormControl(true)
       }),
     });
+
   }
 
   onFileSelected(event: any) {
@@ -168,6 +171,7 @@ export class PortfolioComponent implements OnInit {
   onShow: boolean = false;
 
   onGalleryItemShow(id: number): void {
+
     this.onShow = true;
     if (!this.isMobile) {
       let currentPost = this.loadedPosts.find(post => post.id === id);
@@ -188,31 +192,34 @@ export class PortfolioComponent implements OnInit {
   }
 
   onEditMode() {
-    this.isEditMode = true;
-
-    this.editPostForm = new FormGroup({
-      // postFileForm: new FormGroup({
-      //   file: new FormControl(null)
-      // }),
-      postCoverForm: new FormGroup({
-        cover: new FormControl(null)
-      }),
-      postLocationForm: new FormGroup({
-        location: new FormControl(this.currentPost.location, Validators.required)
-      }),
-      postDescriptionForm: new FormGroup({
-        description: new FormControl(this.currentPost.description, Validators.required)
-      }),
-      postVisibilityForm: new FormGroup({
-        visibility: new FormControl(this.currentPost.visibility)
-      }),
+    this.isLoading = true;
+    this.onCheckSubscription = this.loginService.checkSession().subscribe(responseData => {
+      if (responseData && responseData.message && responseData.message.toString() === 'ACTIVE_SESSION') {
+        this.isEditMode = true;
+        this.editPostForm = new FormGroup({
+          postLocationForm: new FormGroup({
+            location: new FormControl(this.currentPost.location, Validators.required)
+          }),
+          postDescriptionForm: new FormGroup({
+            description: new FormControl(this.currentPost.description, Validators.required)
+          }),
+          postVisibilityForm: new FormGroup({
+            visibility: new FormControl(this.currentPost.visibility)
+          }),
+        });
+        this.isLoading = false;
+      }
+    }, errorMessage => {
+      this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
+      this.appComponent.changeLoginState();
+      this.isLoading = false;
     });
   }
 
   onEdit() {
     this.isUploading = true;
     console.log(this.editPostForm);
-    this.portfolioService.updatePost(
+    this.onEditSubscription = this.portfolioService.updatePost(
       this.currentPost.id,
       this.file,
       this.cover,
@@ -223,11 +230,13 @@ export class PortfolioComponent implements OnInit {
       this.isUploading = false;
       this.toastService.generateToast('success', 'Edycja Posta', responseData.message.toString());
       this.editPostForm.reset();
-      this.file = {} as File;
+      this.file = null;
+      this.cover = null;
       this.isEditMode = false;
       this.onShow = false;
 
-      this.portfolioService.fetchPosts().subscribe(posts => {
+      this.isLoading = true;
+      this.onFetchSubscription = this.portfolioService.fetchPosts().subscribe(posts => {
         this.loadedPosts = posts;
         this.isLoading = false;
       });
@@ -236,7 +245,8 @@ export class PortfolioComponent implements OnInit {
       this.isUploading = false;
       this.isEditMode = false;
       this.editPostForm.reset();
-      this.file = {} as File;
+      this.file = null;
+      this.cover = null;
     });
   }
 
@@ -247,7 +257,7 @@ export class PortfolioComponent implements OnInit {
 
         this.isUploading = true;
 
-        this.portfolioService.deletePost(this.currentPost.id).subscribe(responseData => {
+        this.onFetchSubscription = this.onDeleteSubscription = this.portfolioService.deletePost(this.currentPost.id).subscribe(responseData => {
           this.isUploading = false;
           this.onShow = false;
           this.toastService.generateToast('success', 'Usuwanie Posta', responseData.data.toString());
@@ -269,7 +279,7 @@ export class PortfolioComponent implements OnInit {
 
   onCreate() {
     this.isLoading = true;
-    this.loginService.checkSession().subscribe(responseData => {
+    this.onCheckSubscription = this.loginService.checkSession().subscribe(responseData => {
       console.log('session state: ', responseData);
       if (responseData && responseData.message && responseData.message.toString() === 'ACTIVE_SESSION') {
         this.isCreateMode = true;
@@ -277,14 +287,14 @@ export class PortfolioComponent implements OnInit {
       }
     }, errorMessage => {
       this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
+      this.appComponent.changeLoginState();
       this.isLoading = false;
-    })
+    });
   }
 
   onPostCreate() {
-
     this.isUploading = true;
-    this.portfolioService.uploadPost(
+    this.onCreateSubscription = this.portfolioService.uploadPost(
       this.file,
       this.cover,
       this.createPostForm.get('postLocationForm.location')?.value,
@@ -298,7 +308,7 @@ export class PortfolioComponent implements OnInit {
       this.file = null;
       this.createPostForm.reset();
 
-      this.portfolioService.fetchPosts().subscribe(posts => {
+      this.onFetchSubscription = this.portfolioService.fetchPosts().subscribe(posts => {
         this.loadedPosts = posts;
         this.isLoading = false;
         this.isCreateMode = false
@@ -310,9 +320,7 @@ export class PortfolioComponent implements OnInit {
       this.isCreateMode = false
       this.file = null;
       this.file = null;
-
     });
-
   }
 
   onCancelCreateMode() {
@@ -446,4 +454,20 @@ export class PortfolioComponent implements OnInit {
     return extension ? imageExtensions.includes(extension) : false;
   }
 
+  // checkAdminPrivileges() {
+  //   if (this.loginService.hasAdminPrivileges()) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
+  isAdmin() {
+    return this.loginService.hasAdminPrivileges()?.privileges === 'admin' || false;
+  }
+
+  ngOnDestroy(): void {
+    this.onCreateSubscription?.unsubscribe();
+    this.onEditSubscription?.unsubscribe();
+    this.onFetchSubscription?.unsubscribe();
+  }
 }

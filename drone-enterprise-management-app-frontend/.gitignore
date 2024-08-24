@@ -43,3 +43,6 @@ Thumbs.db
 
 # Ignore assets folder
 /src/assets/
+
+# Igonre env variables
+/src/environments/environment.ts

@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-class ClearInactiveSessions extends Command
+class ClearInactiveSessionsCommand extends Command
 {
     /**
      * The name and signature of the console command.

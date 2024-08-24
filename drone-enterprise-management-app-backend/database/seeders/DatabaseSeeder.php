@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+
 
         \App\Models\Post::create([
             'visibility' => true,
@@ -49,11 +49,213 @@ class DatabaseSeeder extends Seeder
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         ]);
 
+        // User
+
         \App\Models\User::create([
             'email' => 'slomin.sky.drone@gmail.com',
             'password' => Hash::make('P455w0rd!'),
             'role' => 'admin',
             'verification_token' => '311223',
+        ]);
+
+        // Service
+
+        \App\Models\Service::create([
+            'service_type' => 'foto/video',
+        ]);
+
+        \App\Models\Service::create([
+            'service_type' => 'inspekcja PV',
+        ]);
+
+        \App\Models\Service::create([
+            'service_type' => 'fotogrametria',
+        ]);
+
+        \App\Models\Service::create([
+            'service_type' => 'inspekcja energetyczna',
+        ]);
+
+        \App\Models\Service::create([
+            'service_type' => 'inspekcja turbin',
+        ]);
+
+        // Subservice
+
+        \App\Models\Subservice::create([
+            'service_id' => 1, //foto/video
+            'subservice' => 'spot reklamowy',
+            'unit_amount_min' => 1,
+            'unit_amount_max' => 15,
+            'unit_price' => 150
+        ]);
+
+        \App\Models\Subservice::create([
+            'service_id' => 1, //foto/video
+            'subservice' => 'relacja z wydarzenia',
+            'unit_amount_min' => 1,
+            'unit_amount_max' => 30,
+            'unit_price' => 125
+        ]);
+
+        \App\Models\Subservice::create([
+            'service_id' => 1, //foto/video
+            'subservice' => 'fotografia',
+            'unit_amount_min' => 1,
+            'unit_amount_max' => 50,
+            'unit_price' => 30
+        ]);
+
+        \App\Models\Subservice::create([
+            'service_id' => 2, //pv
+            'subservice' => 'inspekcja RGB',
+            'unit_amount_min' => 1,
+            'unit_amount_max' => 10,
+            'unit_price' => 150
+        ]);
+
+        \App\Models\Subservice::create([
+            'service_id' => 2, //pv
+            'subservice' => 'inspekcja IR',
+            'unit_amount_min' => 1,
+            'unit_amount_max' => 10,
+            'unit_price' => 250
+        ]);
+
+        \App\Models\Subservice::create([
+            'service_id' => 2, //pv
+            'subservice' => 'inspekcja RGB + IR',
+            'unit_amount_min' => 1,
+            'unit_amount_max' => 10,
+            'unit_price' => 350
+        ]);
+
+        \App\Models\Subservice::create([
+            'service_id' => 3, //fotogramteria
+            'subservice' => 'ortofotomapa',
+            'unit_amount_min' => 1,
+            'unit_amount_max' => 100,
+            'unit_price' => 50
+        ]);
+
+        \App\Models\Subservice::create([
+            'service_id' => 3, //fotogramteria
+            'subservice' => 'ortomozaika',
+            'unit_amount_min' => 1,
+            'unit_amount_max' => 100,
+            'unit_price' => 75
+        ]);
+
+        \App\Models\Subservice::create([
+            'service_id' => 3, //fotogramteria
+            'subservice' => 'model 3D',
+            'unit_amount_min' => 1,
+            'unit_amount_max' => 500,
+            'unit_price' => 10
+        ]);
+
+        \App\Models\Subservice::create([
+            'service_id' => 4, //eneregtyka
+            'subservice' => 'inspekcja RGB',
+            'unit_amount_min' => 1,
+            'unit_amount_max' => 10,
+            'unit_price' => 250
+        ]);
+
+        \App\Models\Subservice::create([
+            'service_id' => 4, //eneregtyka
+            'subservice' => 'inspekcja IR',
+            'unit_amount_min' => 1,
+            'unit_amount_max' => 10,
+            'unit_price' => 300
+        ]);
+
+        \App\Models\Subservice::create([
+            'service_id' => 4, //eneregtyka
+            'subservice' => 'inspekcja RGB + IR',
+            'unit_amount_min' => 1,
+            'unit_amount_max' => 10,
+            'unit_price' => 400
+        ]);
+
+        \App\Models\Subservice::create([
+            'service_id' => 5, //turbiny
+            'subservice' => 'inspekcja RGB',
+            'unit_amount_min' => 1,
+            'unit_amount_max' => 10,
+            'unit_price' => 300
+        ]);
+
+        \App\Models\Subservice::create([
+            'service_id' => 5, //turbiny
+            'subservice' => 'inspekcja IR',
+            'unit_amount_min' => 1,
+            'unit_amount_max' => 10,
+            'unit_price' => 350
+        ]);
+
+        \App\Models\Subservice::create([
+            'service_id' => 5, //turbiny
+            'subservice' => 'inspekcja RGB + IR',
+            'unit_amount_min' => 1,
+            'unit_amount_max' => 10,
+            'unit_price' => 550
+        ]);
+
+        // Background Music
+
+        \App\Models\BackgroundMusic::create([
+            'type' => 'ambient'
+        ]);
+
+        \App\Models\BackgroundMusic::create([
+            'type' => 'rock/metal'
+        ]);
+
+        \App\Models\BackgroundMusic::create([
+            'type' => 'jazz'
+        ]);
+
+        \App\Models\BackgroundMusic::create([
+            'type' => 'klasyczna'
+        ]);
+
+        \App\Models\BackgroundMusic::create([
+            'type' => 'elektroniczna'
+        ]);
+
+        \App\Models\BackgroundMusic::create([
+            'type' => 'dowolna'
+        ]);
+
+        \App\Models\BackgroundMusic::create([
+            'type' => 'brak'
+        ]);
+
+        // State
+
+        \App\Models\State::create([
+            'state_type' => 'przyjęte'
+        ]);
+
+        \App\Models\State::create([
+            'state_type' => 'realizowane'
+        ]);
+
+        \App\Models\State::create([
+            'state_type' => 'zrealizowane'
+        ]);
+
+        \App\Models\State::create([
+            'state_type' => 'do modyfikacji'
+        ]);
+
+        \App\Models\State::create([
+            'state_type' => 'odrzucone'
+        ]);
+
+        \App\Models\State::create([
+            'state_type' => 'przyjęte'
         ]);
     }
 }

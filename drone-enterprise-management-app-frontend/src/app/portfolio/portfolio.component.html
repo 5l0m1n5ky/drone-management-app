@@ -36,8 +36,7 @@
                   </div>
                   <div
                     class="flex flex-row justify-between items-center w-full h-[75px] mt-5 text-neutral-600 font-montserrat text-base font-normal">
-                    <img *ngIf="isImage(fileName)" [src]="file ? fileSrc : ''"
-                      class="h-full w-auto">
+                    <img *ngIf="isImage(fileName)" [src]="file ? fileSrc : ''" class="h-full w-auto">
                     <img *ngIf="!isImage(fileName) && file"
                       [src]="createPostForm.get('postCoverForm.cover') ? './assets/icons/movie-icon.svg' : ''"
                       class="h-full w-auto">
@@ -67,8 +66,7 @@
                   <p class="text-3xl font-normal text-neutral-600">Wybierz okładkę materiału video</p>
                   <div (click)="inputCover.click()"
                     class="flex flex-col justify-center items-center h-[300px] mt-2 w-full border-dashed border-2 rounded-xl border-neutral-600 cursor-pointer">
-                    <input type="file" #inputCover (change)="onCoverSelected($event)" id="cover"
-                      class="hidden">
+                    <input type="file" #inputCover (change)="onCoverSelected($event)" id="cover" class="hidden">
                     <!-- <input type="file" #inputCover (change)="onCoverSelected($event)" id="cover" formControlName="cover"
                       class="hidden"> -->
                     <p class="p-5 font-semibold text-base font-montserrat text-neutral-600">
@@ -200,31 +198,66 @@
               style="background-color: transparent; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
               <mat-step>
                 <ng-template matStepLabel>PLIK</ng-template>
-                <div class="font-montserrat flex flex-col justify-start items-start" formGroupName="postFileForm">
-                  <p class="text-3xl font-normal text-neutral-600">Zmień plik foto/video</p>
+                <div class="font-montserrat flex flex-col justify-start items-start">
+                  <p class="text-3xl font-normal text-neutral-600">Wybierz plik foto/video</p>
                   <div (click)="inputFile.click()"
                     class="flex flex-col justify-center items-center h-[300px] mt-2 w-full border-dashed border-2 rounded-xl border-neutral-600 cursor-pointer">
-                    <input type="file" #inputFile (change)="onFileSelected($event)" id="file" formControlName="file"
-                      class="hidden">
+                    <input type="file" #inputFile (change)="onFileSelected($event)" id="file" class="hidden">
                     <p class="p-5 font-semibold text-base font-montserrat text-neutral-600">
                       WYBIERZ PLIK
                     </p>
                   </div>
                   <div
                     class="flex flex-row justify-between items-center w-full h-[75px] mt-5 text-neutral-600 font-montserrat text-base font-normal">
-                    <img [src]="editPostForm.get('postFileForm.file') ? fileSrc : ''" class="h-full w-auto">
+                    <img *ngIf="isImage(fileName)" [src]="file ? fileSrc : ''" class="h-full w-auto">
+                    <img *ngIf="!isImage(fileName) && file"
+                      [src]="createPostForm.get('postCoverForm.cover') ? './assets/icons/movie-icon.svg' : ''"
+                      class="h-full w-auto">
                     <p>
-                      {{ editPostForm.get('postFileForm.file') ? fileName : '' }}
+                      {{ file ? fileName : '' }}
                     </p>
                     <p>
-                      {{ editPostForm.get('postFileForm.file') ? fileSize : '' }}
+                      {{ file ? fileSize : '' }}
                     </p>
                   </div>
                   <div class="w-full flex justify-end mt-5">
                     <button matStepperNext type="button">
                       <p
-                        class="text-neutral-900 font-semibold text-sm bg-neutral-600 px-7 py-1 rounded-md hover:bg-neutral-500 ease-in-out transition-all duration-150">
-                        {{ editPostForm.get('postFileForm.file')?.touched ? 'DALEJ' : 'POMIŃ' }}
+                        [ngClass]="!file ? 'text-neutral-900 font-semibold text-sm bg-neutral-800 px-7 py-1 rounded-md cursor-not-allowed' : 'text-neutral-900 font-semibold text-sm bg-neutral-600 px-7 py-1 rounded-md hover:bg-neutral-500 ease-in-out transition-all duration-150'">
+                        DALEJ
+                      </p>
+                    </button>
+                  </div>
+                </div>
+              </mat-step>
+
+              <!-- cover -->
+              <mat-step *ngIf="!isImage(currentPost.path)">
+                <ng-template matStepLabel>OKŁADKA</ng-template>
+                <div class="font-montserrat flex flex-col justify-start items-start">
+                  <p class="text-3xl font-normal text-neutral-600">Wybierz okładkę materiału video</p>
+                  <div (click)="inputCover.click()"
+                    class="flex flex-col justify-center items-center h-[300px] mt-2 w-full border-dashed border-2 rounded-xl border-neutral-600 cursor-pointer">
+                    <input type="file" #inputCover (change)="onCoverSelected($event)" id="cover" class="hidden">
+                    <p class="p-5 font-semibold text-base font-montserrat text-neutral-600">
+                      WYBIERZ OKŁADKĘ
+                    </p>
+                  </div>
+                  <div
+                    class="flex flex-row justify-between items-center w-full h-[75px] mt-5 text-neutral-600 font-montserrat text-base font-normal">
+                    <img [src]="cover ? coverSrc : ''" class="h-full w-auto">
+                    <p>
+                      {{ cover ? coverName : '' }}
+                    </p>
+                    <p>
+                      {{ cover ? coverSize : '' }}
+                    </p>
+                  </div>
+                  <div class="w-full flex justify-end mt-5">
+                    <button matStepperNext type="button">
+                      <p
+                        [ngClass]="!cover ? 'text-neutral-900 font-semibold text-sm bg-neutral-800 px-7 py-1 rounded-md cursor-not-allowed' : 'text-neutral-900 font-semibold text-sm bg-neutral-600 px-7 py-1 rounded-md hover:bg-neutral-500 ease-in-out transition-all duration-150'">
+                        DALEJ
                       </p>
                     </button>
                   </div>
@@ -321,7 +354,7 @@
     <div *ngIf="!isMobile && onShow"
       class="fixed flex flex-row justify-around items-center z-50 h-full w-full bg-black/75 overflow-hidden">
       <div *ngIf="isUploading"
-        class="absolute flex flex-col gap-5 justify-center items-center left-0 top-0 rounded-2xl z-50 w-screen h-screen bg-black/70">
+        class="absolute flex flex-col gap-5 justify-center items-center left-0 top-0 rounded-2xl z-[100] w-screen h-screen bg-black/70">
         <span class="loader"></span>
         <p class="text-sm text-neutral-400 font-montserrat font-normal">Przetwarzanie...</p>
       </div>
@@ -347,7 +380,8 @@
               <img src="./assets/icons/location-icon.svg" alt="location-icon" class="w-8 h-8 mr-1">
               <span class="font-montserrat text-neutral-600 text-base font-normal">{{currentPost.location}}</span>
             </div>
-            <img src="./assets/icons/preferences-icon.svg" alt="preferences-icon" [matMenuTriggerFor]="settings"
+            <img *ngIf="isAdmin()" src="./assets/icons/preferences-icon.svg" alt="preferences-icon"
+              [matMenuTriggerFor]="settings"
               class="w-10 h-10 mr-2 cursor-pointer hover:brightness-150 transition-all ease-in-out duration-75">
             <mat-menu #settings="matMenu" yPosition="below" xPosition="before">
               <ng-template matMenuContent>
@@ -381,7 +415,7 @@
     </div>
 
     <div
-      class="relative flex flex-col justify-start items-center w-full min-h-full overflow-x-hidden overflow-y-visible">
+      class="relative flex flex-col justify-start items-center w-full min-h-screen overflow-x-hidden overflow-y-visible">
       <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
       <div class="w-[85%] flex flex-row justify-start items-center">
         <div (click)="onCreate()"
@@ -392,6 +426,8 @@
           </p>
         </div>
       </div>
+
+      <!-- post grid -->
       <div *ngIf="loadedPosts.length >= 1" class="w-[85%] mb-36 h-auto grid grid-cols-3 gap-6">
         <div *ngFor="let post of loadedPosts"
           class="flex flex-col justify-center items-center aspect-w-1 aspect-h-1 cursor-pointer rounded-lg overflow-hidden">

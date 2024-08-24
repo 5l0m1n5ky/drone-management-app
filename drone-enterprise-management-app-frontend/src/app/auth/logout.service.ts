@@ -27,10 +27,11 @@ export class LogoutService {
       withCredentials: true
     }).pipe(catchError(this.handleError),
       tap(response => {
-        this.loginService.user.next({} as User);
+        this.loginService.user.next({ id: '', email: '', privileges: '' });
+        // this.loginService.user.next({} as User);
         this.cookieService.deleteAll();
         if (response) {
-          return response
+          return response;
         }
         return 'Wylogowano pomyślnie'
       }

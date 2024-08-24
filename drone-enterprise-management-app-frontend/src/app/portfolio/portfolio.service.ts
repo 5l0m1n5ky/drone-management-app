@@ -58,7 +58,6 @@ export class PortfolioService {
       }
     ).pipe(catchError(this.handleError),
       tap(response => {
-        // this.router.navigate(['/portfolio']);
         return response.message;
       }
       ));
@@ -85,7 +84,7 @@ export class PortfolioService {
       formData.append('file', file, file.name);
     }
     if (cover) {
-      formData.append('file', cover, cover.name);
+      formData.append('cover', cover, cover.name);
     }
     formData.append('description', description);
     formData.append('location', location);

@@ -1,10 +1,14 @@
 <?php
 
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\StateController;
+use App\Http\Controllers\SubserviceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\BackgroundMusicController;
 
 
 use App\Mail\InvoicePaid;
@@ -61,6 +65,15 @@ Route::post('/posts/create', [PostController::class, 'store']);
 Route::delete('/posts/delete/{post_id}', [PostController::class, 'delete']);
 
 Route::put('/posts/update/{post_id}', [PostController::class, 'update']);
+
+Route::get('/services', [ServiceController::class, 'index']);
+
+Route::get('/subservices', [SubserviceController::class, 'index']);
+
+Route::get('/background-music', [BackgroundMusicController::class, 'index']);
+
+Route::get('/states', [StateController::class, 'index']);
+
 
 
 

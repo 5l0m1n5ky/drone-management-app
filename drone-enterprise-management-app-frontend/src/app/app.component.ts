@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import * as Aos from 'aos';
 import { LoginService } from './login/login.service';
-import { Subscription } from 'rxjs';
+import { exhaustMap, Subscription, take } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { ActivatedRoute } from '@angular/router';
 import { ToastService } from './shared/toast/toast.service';
@@ -15,7 +15,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(private loginService: LoginService, private cookieService: CookieService, private activatedRoute: ActivatedRoute, private toastService: ToastService) { }
 
-  private userSubscription: Subscription
+  userSubscription: Subscription
+  queryParamsSubscriber: Subscription
 
   isAuthenticated: boolean = false;
 
@@ -23,13 +24,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
   queryParams: any = {};
 
-  queryParamsSubscriber: Subscription
-
   ngOnInit(): void {
     Aos.init();
-    this.userSubscription = this.loginService.getUserData().subscribe(user => {
+    // this.userSubscription = this.loginService.getUserData().subscribe(user => {
+    this.loginService.user.pipe(take(1)).subscribe(user => {
       this.isAuthenticated = !!user;
-      this.cookieService.set('user', JSON.stringify({ id: user.id, email: user.email, privileges: user.privileges }));
+      // this.cookieService.set('user', JSON.stringify({ id: user?.id, email: user?.email, privileges: user?.privileges }));
     });
 
     this.queryParamsSubscriber = this.activatedRoute.queryParams.subscribe(params => {
@@ -39,6 +39,8 @@ export class AppComponent implements OnInit, OnDestroy {
         this.toastService.generateToast('success', 'Logowanie', 'Zalogowano pomyślnie');
       }
     });
+
+    this.loginService.autoLogin();
   }
 
   getLoginState(): boolean {
@@ -51,9 +53,16 @@ export class AppComponent implements OnInit, OnDestroy {
 
   }
 
+  changeLoginState() {
+    this.isAuthenticated = false;
+    if (this.getLoginState()) {
+      this.cookieService.delete('user');
+    }
+  }
+
   ngOnDestroy() {
-    this.userSubscription.unsubscribe();
-    this.queryParamsSubscriber.unsubscribe();
+    this.userSubscription?.unsubscribe();
+    this.queryParamsSubscriber?.unsubscribe();
   }
 
 }

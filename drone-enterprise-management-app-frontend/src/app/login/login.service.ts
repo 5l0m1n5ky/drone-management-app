@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, Subject, catchError, tap, throwError } from "rxjs";
+import { BehaviorSubject, Observable, Subject, catchError, exhaustMap, take, tap, throwError } from "rxjs";
 import { User } from "../user/user.model";
 import { CookieService } from "ngx-cookie-service";
 import { ToastModule } from 'primeng/toast';
@@ -30,13 +30,33 @@ interface checkSessionResponseData {
 
 export class LoginService {
 
-  user = new Subject<User>();
-  // user = new BehaviorSubject<User>({} as User);
+  // user = new Subject<User>();
+  user = new BehaviorSubject<User | null>(null);
 
-  getUserData(): Observable<User> {
-    return this.user.asObservable();
+  constructor(private http: HttpClient, private cookieService: CookieService) {
   }
-  constructor(private http: HttpClient) { }
+
+
+
+  // user = new BehaviorSubject<User>({ id: '', email: '', privileges: '' });
+
+  // getUserData(): Observable<User> {
+  //   return this.user.asObservable();
+  // }
+
+  // hasAdminPrivileges(): boolean {
+  //   const user = this.user.value;
+  //   if (user?.privileges === 'admin') {
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
+  hasAdminPrivileges(): User | null {
+    return this.user.value;
+  }
+
+
 
   login(email: string, password: string) {
     return this.http.post<LoginResponseData>('http://localhost:8000/login', {
@@ -85,7 +105,20 @@ export class LoginService {
   private handleAuthentication(id: string, email: string, privileges: string) {
     const user = new User(id, email, privileges);
     this.user.next(user);
+    this.cookieService.set('user', JSON.stringify({ id: user?.id, email: user?.email, privileges: user?.privileges }));
   }
 
+  autoLogin() {
+    const userData: User = JSON.parse(this.cookieService.get('user'));
 
+    if (!userData) {
+      return;
+    }
+
+    const loadedUser = new User(userData.id, userData.email, userData.privileges);
+    console.log(this.user.value);
+    this.user.next(loadedUser);
+    console.log('just set user from cookie');
+    console.log(this.user.value);
+  }
 }

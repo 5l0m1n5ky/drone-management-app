@@ -35,6 +35,12 @@ import { ToastService } from './shared/toast/toast.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { OnscrollAutoplay } from './portfolio/onscroll-autoplay.directive';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { PanelComponent } from './user/panel/panel.component';
+import { OrderComponent } from './user/panel/order/order.component';
+import { NotificationComponent } from './user/panel/notification/notification.component';
+import { AccountComponent } from './user/panel/account/account.component';
+import { OrderCreateComponent } from './user/panel/order-create/order-create.component';
 
 
 
@@ -73,7 +79,13 @@ import { OnscrollAutoplay } from './portfolio/onscroll-autoplay.directive';
     PreviewMobileComponent,
     CancelDialogComponent,
     ToastModule,
-    OnscrollAutoplay
+    OnscrollAutoplay,
+    SidebarComponent,
+    PanelComponent,
+    OrderComponent,
+    OrderCreateComponent,
+    AccountComponent,
+    NotificationComponent,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

@@ -46,6 +46,8 @@ export class NavbarComponent implements OnInit {
       if (response.data.toString() === 'Wylogowano pomyślnie') {
         this.router.navigate(['/login'], { queryParams: { action: 'logout' } });
       }
+    }, errorMessage => {
+      this.router.navigate(['/login']);
     });
   }
 }

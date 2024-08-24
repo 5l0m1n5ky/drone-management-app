@@ -79,10 +79,6 @@ module.exports = {
       boxShadow: {
         '3xl': '0 10px 40px rgba(0, 0, 0, 0.1)',
       },
-      // backgroundImage: {
-      //   'hero': "url('assets/images/collection-background.svg')",
-      //   'card': "url('assets/images/thumbnail-background.svg')",
-      // },
       screens: {
         "wide": "1440px"
       },
@@ -92,6 +88,27 @@ module.exports = {
       backgroundSize: {
         'dotted-size': '20px 20px',
       },
+      keyframes: {
+        sidebar_expand: {
+          '0%': { visibility: 'hidden' },
+          '75%': { visibility: 'hidden' },
+          '100%': { visibility: 'visible' },
+        },
+        sidebar_overlay_fade: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        }
+      },
+      animation: {
+        sidebar_expand: 'sidebar_expand 0.5s ease-in-out forwards',
+        sidebar_overlay_fade: 'sidebar_overlay_fade 0.5s ease-in-out forwards'
+      }
+    },
+  },
+  variants: {
+    extend: {
+      width: ['hover'],
+      animation: ['group-hover'],
     },
   },
   corePlugins: {
