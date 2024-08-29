@@ -17,15 +17,17 @@ return new class extends Migration {
             $table->foreignId('state_id')->references('id')->on('states');
             $table->foreignId('order_details_id')->references('id')->on('order_details');
             $table->float('price_brutto');
-            $table->dateTime('datetime');
+            $table->date('date');
             $table->float('order_latitude');
             $table->float('order_longtitude');
             $table->string('customer_name');
             $table->string('customer_surname');
             $table->string('nip');
-            $table->string('customer_address');
-            $table->string('order_alias');
+            $table->string('streetName');
+            $table->integer('streetNumber');
+            $table->integer('apartmentNumber');
             $table->longText('customer_comment');
+            $table->string('order_alias');
             $table->timestampsTz();
         });
     }

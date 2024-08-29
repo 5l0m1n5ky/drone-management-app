@@ -7,12 +7,18 @@ import { Subservice } from "./subservice.model";
 import { BackgroundMusic } from "./background-music.model";
 import { State } from "./state.model";
 
+interface PlaceOrderResponse {
+  data: string,
+  message: string
+}
+
 @Injectable({ providedIn: 'root' })
 
 export class OrderCreateService {
 
   constructor(private http: HttpClient) { }
 
+  // future feature
   reverseGeocoding(latLng: string) {
     const apiKey = environment.googleMapsApiKey;
     const url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + latLng + '&key=' + apiKey + '&language=pl&result_type=street_address'
@@ -79,15 +85,33 @@ export class OrderCreateService {
     );
   }
 
+  placeOrder(orderData: FormData) {
+    const formData: FormData = new FormData();
+
+    return this.http.post<PlaceOrderResponse>('http://localhost:8000/posts/create',
+      formData,
+      {
+        withCredentials: true,
+        reportProgress: true
+      }
+    ).pipe(catchError(this.handleError),
+      tap(response => {
+        return response.message;
+      }
+      ));
+  }
+
+
+
   private handleError(errorResponse: HttpErrorResponse) {
-    let errorMessage = 'Wystapił błąd. Spróbuj ponownie';
-    if (!errorResponse || !errorResponse.error) {
-      return throwError(errorMessage);
+
+    let errorMessage = 'Wystapił błąd';
+    if (errorResponse.error.data) {
+      errorMessage = errorResponse.error.data;
+    } else {
+      errorMessage = errorResponse.error.message;
     }
-    switch (errorResponse.error.message) {
-      case 'CREDENTIALS_MISMATCH':
-        errorMessage = 'Nieprawidłowe dane logowania'
-    };
+
     return throwError(errorMessage);
   }
 

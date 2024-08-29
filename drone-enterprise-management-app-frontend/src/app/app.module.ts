@@ -41,6 +41,7 @@ import { OrderComponent } from './user/panel/order/order.component';
 import { NotificationComponent } from './user/panel/notification/notification.component';
 import { AccountComponent } from './user/panel/account/account.component';
 import { OrderCreateComponent } from './user/panel/order-create/order-create.component';
+import { IndexComponent } from './index/index.component';
 
 
 
@@ -51,6 +52,7 @@ import { OrderCreateComponent } from './user/panel/order-create/order-create.com
     AccountVerificationComponent,
   ],
   imports: [
+    IndexComponent,
     BrowserModule,
     AppRoutingModule,
     FormsModule,

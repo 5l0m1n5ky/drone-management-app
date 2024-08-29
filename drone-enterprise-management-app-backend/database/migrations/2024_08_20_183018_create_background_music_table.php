@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('background_music', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['ambient', 'rock/metal', 'jazz', 'klasyczna', 'elektroniczna', 'dowolna', 'brak']);
+            $table->enum('type', ['ambient', 'rock/metal', 'jazz', 'klasyczna', 'elektroniczna', 'dowolny', 'brak']);
         });
     }
 

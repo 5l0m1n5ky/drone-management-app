@@ -225,7 +225,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\BackgroundMusic::create([
-            'type' => 'dowolna'
+            'type' => 'dowolny'
         ]);
 
         \App\Models\BackgroundMusic::create([
