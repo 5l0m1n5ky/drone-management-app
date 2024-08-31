@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StateController;
@@ -73,6 +74,10 @@ Route::get('/subservices', [SubserviceController::class, 'index']);
 Route::get('/background-music', [BackgroundMusicController::class, 'index']);
 
 Route::get('/states', [StateController::class, 'index']);
+
+Route::get('/dates', [OrderController::class, 'indexOrderDates']);
+
+Route::get('/orders', [OrderController::class, 'index']);
 
 
 

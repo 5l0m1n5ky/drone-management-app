@@ -19,6 +19,7 @@ import { OrderCreateComponent } from './user/panel/order-create/order-create.com
 import { NotificationComponent } from './user/panel/notification/notification.component';
 import { AccountComponent } from './user/panel/account/account.component';
 import { ChooseServiceComponent } from './services/choose-service/choose-service.component';
+import { OrderViewComponent } from './user/panel/order-view/order-view.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -42,6 +43,7 @@ const routes: Routes = [
       { path: 'create-order/:service_id', component: OrderCreateComponent },
       { path: 'notifications', component: NotificationComponent },
       { path: 'account', component: AccountComponent },
+      { path: 'order-view', component: OrderViewComponent },
     ]
   },
   // { path: '*', component: ServicesComponent }, TODO ANY LINK

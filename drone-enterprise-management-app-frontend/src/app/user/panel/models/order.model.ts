@@ -1,0 +1,23 @@
+export interface Order {
+  'id': Number,
+  'service_id': Number,
+  'user_id': Number,
+  'state_id': Number,
+  'order_details_id': Number,
+  'price_brutto': Number,
+  'date': Date,
+  'order_latitude': Number,
+  'order_longitude': Number,
+  'customer_name': String,
+  'customer_surname': String,
+  'nip': Number,
+  'streetName': String,
+  'streetNumber': Number,
+  'apartmentNumber': Number,
+  'customer_comment': String,
+  'email': Number,
+  'tel': Number,
+  'order_alias': String,
+  'created_at': Date,
+  'updated_at': Date
+}

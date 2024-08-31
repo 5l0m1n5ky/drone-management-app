@@ -24,6 +24,10 @@ class Order extends Model
         'streetName',
         'streetNumber',
         'apartmentNumber',
+        'zip',
+        'city',
+        'email',
+        'tel',
         'order_alias',
         'customer_comment'
     ];

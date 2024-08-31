@@ -12,7 +12,8 @@ return new class extends Migration {
     {
         Schema::create('states', function (Blueprint $table) {
             $table->id();
-            $table->enum('state_type', ['zlecono', 'przyjęte', 'realizowane', 'zrealizowane', 'odrzucone', 'do modyfikacji']);
+            $table->enum('state_type', ['Przyjęte', 'W realizacji', 'Zrealizowane', 'Do modyfikacji', 'Odrzucone']);
+            $table->enum('color', ['state-confirmed', 'state-in-progress', 'state-complete', 'state-to-modify', 'state-cancelled']);
         });
     }
 

@@ -5,7 +5,7 @@
       class="absolute right-3 top-3 w-4 h-4 brightness-50 hover:brightness-100 transition-all ease-in-out duration-200 cursor-pointer">
     <app-loading-spinner *ngIf="isProcessing"></app-loading-spinner>
     <form id="form" [formGroup]="placeOrderForm" (ngSubmit)="onPlaceOrder()">
-      <mat-horizontal-stepper #stepper [linear]="true" (selectionChange)="onStepChange($event)"
+      <mat-horizontal-stepper #stepper [linear]="false" (selectionChange)="onStepChange($event)"
         style="background-color: transparent; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
         <mat-step [stepControl]="placeOrderForm.get('ServiceDetailsForm')!">
           <ng-template matStepLabel>USŁUGA
@@ -172,9 +172,9 @@
         <mat-step [stepControl]="placeOrderForm.get('OrderDate')!">
           <ng-template matStepLabel>TERMIN</ng-template>
           <div matStepContent class="w-full">
-            <section class="mt-5 w-full flex flex-row justify-start items-center">
+            <section *ngIf="isFilterProcessed" class="mt-5 w-full flex flex-row justify-start items-center">
               <mat-card style="width: 500px;">
-                <mat-calendar [(selected)]="selected" [minDate]="minDate"
+                <mat-calendar [(selected)]="selected" [minDate]="minDate" [dateFilter]="orderDatesFilter"
                   (selectedChange)="onDateSelect($event)"></mat-calendar>
               </mat-card>
               <div *ngIf="orderDate" class="flex flex-col justify-center items-start ml-16 gap-5">

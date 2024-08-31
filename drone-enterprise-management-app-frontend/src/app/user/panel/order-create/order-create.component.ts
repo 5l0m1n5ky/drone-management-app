@@ -14,10 +14,6 @@ import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
 import { CommonModule } from '@angular/common';
 import { GoogleMapsModule } from "@angular/google-maps";
 import { OrderCreateService } from './order-create.service';
-import { Service } from './service.model';
-import { Subservice } from './subservice.model';
-import { State } from './state.model';
-import { BackgroundMusic } from './background-music.model';
 import { LoadingSpinnerComponent } from 'src/app/shared/loading-spinner/loading-spinner.component';
 import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { ActivatedRoute, Route, Router } from '@angular/router';
@@ -27,6 +23,15 @@ import { DatePipe } from '@angular/common';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { MatDialog } from '@angular/material/dialog';
 import { CancelDialogComponent } from 'src/app/shared/cancel-dialog/cancel-dialog.component';
+import { ToastService } from 'src/app/shared/toast/toast.service';
+import { LoginService } from 'src/app/login/login.service';
+import { AppComponent } from 'src/app/app.component';
+import { PanelService } from '../panel.service';
+import { OrderData } from '../models/order-data.model';
+import { Service } from '../models/service.model';
+import { Subservice } from '../models/subservice.model';
+import { State } from '../models/state.model';
+import { BgMusic } from '../models/bg-music.model';
 
 @Component({
   standalone: true,
@@ -39,13 +44,15 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
 
   placeOrderForm: FormGroup
 
+  order: OrderData;
+
   services: Service[] = [];
   currentService: Service[] = [];
   currentSubservices: Subservice[] = [];
   selectedSubservice: Subservice[] = [];
   subservices: Subservice[] = [];
   states: State[] = [];
-  bgMusic: BackgroundMusic[] = [];
+  bgMusic: BgMusic[] = [];
 
   options: google.maps.MapOptions = {
     mapId: "DEMO_MAP_ID",
@@ -69,12 +76,14 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
   areServicesFetched$ = new BehaviorSubject<boolean>(false);
   areSubservicesFetched$ = new BehaviorSubject<boolean>(false);
   isBackgroundMusicFetched$ = new BehaviorSubject<boolean>(false);
+  areOrderDatesFetched$ = new BehaviorSubject<boolean>(false);
 
   isProcessing: boolean = false;
   fetchFlagsSubscription: Subscription;
   orderSubscription: Subscription;
   ServiceSubscription: Subscription;
   musicSubscription: Subscription;
+  orderDatesSubscription: Subscription;
   orderIdSubscription: Subscription;
   isEnterpriseSubsription: Subscription;
   dialogActionSubscription: Subscription;
@@ -85,7 +94,7 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
   action$: Observable<any> = this.actionSubject.asObservable();
 
   currentServiceId: number;
-  currentServiceName: string
+  currentServiceName: String
 
   currentSubserviceId: number;
   currentSubserviceName: string
@@ -101,26 +110,86 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
   formats: string[] = ['4:3', '3:4', '16:9', '9:16', '21:9', '1:1'];
 
   orderAlias: string = 'zlecenie#' + Math.floor(10000 + Math.random() * 90000);
+  onPlaceOrderSubscription: any;
+  onCheckSubscription: Subscription;
 
-  constructor(private orderCreateService: OrderCreateService, private route: ActivatedRoute, private datePipe: DatePipe, private dialog: MatDialog, private router: Router) { }
+  fetchedDates: String[];
+  disabledOrderDates: Date[] = [];
+  isFilterProcessed: boolean = false; //forced initialization of calendar only after fetching filter dates
+
+
+  // Date filter function
+  orderDatesFilter = (date: Date): boolean => {
+    const dateToFilter = (date || new Date());
+
+    // Check if the current date is in the disabled dates array
+    return !this.disabledOrderDates.some(disabledOrderDate =>
+      disabledOrderDate.getDate() === dateToFilter.getDate() &&
+      disabledOrderDate.getMonth() === dateToFilter.getMonth() &&
+      disabledOrderDate.getFullYear() === dateToFilter.getFullYear()
+    );
+  }
+
+
+  constructor(private orderCreateService: OrderCreateService, private route: ActivatedRoute, private datePipe: DatePipe, private dialog: MatDialog, private router: Router, private toastService: ToastService, private loginService: LoginService, private appComponent: AppComponent, private panelService: PanelService) { }
 
   ngOnInit(): void {
 
     this.isProcessing = true;
 
-    this.orderSubscription = this.orderCreateService.fetchServices().subscribe(services => {
+    this.onCheckSubscription = this.loginService.checkSession().subscribe(responseData => {
+      if (responseData && responseData.message && responseData.message.toString() === 'ACTIVE_SESSION') {
+        this.isProcessing = false;
+      }
+    }, () => {
+      this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
+      this.appComponent.changeLoginState();
+      this.isProcessing = false;
+    });
+
+
+    this.orderSubscription = this.panelService.fetchServices().subscribe(services => {
       this.services = services;
       this.areServicesFetched$.next(true);
     });
 
-    this.ServiceSubscription = this.orderCreateService.fetchSubervices().subscribe(subservices => {
+    this.ServiceSubscription = this.panelService.fetchSubervices().subscribe(subservices => {
       this.subservices = subservices;
       this.areSubservicesFetched$.next(true);
     });
 
-    this.musicSubscription = this.orderCreateService.fetchBackgroundMusicTypes().subscribe(bgMusic => {
+    this.musicSubscription = this.panelService.fetchBackgroundMusicTypes().subscribe(bgMusic => {
       this.bgMusic = bgMusic;
       this.isBackgroundMusicFetched$.next(true);
+    });
+
+    this.orderDatesSubscription = this.orderCreateService.fetchOrderDates().subscribe(dates => {
+      console.log(dates);
+      // this.fetchedDates = dates.map(date => new Date(date));
+      // this.fetchedDates.map(date => this.datePipe.transform(new Date(date), 'yyyy-MM-dd'));
+      // this.disabledOrderDates = this.fetchedDates;
+      //  this.disabledOrderDates
+      // const orderDates = dates.map(date => new Date(date.valueOf()));
+      // this.fetchedDates = dates.map(date => new Date(date.date.toString()));
+
+
+      this.fetchedDates = dates.map(date => date.date);
+
+      this.fetchedDates.forEach(date => {
+        this.disabledOrderDates.push(new Date(date.toString()))
+      });
+
+      this.isFilterProcessed = true;
+
+      // this.disabledOrderDates = this.fetchedDates.map(date => new Date(date.toString()))
+
+      // this.fetchedDates.map(date => this.datePipe.transform(date, 'yyyy-MM-dd'));
+
+      // this.disabledOrderDates = orderDates;
+      console.log(this.fetchedDates);
+      console.log(this.disabledOrderDates);
+      // console.log(this.disabledOrderDates);
+      this.areOrderDatesFetched$.next(true);
     });
 
     this.fetchFlagsSubscription = combineLatest([this.areServicesFetched$, this.areSubservicesFetched$, this.isBackgroundMusicFetched$]).subscribe(
@@ -146,7 +215,7 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
         amount: new FormControl(null, Validators.required),
         bgMusicId: new FormControl(null),
         format: new FormControl(null),
-        report: new FormControl(null),
+        report: new FormControl(true),
       }),
       OrderLocationForm: new FormGroup({
         latitude: new FormControl(null, Validators.required),
@@ -233,6 +302,47 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
 
   onPlaceOrder() {
     console.log(this.placeOrderForm.value);
+
+    this.isProcessing = true;
+
+    this.order = {
+      'service_id': this.placeOrderForm.get('ServiceDetailsForm.service_id')?.value,
+      'subservice_id': this.placeOrderForm.get('ServiceDetailsForm.subservice_id')?.value,
+      'amount': this.placeOrderForm.get('ServiceDetailsForm.amount')?.value,
+      'bgMusicId': this.placeOrderForm.get('ServiceDetailsForm.bgMusicId')?.value,
+      'format': this.placeOrderForm.get('ServiceDetailsForm.format')?.value,
+      'report': this.placeOrderForm.get('ServiceDetailsForm.report')?.value,
+      'latitude': this.placeOrderForm.get('OrderLocationForm.latitude')?.value,
+      'longitude': this.placeOrderForm.get('OrderLocationForm.longitude')?.value,
+      'date': this.placeOrderForm.get('OrderDate.date')?.value,
+      'name': this.placeOrderForm.get('CustomerDataForm.name')?.value,
+      'surname': this.placeOrderForm.get('CustomerDataForm.surname')?.value,
+      'streetName': this.placeOrderForm.get('CustomerDataForm.streetName')?.value,
+      'streetNumber': this.placeOrderForm.get('CustomerDataForm.streetNumber')?.value,
+      'apartmentNumber': this.placeOrderForm.get('CustomerDataForm.apartmentNumber')?.value,
+      'city': this.placeOrderForm.get('CustomerDataForm.city')?.value,
+      'zip': this.placeOrderForm.get('CustomerDataForm.zip')?.value,
+      'nip': this.placeOrderForm.get('CustomerDataForm.nip')?.value,
+      'email': this.placeOrderForm.get('CustomerDataForm.email')?.value,
+      'tel': this.placeOrderForm.get('CustomerDataForm.tel')?.value,
+      'alias': this.placeOrderForm.get('OrderDetailForm.alias')?.value,
+      'description': this.placeOrderForm.get('OrderDetailForm.description')?.value,
+      'price': this.placeOrderForm.get('OrderDetailForm.price')?.value,
+    };
+
+    this.onPlaceOrderSubscription = this.orderCreateService.placeOrder(
+      this.order
+    ).subscribe(responseData => {
+      this.isProcessing = false;
+      this.router.navigate(['/user/panel/orders'])
+      this.toastService.generateToast('success', 'Składanie zamówienia', responseData.message.toString());
+
+    }, errorMessage => {
+      this.toastService.generateToast('error', 'Składanie zamówienia', errorMessage);
+      this.isProcessing = false;
+
+    });
+    this.placeOrderForm.reset();
   }
 
   onCancel() {
@@ -290,7 +400,7 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
     }
   }
 
-  onDateSelect(date: Date) {
+  onDateSelect(date: Date | null) {
     this.orderDate = this.datePipe.transform(date, 'dd-MM-yyyy')?.toString();
     this.placeOrderForm.get('OrderDate.date')?.patchValue(this.datePipe.transform(date, 'yyyy-MM-dd')?.toString());
   }

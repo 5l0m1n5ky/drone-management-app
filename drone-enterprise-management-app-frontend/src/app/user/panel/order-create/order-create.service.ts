@@ -2,14 +2,15 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http
 import { Injectable } from "@angular/core";
 import { catchError, map, tap, throwError } from "rxjs";
 import { environment } from "src/environments/environment";
-import { Service } from "./service.model";
-import { Subservice } from "./subservice.model";
-import { BackgroundMusic } from "./background-music.model";
-import { State } from "./state.model";
+import { OrderData } from "../models/order-data.model";
 
 interface PlaceOrderResponse {
   data: string,
   message: string
+}
+
+interface OrderDates {
+  date: String
 }
 
 @Injectable({ providedIn: 'root' })
@@ -33,63 +34,23 @@ export class OrderCreateService {
       ));
   }
 
-  fetchServices() {
-    return this.http.get<{ [post: string]: Service }>('http://localhost:8000/api/services').pipe(map(responseData => {
-      const servicesArray: Service[] = [];
-      for (const service in responseData) {
-        if (responseData.hasOwnProperty(service)) {
-          servicesArray.push({ ...responseData[service] });
+  fetchOrderDates() {
+    return this.http.get<{ [date: string]: OrderDates }>('http://localhost:8000/api/dates').pipe(map(responseData => {
+      const datesArray: OrderDates[] = [];
+      for (const date in responseData) {
+        if (responseData.hasOwnProperty(date)) {
+          datesArray.push({ ...responseData[date] });
         }
       }
-      return servicesArray;
+      return datesArray;
     })
     );
   }
 
-  fetchSubervices() {
-    return this.http.get<{ [post: string]: Subservice }>('http://localhost:8000/api/subservices').pipe(map(responseData => {
-      const subservicesArray: Subservice[] = [];
-      for (const subservice in responseData) {
-        if (responseData.hasOwnProperty(subservice)) {
-          subservicesArray.push({ ...responseData[subservice] });
-        }
-      }
-      return subservicesArray;
-    })
-    );
-  }
-
-  fetchBackgroundMusicTypes() {
-    return this.http.get<{ [post: string]: BackgroundMusic }>('http://localhost:8000/api/background-music').pipe(map(responseData => {
-      const backgroundMusicArray: BackgroundMusic[] = [];
-      for (const musicType in responseData) {
-        if (responseData.hasOwnProperty(musicType)) {
-          backgroundMusicArray.push({ ...responseData[musicType] });
-        }
-      }
-      return backgroundMusicArray;
-    })
-    );
-  }
-
-  fetchStates() {
-    return this.http.get<{ [post: string]: State }>('http://localhost:8000/api/states').pipe(map(responseData => {
-      const statesArray: State[] = [];
-      for (const state in responseData) {
-        if (responseData.hasOwnProperty(state)) {
-          statesArray.push({ ...responseData[state] });
-        }
-      }
-      return statesArray;
-    })
-    );
-  }
-
-  placeOrder(orderData: FormData) {
-    const formData: FormData = new FormData();
-
-    return this.http.post<PlaceOrderResponse>('http://localhost:8000/posts/create',
-      formData,
+  placeOrder(orderData: OrderData) {
+    return this.http.post<PlaceOrderResponse>('http://localhost:8000/orders/create',
+      // formData,
+      orderData,
       {
         withCredentials: true,
         reportProgress: true
@@ -118,4 +79,6 @@ export class OrderCreateService {
   private handleRevesrseGeocodingResponse(responseData: string) {
     console.log(responseData);
   }
+
+
 }

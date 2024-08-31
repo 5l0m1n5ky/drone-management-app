@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -32,16 +33,19 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/user/check', [AuthController::class, 'check']);
+
+    Route::post('/posts/create', [PostController::class, 'store'])->middleware('restrictRole:admin');
+    //POST method works with usage of Angular FormData body unlike to PUT or PATCH
+    Route::post('/posts/update/{post_id}', [PostController::class, 'update'])->middleware('restrictRole:admin');
+    Route::delete('/posts/delete/{post_id}', [PostController::class, 'delete'])->middleware('restrictRole:admin');
+
+    Route::post('/orders/create', [OrderController::class, 'store']);
+    Route::get('/orders', [OrderController::class, 'index']);
 });
 
 // Route::post('/posts/create', [PostController::class, 'store']);
 
 Route::post('/register', [AuthController::class, 'register']);
 
-Route::post('/posts/create', [PostController::class, 'store'])->middleware('restrictRole:admin');
 
-//POST method works with usage of Angular FormData body unlike to PUT or PATCH
-Route::post('/posts/update/{post_id}', [PostController::class, 'update'])->middleware('restrictRole:admin');
-
-Route::delete('/posts/delete/{post_id}', [PostController::class, 'delete'])->middleware('restrictRole:admin');
 

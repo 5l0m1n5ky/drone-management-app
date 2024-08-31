@@ -10,7 +10,8 @@ class State extends Model
     use HasFactory;
 
     protected $fillable = [
-        'state_type'
+        'state_type',
+        'color'
     ];
 
     public $timestamps = false;

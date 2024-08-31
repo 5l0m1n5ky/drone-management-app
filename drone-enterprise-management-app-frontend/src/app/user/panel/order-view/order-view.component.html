@@ -1,0 +1,177 @@
+<app-loading-spinner *ngIf="isProcessing"></app-loading-spinner>
+<div
+  class="hidden min-[1024px]:block absolute top-0 left-0 z-0 w-full h-full bg-neutral-800 pl-[6.5rem] py-5 pr-5 overflow-hidden">
+  <div
+    class="px-5 py-5 flex flex-col justify-start items-start gap-5 w-full h-full bg-neutral-900 rounded-xl overflow-x-hidden overflow-y-auto">
+    <div class="flex flex-row justify-start items-center font-montserrat text-neutral-600 text-sm">
+      <p routerLink="/user/panel/orders" class="hover:brightness-125 ease-in-out duration-200 cursor-pointer">
+        ZLECENIA
+      </p>
+      <img src="./assets/icons/swipe-right.svg" alt="">
+      <!-- <p> {{ order[0].alias.toUpperCase() }}</p> -->
+      <p>
+        ZLECENIE
+      </p>
+      <p (click)="openBottomSheet()"
+        class="ml-5 text-xs bg-neutral-600 text-neutral-900 font-semibold py-1 px-2 rounded-full hover:brightness-125 ease-in-out duration-200 cursor-pointer">
+        ZMIEŃ STATUS
+      </p>
+    </div>
+
+    <div *ngIf="order" class="w-full h-full flex flex-row items-start justify-start">
+      <section class="p-5 flex flex-wrap gap-10 h-auto w-auto max-w-[50%]">
+        <div class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            NAZWA ZLECENIA
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].alias }}
+          </p>
+        </div>
+        <div class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            STATUS
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].state }}
+          </p>
+        </div>
+        <div class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            USŁUGA
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].service }}
+          </p>
+        </div>
+        <div class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            ZAKRES ZLECENIA
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].subservice }}
+          </p>
+        </div>
+        <div class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            ILOŚĆ
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].amount }}
+          </p>
+        </div>
+        <div class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            PODKŁAD MUZYCZNY
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].bgMusic }}
+          </p>
+        </div>
+        <div class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            FORMAT
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].format }}
+          </p>
+        </div>
+        <div class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            GENEROWANIE RAPORTU
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].report ? 'Tak' : 'Nie' }}
+          </p>
+        </div>
+        <div class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            Data
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].date }}
+          </p>
+        </div>
+        <div class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            KOSZT
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].price }} PLN
+          </p>
+        </div>
+        <div class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            UWAGI DO ZAMÓWIENIA
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].customerComment }}
+          </p>
+        </div>
+        <div *ngIf="isAdmin" class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            KLIENT
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].customerName }}
+          </p>
+        </div>
+        <div *ngIf="isAdmin && order[0].customerSurname" class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            NAZWISKO
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].customerSurname }}
+          </p>
+        </div>
+        <div *ngIf="isAdmin && order[0].nip" class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            NIP
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].nip }}
+          </p>
+        </div>
+        <div *ngIf="isAdmin" class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            ADRES
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].streetName }} {{ order[0].streetNumber }} {{ order[0].streetName ? '/' + order[0].streetName :
+            ''}} {{ order[0].zip }} {{ order[0].city }}
+          </p>
+        </div>
+        <div *ngIf="isAdmin" class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            EMAIL
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].email }}
+          </p>
+        </div>
+        <div *ngIf="isAdmin" class="text-left font-montserrat w-48 h-8">
+          <h4 class="text-neutral-700 text-xs">
+            NUMER KONTAKTOWY
+          </h4>
+          <p class="text-base text-neutral-500 font-semibold">
+            {{ order[0].tel }}
+          </p>
+        </div>
+      </section>
+      <section class="flex flex-col items-center justify-start p-5 w-full">
+        <div class="w-[600px] h-[600px] bg-black">
+          <google-map height="100%" width="100%" [options]="options" [center]="center">
+            <map-advanced-marker *ngFor="let position of markerPositions" [position]="position" />
+          </google-map>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div
+  class="block min-[1024px]:hidden absolute top-0 left-0 z-0 w-screen h-screen bg-neutral-800 px-5 pt-5 overflow-hidden">
+  <div class="w-full h-full bg-[#202020] rounded-xl">
+    <p>order</p>
+  </div>
+</div>

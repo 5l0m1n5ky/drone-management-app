@@ -235,27 +235,28 @@ class DatabaseSeeder extends Seeder
         // State
 
         \App\Models\State::create([
-            'state_type' => 'przyjęte'
+            'state_type' => 'Przyjęte',
+            'color' => 'state-confirmed'
         ]);
 
         \App\Models\State::create([
-            'state_type' => 'realizowane'
+            'state_type' => 'W realizacji',
+            'color' => 'state-in-progress'
         ]);
 
         \App\Models\State::create([
-            'state_type' => 'zrealizowane'
+            'state_type' => 'Zrealizowane',
+            'color' => 'state-complete'
         ]);
 
         \App\Models\State::create([
-            'state_type' => 'do modyfikacji'
+            'state_type' => 'Do modyfikacji',
+            'color' => 'state-to-modify'
         ]);
 
         \App\Models\State::create([
-            'state_type' => 'odrzucone'
-        ]);
-
-        \App\Models\State::create([
-            'state_type' => 'przyjęte'
+            'state_type' => 'Odrzucone',
+            'color' => 'state-cancelled'
         ]);
     }
 }

@@ -44,17 +44,17 @@ export class LoginService {
   //   return this.user.asObservable();
   // }
 
-  // hasAdminPrivileges(): boolean {
-  //   const user = this.user.value;
-  //   if (user?.privileges === 'admin') {
-  //     return true;
-  //   }
-  //   return false;
-  // }
-
-  hasAdminPrivileges(): User | null {
-    return this.user.value;
+  hasAdminPrivileges(): boolean {
+    const user = this.user.value;
+    if (user?.privileges === 'admin') {
+      return true;
+    }
+    return false;
   }
+
+  // hasAdminPrivileges(): User | null {
+  //   return this.user.value;
+  // }
 
 
 

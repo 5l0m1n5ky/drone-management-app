@@ -462,7 +462,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
   // }
 
   isAdmin() {
-    return this.loginService.hasAdminPrivileges()?.privileges === 'admin' || false;
+    return this.loginService.hasAdminPrivileges();
   }
 
   ngOnDestroy(): void {

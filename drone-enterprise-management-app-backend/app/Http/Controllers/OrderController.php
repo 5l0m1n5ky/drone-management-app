@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderDetails;
 use Illuminate\Support\Facades\DB;
 use App\Traits\HttpResponses;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 
@@ -18,24 +19,122 @@ class OrderController extends Controller
     public function index()
     {
 
-        $user = auth()->user();
+        $user = Auth::user();
 
-        if ($user->role === 'admin') {
-            $orders = DB::table('orders')->orderBy('id')->get();
-            return response()->json($orders);
+        $services = collect(DB::table('services')->get());
+        $subservices = collect(DB::table('subservices')->get());
+        $states = collect(DB::table('states')->get());
+        $bgMusic = collect(DB::table('background_music')->get());
 
-        } else if ($user->role === 'user') {
-            $orders = DB::table('orders')->where('id', $user->id)->orderBy('id')->get();
-            return response()->json($orders);
+        try {
+            if ($user->role === 'admin') {
 
-        } else {
+                $orderData = [];
+                $orders = DB::table('orders')->orderBy('id')->get();
+
+                foreach ($orders as $order) {
+
+                    $orderDetailsId = $order->order_details_id;
+                    $orderDetails = DB::table('order_details')->where('id', $orderDetailsId)->orderBy('id')->first();
+                    $orderItem = [
+                        // 'order' => [
+                        'id' => $order->id,
+                        'service' => $services->where('id', $order->service_id)->pluck('service_type')->first(),
+                        'subservice' => $subservices->where('id', $orderDetails->subservice_id)->pluck('subservice')->first(),
+                        'amount' => $orderDetails->amount,
+                        'bgMusic' => $orderDetails->background_music_id ? $bgMusic->where('id', $orderDetails->background_music_id)->pluck('type')->first() : null,
+                        'format' => $orderDetails->format,
+                        'report' => $orderDetails->report,
+                        'latitude' => $order->order_latitude,
+                        'longitude' => $order->order_longitude,
+                        'date' => $order->date,
+                        'alias' => $order->order_alias,
+                        'description' => $order->customer_comment,
+                        'price' => $order->price_brutto,
+                        'state' => $states->where('id', $order->state_id)->pluck('state_type')->first(),
+                        'stateColor' => $states->where('id', $order->state_id)->pluck('color')->first(),
+                        'customerName' => $order->customer_name,
+                        'customerSurname' => $order->customer_surname,
+                        'nip' => $order->nip,
+                        'streetName' => $order->streetName,
+                        'streetNumber' => $order->streetNumber,
+                        'apartmentNumber' => $order->apartmentNumber,
+                        'zip' => $order->zip,
+                        'city' => $order->city,
+                        'customerComment' => $order->customer_comment,
+                        'email' => $order->email,
+                        'tel' => $order->tel,
+                        // ]
+                    ];
+
+                    $orderData[] = $orderItem;
+                }
+                return response()->json($orderData);
+
+            } else if ($user->role === 'user') {
+
+                $orderData = [];
+                $orders = DB::table('orders')->where('id', $user->id)->orderBy('id')->get();
+                foreach ($orders as $order) {
+
+                    $orderDetailsId = $order->order_details_id;
+                    $orderDetails = DB::table('order_details')->where('id', $orderDetailsId)->orderBy('id')->first();
+                    $orderItem = [
+                        // 'order' => [
+                        'id' => $order->id,
+                        'service' => $services->where('id', $order->service_id)->pluck('service_type')->first(),
+                        'subservice' => $subservices->where('id', $orderDetails->subservice_id)->pluck('subservice')->first(),
+                        'amount' => $orderDetails->amount,
+                        'bgMusic' => $orderDetails->background_music_id ? $bgMusic->where('id', $orderDetails->background_music_id)->pluck('type')->first() : null,
+                        'format' => $orderDetails->format,
+                        'report' => $orderDetails->report,
+                        'latitude' => $order->order_latitude,
+                        'longitude' => $order->order_longitude,
+                        'date' => $order->date,
+                        'alias' => $order->order_alias,
+                        'description' => $order->customer_comment,
+                        'price' => $order->price_brutto,
+                        'state' => $states->where('id', $order->state_id)->pluck('state_type')->first(),
+                        'stateColor' => $states->where('id', $order->state_id)->pluck('color')->first(),
+                        'customerName' => $order->customer_name,
+                        'customerSurname' => $order->customer_surname,
+                        'nip' => $order->nip,
+                        'streetName' => $order->streetName,
+                        'streetNumber' => $order->streetNumber,
+                        'apartmentNumber' => $order->apartmentNumber,
+                        'customerComment' => $order->customer_comment,
+                        'email' => $order->email,
+                        'tel' => $order->tel,
+                        // ]
+                    ];
+
+                    $orderData[] = $orderItem;
+                }
+                return response()->json($orderData);
+
+            } else {
+                return $this->error(
+                    'You do not have such as previleges to make that request',
+                    'DENIED',
+                    500
+                );
+            }
+        } catch (\ErrorException $errorException) {
             return $this->error(
-                'You do not have such as previleges to make that request',
+                $errorException,
                 'DENIED',
                 500
             );
         }
+    }
 
+    public function indexOrderDates()
+    {
+        if (Auth::user()) {
+            $orderDates = Order::select('date')->orderBy('id')->get();
+
+            return response()->json($orderDates);
+        }
     }
 
     public function store(OrderRequest $orderRequest)
@@ -71,8 +170,24 @@ class OrderController extends Controller
             'apartmentNumber' => $orderRequest->apartmentNumber,
             'zip' => $orderRequest->zip,
             'city' => $orderRequest->city,
+            'email' => $orderRequest->email,
+            'tel' => $orderRequest->tel,
             'order_alias' => $orderRequest->alias,
             'customer_comment' => $orderRequest->description
         ]);
+
+        if ($order && $orderDetails) {
+            return $this->success(
+                'Zamówienie zostało złożone',
+                'ORDER_PLACED',
+                200
+            );
+        } else {
+            return $this->error(
+                'Wystąpił błąd w składaniu zamówienia',
+                'ORDER_PLACING_FAILED',
+                500
+            );
+        }
     }
 }

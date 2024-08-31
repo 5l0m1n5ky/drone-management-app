@@ -42,7 +42,7 @@ import { NotificationComponent } from './user/panel/notification/notification.co
 import { AccountComponent } from './user/panel/account/account.component';
 import { OrderCreateComponent } from './user/panel/order-create/order-create.component';
 import { IndexComponent } from './index/index.component';
-
+import { OrderViewComponent } from './user/panel/order-view/order-view.component';
 
 
 @NgModule({
@@ -88,6 +88,7 @@ import { IndexComponent } from './index/index.component';
     OrderCreateComponent,
     AccountComponent,
     NotificationComponent,
+    OrderViewComponent,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

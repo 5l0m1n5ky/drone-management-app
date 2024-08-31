@@ -152,3 +152,32 @@ body {
   }
 }
 
+.state-confirmed {
+  background-color: rgba(229, 229, 229, 0.5);
+  border: 1px solid rgba(229, 229, 229, 1);
+  color: rgba(229, 229, 229, 1);
+}
+
+.state-in-progress {
+  background-color: rgba(96, 165, 250, 0.5);
+  border: 1px solid rgba(96, 165, 250, 1);
+  color: rgba(96, 165, 250, 1);
+}
+
+.state-complete {
+  background-color: rgba(74, 222, 128, 0.5);
+  border: 1px solid rgba(74, 222, 128, 1);
+  color: rgba(74, 222, 128, 1);
+}
+
+.state-to-modify {
+  background-color: rgba(234, 179, 8, 0.5);
+  border: 1px solid rgba(234, 179, 8, 1);
+  color: rgba(234, 179, 8, 1);
+}
+
+.state-cancelled {
+  background-color: rgba(220, 38, 38, 0.5);
+  border: 1px solid rgba(220, 38, 38, 1);
+  color: rgba(220, 38, 38, 1);
+}

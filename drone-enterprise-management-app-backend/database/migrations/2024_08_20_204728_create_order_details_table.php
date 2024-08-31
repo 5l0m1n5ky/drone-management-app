@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->foreignId('background_music_id')->nullable()->references('id')->on('background_music');
             $table->enum('format', ['4:3', '3:4', '16:9', '9:16', '21:9', '1:1'])->nullable();
             $table->boolean('report')->nullable();
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 
