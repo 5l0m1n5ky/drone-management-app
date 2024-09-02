@@ -19,7 +19,13 @@
         class="font-montserrat text-[14px] font-semibold text-neutral-600">
         <div
           class="flex flex-row items-center mx-2 cursor-pointer hover:brightness-125 transition-all duration-300 ease-in-out">
-          <img src="./assets/icons/bell-icon.svg" alt="notification" class="w-12 h-12">
+          <div class="relative w-12 h-12">
+            <img src="./assets/icons/bell-icon.svg" alt="notification" class="absolute top-0 left-0 w-12 h-12">
+            <div *ngIf="badgeValue.valueOf() > 0" class="absolute top-1 right-1 rounded-full bg-red-700 w-4 h-4 text-center">
+              <p class="font-montserrat text-neutral-400 font-semibold text-[10px]">
+                {{ badgeValue.valueOf() < 10 ? badgeValue : '9+' }} </p>
+            </div>
+          </div>
           <h3 class="mx-2 hidden group-hover:block group-hover:animate-sidebar_expand">POWIADOMIENIA</h3>
         </div>
       </section>
@@ -31,14 +37,14 @@
           <h3 class="mx-2 hidden group-hover:block group-hover:animate-sidebar_expand">MOJE ZLECENIA</h3>
         </div>
       </section>
-      <section routerLink="/user/panel/account" routerLinkActive="routing-highlight"
+      <!-- <section routerLink="/user/panel/account" routerLinkActive="routing-highlight"
         class="font-montserrat text-[14px] font-semibold text-neutral-600">
         <div
           class="flex flex-row items-center mx-2 cursor-pointer hover:brightness-125 transition-all duration-300 ease-in-out">
           <img src="./assets/icons/user-icon.svg" alt="user" class="w-12 h-12">
           <h3 class="mx-2 hidden group-hover:block group-hover:animate-sidebar_expand">MOJE KONTO</h3>
         </div>
-      </section>
+      </section> -->
     </aside>
   </div>
 
@@ -47,7 +53,7 @@
     <li class="my-2">
       <div routerLink="/" class="flex flex-col justify-center items-center">
         <img src="./assets/icons/home-icon.svg" alt="home" class="w-8 h-8">
-        <h3 class="mx-2">
+        <h3 class="mx-2 text-xs">
           HOME
         </h3>
         <div class="w-10 mt-2 h-[5px] rounded-full">
@@ -59,12 +65,13 @@
       <div routerLink="/user/panel/notifications" routerLinkActive="routing-highlight"
         class="flex flex-col justify-center items-center">
         <div class="relative">
-          <img src="./assets/icons/bell-icon.svg" alt="notification" class="relative w-8 h-8">
-          <div class="absolute top-0 right-0 rounded-full bg-red-700 w-3 h-3 text-center">
-            <p class="font-montserrat text-neutral-500 font-semibold text-[0.5rem]">3</p>
+          <img src="./assets/icons/bell-icon.svg" alt="notification" class="w-8 h-8">
+          <div *ngIf="badgeValue.valueOf() > 0" class="absolute top-0 right-0 rounded-full bg-red-700 w-3 h-3 text-center">
+            <p class="font-montserrat text-neutral-400 font-semibold text-[0.5rem]">
+              {{ badgeValue.valueOf() < 10 ? badgeValue : '9+' }} </p>
           </div>
         </div>
-        <h3 class="mx-2">
+        <h3 class="mx-2 text-xs">
           POWIADOMIENIA
         </h3>
         <div class="w-10 mt-2 h-[5px] rounded-full" routerLinkActive="routing-indicator">
@@ -76,15 +83,14 @@
       <div routerLink="/user/panel/orders" routerLinkActive="routing-highlight"
         class="flex flex-col justify-center items-center">
         <img src="./assets/icons/list-icon.svg" alt="list" class="w-8 h-8">
-        <h3 class="mx-2">
+        <h3 class="mx-2 text-xs">
           ZLECENIA
         </h3>
         <div class="w-10 mt-2 h-[5px] rounded-full" routerLinkActive="routing-indicator">
         </div>
       </div>
     </li>
-
-    <li class="my-2">
+    <!-- <li class="my-2">
       <div routerLink="/user/panel/account" routerLinkActive="routing-highlight"
         class="flex flex-col justify-center items-center">
         <img src="./assets/icons/user-icon.svg" alt="user" class="w-8 h-8">
@@ -94,6 +100,6 @@
         <div class="w-10 mt-2 h-[5px] rounded-full" routerLinkActive="routing-indicator">
         </div>
       </div>
-    </li>
+    </li> -->
   </menu>
 </main>

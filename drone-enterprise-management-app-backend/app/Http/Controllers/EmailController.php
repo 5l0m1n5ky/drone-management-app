@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\AccountVeryficationEmail;
+use App\Mail\NotificationEmail;
 use App\Mail\TestMail;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -41,6 +42,12 @@ class EmailController extends Controller
             ]);
 
         }
+
+    }
+
+    public function sendNotificationEmail($email, $title, $content, $state = null, $comment)
+    {
+        $response = Mail::to($email)->send(new NotificationEmail($title, $content, $state, $comment));
 
     }
 }

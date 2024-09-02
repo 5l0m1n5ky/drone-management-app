@@ -13,6 +13,8 @@ class Notification extends Model
         'user_id',
         'title',
         'content',
+        'comment',
+        'state_id',
         'seen',
     ];
 }

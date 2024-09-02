@@ -15,8 +15,10 @@ return new class extends Migration {
             $table->foreignId('user_id')->references('id')->on('users');
             $table->string('title');
             $table->longText('content');
+            $table->longText('comment')->nullable();
+            $table->foreignId('state_id')->nullable()->references('id')->on('states');
             $table->boolean('seen');
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

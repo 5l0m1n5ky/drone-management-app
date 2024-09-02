@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\StateController;
 
 
 
@@ -41,6 +44,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::post('/orders/create', [OrderController::class, 'store']);
     Route::get('/orders', [OrderController::class, 'index']);
+    Route::post('/orders/state-update', [StateController::class, 'update'])->middleware('restrictRole:admin');
+
+    Route::get('/notifications', [NotificationController::class, 'index']);
 });
 
 // Route::post('/posts/create', [PostController::class, 'store']);

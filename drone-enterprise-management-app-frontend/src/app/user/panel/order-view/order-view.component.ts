@@ -15,6 +15,7 @@ import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-s
 import { BottomPanelComponent } from './bottom-panel/bottom-panel.component';
 import { State } from '../models/state.model';
 import { LoadingSpinnerComponent } from 'src/app/shared/loading-spinner/loading-spinner.component';
+import { ToastService } from 'src/app/shared/toast/toast.service';
 
 @Component({
   selector: 'app-order-view',
@@ -49,8 +50,9 @@ export class OrderViewComponent implements OnInit {
   markerPositions: google.maps.LatLngLiteral[] = [];
   mapInit: boolean = false;
   statesSubscription: Subscription;
+  updateStateSubscription: Subscription;
 
-  constructor(private panelComponent: PanelComponent, private panelService: PanelService, private router: Router, private location: Location, private loginService: LoginService, private bottomSheet: MatBottomSheet) { }
+  constructor(private panelComponent: PanelComponent, private panelService: PanelService, private router: Router, private location: Location, private loginService: LoginService, private bottomSheet: MatBottomSheet, private toastService: ToastService) { }
 
   ngOnInit(): void {
 
@@ -62,9 +64,9 @@ export class OrderViewComponent implements OnInit {
       this.orderItem = order;
     });
 
-    // if (!this.order) {
-    //   this.location.back();
-    // }
+    if (!this.order) {
+      this.location.back();
+    }
 
     const latitude = parseFloat(this.orderItem.latitude.toString());
     const longitude = parseFloat(this.orderItem.longitude.toString());
@@ -83,10 +85,29 @@ export class OrderViewComponent implements OnInit {
 
       const dataToPass = { data: { states: this.states, orderId: this.orderItem.id } }
 
-      this.bottomSheet.open(BottomPanelComponent, {
-        data: dataToPass // Correctly passing the data
+      const bottomPanelRef = this.bottomSheet.open(BottomPanelComponent, {
+        data: dataToPass
       });
       this.isProcessing = false;
+
+      bottomPanelRef.afterDismissed().subscribe((result) => {
+        if (result) {
+          console.log(result);
+
+          this.isProcessing = true;
+
+          this.updateStateSubscription = this.panelService.updateOrderState(result.orderId, result.stateId, result.comment).subscribe(response => {
+            console.log(response);
+            this.toastService.generateToast('success', 'Modyfikacja statusu', response.data.toString());
+            this.isProcessing = false;
+            this.router.navigate(['/user/panel/orders']);
+          }, errorMessage => {
+            this.toastService.generateToast('error', 'Modyfikacja statusu', errorMessage);
+            this.isProcessing = false;
+          });
+        }
+      });
     });
   }
+
 }

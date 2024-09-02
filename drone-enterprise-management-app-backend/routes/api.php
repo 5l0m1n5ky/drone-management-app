@@ -11,6 +11,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\BackgroundMusicController;
 
+use App\Mail\NotificationEmail;
+
+
 
 use App\Mail\InvoicePaid;
 use App\Models\Invoice;
@@ -78,6 +81,19 @@ Route::get('/states', [StateController::class, 'index']);
 Route::get('/dates', [OrderController::class, 'indexOrderDates']);
 
 Route::get('/orders', [OrderController::class, 'index']);
+
+Route::get('/notify-email', function () {
+
+    $title = "Zmiana statusu Twojego zlecenia";
+    $content = "Aktualny status Twojego zlecenia:";
+    $state = "W realizacji";
+    $comment = 'Twoje zlecenie jest w trakcie realizacji';
+
+    return new NotificationEmail($title, $content, $state, $comment);
+
+});
+
+
 
 
 

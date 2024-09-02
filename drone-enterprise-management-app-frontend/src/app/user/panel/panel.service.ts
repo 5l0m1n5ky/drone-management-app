@@ -1,15 +1,23 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, map } from "rxjs";
+import { BehaviorSubject, catchError, map, tap, throwError } from "rxjs";
 import { Service } from "./models/service.model";
 import { Subservice } from "./models/subservice.model";
 import { BgMusic } from "./models/bg-music.model";
 import { State } from "./models/state.model";
 import { OrderItem } from "./models/order-item.model";
+import { Notification } from "./models/notification.model";
 
 interface OrderResponseData {
   order: OrderItem[],
 }
+
+interface ResponseData {
+  status: string,
+  message: string,
+  data: string
+}
+
 @Injectable({ providedIn: 'root' })
 
 export class PanelService {
@@ -20,7 +28,7 @@ export class PanelService {
   orderToShowObservable$ = this.orderToShow.asObservable();
 
 
-  assignOrderItem(orderItem: OrderItem[]){
+  assignOrderItem(orderItem: OrderItem[]) {
     this.orderToShow.next(orderItem);
   }
 
@@ -76,6 +84,40 @@ export class PanelService {
     );
   }
 
+  fetchNotifications() {
+    return this.http.get<{ [notification: string]: Notification }>('http://localhost:8000/notifications', {
+      headers: new HttpHeaders({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }),
+      withCredentials: true
+    }).pipe(map(responseData => {
+      const notificationArray: Notification[] = [];
+      for (const notification in responseData) {
+        if (responseData.hasOwnProperty(notification)) {
+          notificationArray.push({ ...responseData[notification] });
+        }
+      }
+      return notificationArray;
+    })
+    );
+  }
+
+  updateNotificationSeenStatus(notificationId: Number) {
+    return this.http.post<ResponseData>('http://localhost:8000/notifications', { notificationId: notificationId },
+      {
+        headers: new HttpHeaders({
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }),
+        withCredentials: true
+      }).pipe(catchError(this.handleError),
+        tap(response => {
+          return response;
+        }
+        ));
+  }
+
   fetchOrders() {
     return this.http.get<{ [order: string]: OrderItem }>('http://localhost:8000/orders',
       {
@@ -95,26 +137,40 @@ export class PanelService {
       return ordersArray;
     })
     );
-
   }
 
+  updateOrderState(orderId: Number, stateId: Number, comment: string) {
+    const formData = new FormData;
+    formData.append('orderId', orderId.toString());
+    formData.append('stateId', stateId.toString());
+    formData.append('comment', comment);
 
+    return this.http.post<ResponseData>('http://localhost:8000/orders/state-update',
+      formData,
+      {
+        withCredentials: true,
+        reportProgress: true
+      }
+    ).pipe(catchError(this.handleError),
+      tap(response => {
+        return response;
+      }
+      ));
+  }
 
-  // private handleError(errorResponse: HttpErrorResponse) {
+  private handleError(errorResponse: HttpErrorResponse) {
 
-  //   let errorMessage = 'Wystapił błąd';
-  //   if (errorResponse.error.data) {
-  //     errorMessage = errorResponse.error.data;
-  //   } else {
-  //     errorMessage = errorResponse.error.message;
-  //   }
+    let errorMessage = 'Wystapił błąd';
+    if (errorResponse.error.data) {
+      errorMessage = errorResponse.error.data;
+    } else {
+      errorMessage = errorResponse.error.message;
+    }
 
-  //   return throwError(errorMessage);
-  // }
+    return throwError(errorMessage);
+  }
 
   // private handleRevesrseGeocodingResponse(responseData: string) {
   //   console.log(responseData);
   // }
-
-
 }

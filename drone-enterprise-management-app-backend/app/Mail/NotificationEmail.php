@@ -9,19 +9,25 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class AccountVerificationEmail extends Mailable
+class NotificationEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
-    public $emailSubject = 'Weryfikacja konta w systemie SlominSky';
+    private $title;
+    private $content;
+    private $state;
+    private $comment;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user)
+    public function __construct($title, $content, $state, $comment)
     {
-        $this->user = $user;
+        $this->title = $title;
+        $this->content = $content;
+        $this->state = $state;
+        $this->comment = $comment;
+
     }
 
     /**
@@ -30,7 +36,7 @@ class AccountVerificationEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Account Verification Email',
+            subject: 'Notification Email',
         );
     }
 
@@ -39,13 +45,18 @@ class AccountVerificationEmail extends Mailable
      */
     public function content(): Content
     {
-
-        $token = $this->user->verification_token;
+        $title = $this->title;
+        $content = $this->content;
+        $state = $this->state;
+        $comment = $this->comment;
 
         return new Content(
-            markdown: 'mail.accountVerificationEmail',
+            markdown: 'mail.notificationEmail',
             with: [
-                'token' => $token
+                'title' => $title,
+                'content' => $content,
+                'state' => $state,
+                'comment' => $comment
             ]
         );
     }

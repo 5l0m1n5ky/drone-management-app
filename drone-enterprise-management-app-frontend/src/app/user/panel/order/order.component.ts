@@ -7,6 +7,7 @@ import { AppComponent } from 'src/app/app.component';
 import { PanelService } from '../panel.service';
 import { OrderItem } from '../models/order-item.model';
 import { RouterLink } from '@angular/router';
+import { ToastModule } from 'primeng/toast';
 
 
 @Component({

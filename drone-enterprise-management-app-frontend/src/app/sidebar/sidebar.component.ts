@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { PanelService } from '../user/panel/panel.service';
+import { Notification } from '../user/panel/models/notification.model';
 
 @Component({
   standalone: true,
@@ -10,17 +12,27 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class SidebarComponent implements OnInit {
 
-  constructor() { }
-
+  notificationSubsciption: any;
   isMobile: boolean = false;
-  // isNotificationLink: boolean = false;
-  // isServicesLink: boolean = true;
-  // isUserAccountLink: boolean = false;
+  notifications: Notification[] = [];
+  unseenNotifications: Notification[] = [];
+  badgeValue: Number = 0;
+
+  constructor(private panelService: PanelService) { }
 
   @ViewChild('sidebar') sidebar: ElementRef;
 
   ngOnInit(): void {
-    this.onResize()
+    this.onResize();
+
+    this.notificationSubsciption = this.panelService.fetchNotifications().subscribe(notifications => {
+      console.log(notifications);
+      this.notifications = notifications;
+
+      this.checkBadgeValue();
+
+    });
+
   }
 
   isSidebarHovered: boolean = false;
@@ -34,24 +46,12 @@ export class SidebarComponent implements OnInit {
     }
   }
 
-  // onNotificationLink() {
-  //   this.isNotificationLink = true;
-  //   this.isServicesLink = false;
-  //   this.isUserAccountLink = false;
-  // }
+  checkBadgeValue() {
 
-  // onServicesLink() {
-  //   this.isServicesLink = true;
-  //   this.isNotificationLink = false;
-  //   this.isUserAccountLink = false;
-  // }
+    this.unseenNotifications = [...this.notifications.filter(notification => notification.seen === false)];
 
-  // onUserAccountLink() {
-  //   this.isUserAccountLink = true;
-  //   this.isNotificationLink = false;
-  //   this.isServicesLink = false;
-  // }
-
+    this.badgeValue = this.unseenNotifications.length;
+  }
 }
 
 

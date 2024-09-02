@@ -307,3 +307,9 @@ img {
 .break-all {
     word-break: break-all;
 }
+
+#state-highlight {
+    color: #a0a0a0;
+    font-weight: bold;
+    font-size: larger;
+}
