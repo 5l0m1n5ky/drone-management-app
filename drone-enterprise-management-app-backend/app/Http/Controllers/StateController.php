@@ -42,9 +42,9 @@ class StateController extends Controller
             $title = "Zmiana statusu Twojego zlecenia";
             $content = "Aktualny status Twojego zlecenia:";
 
-            $notificationResult = $this->notificationController->createNotification($userId, $email, $state_id, $comment, $title, $content);
+            $this->notificationController->createNotification($userId, $email, $state_id, $comment, $title, $content);
 
-            if ($result && $notificationResult) {
+            if ($result) {
                 return $this->success(
                     'Zaktualizowano status zlecenia',
                     'STATE_UPDATED',
@@ -53,7 +53,7 @@ class StateController extends Controller
             } else {
                 return $this->error(
                     'Bład aktualizacji zlecenia',
-                    'STATE_UPDATED_ERROR',
+                    'STATE_UPDATE_ERROR',
                     500
                 );
             }

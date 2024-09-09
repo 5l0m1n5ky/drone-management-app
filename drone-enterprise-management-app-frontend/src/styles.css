@@ -181,3 +181,27 @@ body {
   border: 1px solid rgba(220, 38, 38, 1);
   color: rgba(220, 38, 38, 1);
 }
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mat-expansion-panel {
+  background-color: #181818;
+}
+
+/* Angular Material FormField component border issue related to colision with Tailwind */
+.mdc-notched-outline__notch {
+  border-right: none;
+}
+
+.full-width{
+  width: 100%;
+}
+
+::ng-deep textarea.mat-input-element {
+  resize: none;
+}
+
+

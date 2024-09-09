@@ -4,30 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\StoreUserRequest;
-use Exception;
-use Illuminate\Session\TokenMismatchException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Http\Request;
 use App\Traits\HttpResponses;
 use App\Models\User;
+use App\Models\Token;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\AccountVerificationEmail;
-use Illuminate\Validation\ValidationException;
 use Throwable;
-use Illuminate\Support\Str;
-
-
-// use Illuminate\Contracts\Debug\ExceptionHandler;
-// use DB;
-// use \Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
 
-    // use HttpResponses;
+    protected $emailController;
+
+    public function __construct(EmailController $emailController)
+    {
+        $this->emailController = $emailController;
+    }
+
     use HttpResponses, HasApiTokens;
 
     public function login(LoginUserRequest $request)
@@ -87,58 +83,65 @@ class AuthController extends Controller
         try {
             $request->validated($request->all());
 
-            $user = User::create([
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'verification_token' => random_int(100000, 999999),
-            ]);
+            $user = User::where('email', $request->email)->first();
 
-            if (!$user->hasVerifiedEmail()) {
-                Mail::to($user->email)
-                    ->send(new AccountVerificationEmail($user));
+            if (!$user) {
+
+                $new_user = User::create([
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                ]);
+
+                if (!$new_user->hasVerifiedEmail()) {
+                    $token = Token::create([
+                        'user_id' => $new_user->id,
+                        'token_value' => random_int(100000, 999999),
+                    ]);
+
+                    $this->emailController->sendRegistrationEmail($new_user->email, $token->token_value);
+                }
+
+                return $this->success(
+                    [
+                        'user' => [
+                            'id' => $new_user->id,
+                            'email' => $new_user->email,
+                            'role' => $new_user->role
+                        ],
+                    ],
+                    'SIGNED_UP',
+                    200
+
+                );
+            } else {
+                return $this->error(
+                    'Wystąpił błąd w rejestracji konta',
+                    'REGISTER_ERROR',
+                    401
+                );
             }
 
-            return $this->success(
-                [
-                    'user' => [
-                        'id' => $user->id,
-                        'email' => $user->email,
-                        'role' => $user->role
-                    ],
-                ],
-                'SIGNED_UP',
-                200
-            );
-
-
-        } catch (ValidationException $authorizationException) {
+        } catch (\ErrorException $errorException) {
             return $this->error(
-                [
-                    'request' => [
-                        'email' => $request->email,
-                        'password' => $request->password
-                    ],
-                    $authorizationException->getMessage()
-                ],
+                'Wystąpił błąd w rejestracji konta',
+                'REGISTER_ERROR',
+                500
             );
-
         }
     }
 
     public function verifyAccount(Request $request)
     {
-        $token = $request->query('token');
+        $tokenToVerify = $request->query('token');
         $user_id = $request->query('user_id');
-
         $user = User::find($user_id);
+        $token = DB::table('tokens')->where('user_id', $user_id)->pluck('token_value')->first();
 
         if (!$user->hasVerifiedEmail()) {
 
-            if ($user->verification_token === $token) {
+            if ($tokenToVerify === $token) {
 
                 $user->markEmailAsVerified();
-
-                // TODO: create new table verify_tokens and execute remove record by user_id
 
                 return $this->success(
                     [
@@ -184,8 +187,6 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // Auth::user()->currentAccessToken()->delete();
-
         $request->session()->invalidate();
 
         return $this->success(

@@ -3,6 +3,7 @@ import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { PanelService } from '../user/panel/panel.service';
 import { Notification } from '../user/panel/models/notification.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -12,7 +13,7 @@ import { Notification } from '../user/panel/models/notification.model';
 })
 export class SidebarComponent implements OnInit {
 
-  notificationSubsciption: any;
+  notificationSubsciption: Subscription;
   isMobile: boolean = false;
   notifications: Notification[] = [];
   unseenNotifications: Notification[] = [];
@@ -25,14 +26,14 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void {
     this.onResize();
 
-    this.notificationSubsciption = this.panelService.fetchNotifications().subscribe(notifications => {
-      console.log(notifications);
-      this.notifications = notifications;
+    this.fetchNotifications();
 
-      this.checkBadgeValue();
+    this.panelService.badgeValue$.subscribe(action => {
 
+      if (action) {
+        this.fetchNotifications();
+      }
     });
-
   }
 
   isSidebarHovered: boolean = false;
@@ -46,11 +47,19 @@ export class SidebarComponent implements OnInit {
     }
   }
 
+  fetchNotifications() {
+    this.notificationSubsciption = this.panelService.fetchNotifications().subscribe(notifications => {
+      console.log(notifications);
+      this.notifications = notifications;
+      this.checkBadgeValue();
+    });
+  }
+
   checkBadgeValue() {
 
     this.unseenNotifications = [...this.notifications.filter(notification => notification.seen === false)];
-
     this.badgeValue = this.unseenNotifications.length;
+
   }
 }
 

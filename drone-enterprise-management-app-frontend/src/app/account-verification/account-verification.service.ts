@@ -25,7 +25,7 @@ export class AccountVerificationService {
   constructor(private http: HttpClient) { }
 
   verify(userId: number, code: string) {
-    return this.http.post<AccountVerificationResponseData>('http://localhost:8000/api/verifyAccount', {
+    return this.http.post<AccountVerificationResponseData>('http://localhost:8000/verifyAccount', {
     }, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',

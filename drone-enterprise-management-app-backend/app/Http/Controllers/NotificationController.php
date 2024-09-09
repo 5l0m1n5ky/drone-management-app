@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\NotificationSeenUpdateRequest;
 use App\Models\Notification;
+use App\Models\State;
+use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use App\Http\Controllers\EmailController;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 
 class NotificationController extends Controller
 {
+
+    use HttpResponses;
 
     protected $emailController;
 
@@ -95,7 +100,7 @@ class NotificationController extends Controller
     public function createNotification($userId, $email, $stateId = null, $comment = null, $title, $content)
     {
 
-        $notification = Notification::create([
+        Notification::create([
             'user_id' => $userId,
             'title' => $title,
             'content' => $content,
@@ -104,15 +109,45 @@ class NotificationController extends Controller
             'seen' => false
         ]);
 
-        // $this->emailController->sendNotificationEmail($email, $title, $content);
+        $state = null;
 
+        if ($stateId) {
+            $state = State::find($stateId);
+        }
 
-        if ($notification) {
-            // return 'NOTIFICATION_CREATED';
-            return true;
-        } else {
-            return false;
-            // return 'NOTIFICATION_ERROR';
+        $this->emailController->sendNotificationEmail($email, $title, $content, $state->state_type, $comment);
+
+    }
+
+    public function update(NotificationSeenUpdateRequest $notificationSeenUpdateRequest)
+    {
+
+        try {
+            $notificationSeenUpdateRequest->validated($notificationSeenUpdateRequest->all());
+
+            $notification = Notification::find($notificationSeenUpdateRequest->notificationId);
+
+            $result = $notification->update(['seen' => true]);
+
+            if ($result && $result) {
+                return $this->success(
+                    'Zaktualizowano status powiadomienia',
+                    'NOTIFICATION_UPDATED',
+                    200
+                );
+            } else {
+                return $this->error(
+                    'Bład aktualizacji powiadomienia',
+                    'NOTIFICATION_UPDATE_ERROR',
+                    500
+                );
+            }
+        } catch (\ErrorException $errorException) {
+            return $this->error(
+                'Bład w przetwarzaniu żądania',
+                'REQUEST_ERROR',
+                500
+            );
         }
     }
 }

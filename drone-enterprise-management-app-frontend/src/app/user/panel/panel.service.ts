@@ -27,6 +27,12 @@ export class PanelService {
   private orderToShow = new BehaviorSubject<OrderItem[] | null>(null);
   orderToShowObservable$ = this.orderToShow.asObservable();
 
+  private badgeValueSubject = new BehaviorSubject<boolean>(false);
+  badgeValue$ = this.badgeValueSubject.asObservable();
+
+  updateBadgeValue() {
+    this.badgeValueSubject.next(true);
+  }
 
   assignOrderItem(orderItem: OrderItem[]) {
     this.orderToShow.next(orderItem);
@@ -104,7 +110,7 @@ export class PanelService {
   }
 
   updateNotificationSeenStatus(notificationId: Number) {
-    return this.http.post<ResponseData>('http://localhost:8000/notifications', { notificationId: notificationId },
+    return this.http.post<ResponseData>('http://localhost:8000/notifications/seen', { notificationId: notificationId },
       {
         headers: new HttpHeaders({
           'Accept': 'application/json',
@@ -127,7 +133,7 @@ export class PanelService {
         }),
         withCredentials: true
       }
-    ).pipe(map(responseData => {
+    ).pipe(catchError(this.handleError), map(responseData => {
       const ordersArray: OrderItem[] = [];
       for (const order in responseData) {
         if (responseData.hasOwnProperty(order)) {
@@ -161,11 +167,15 @@ export class PanelService {
   private handleError(errorResponse: HttpErrorResponse) {
 
     let errorMessage = 'Wystapił błąd';
-    if (errorResponse.error.data) {
-      errorMessage = errorResponse.error.data;
-    } else {
+    // if (errorResponse.error.data) {
+    //   errorMessage = errorResponse.error.data;
+    // } else {
+    //   errorMessage = errorResponse.error.message;
+
+    if (errorResponse.error) {
       errorMessage = errorResponse.error.message;
     }
+    // }
 
     return throwError(errorMessage);
   }

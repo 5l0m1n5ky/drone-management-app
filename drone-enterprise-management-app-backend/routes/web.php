@@ -2,34 +2,18 @@
 
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
-use Illuminate\Http\Request;
-use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\StateController;
-
-
-
+use App\Http\Controllers\ContactControler;
 use App\Mail\InvoicePaid;
 use App\Models\Invoice;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::get('/', function () {
     return view('welcome');
 });
-
 
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -47,11 +31,14 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/orders/state-update', [StateController::class, 'update'])->middleware('restrictRole:admin');
 
     Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/seen', [NotificationController::class, 'update']);
 });
 
-// Route::post('/posts/create', [PostController::class, 'store']);
-
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/verifyAccount', [AuthController::class, 'verifyAccount']);
+Route::post('/regenerateToken/{user_id}', [AuthController::class, 'regenerateToken']);
+Route::post('/contact', [ContactControler::class, 'store']);
+
 
 
 

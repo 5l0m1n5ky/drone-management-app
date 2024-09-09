@@ -5,12 +5,14 @@ import { Notification } from '../models/notification.model';
 import { Subscription } from 'rxjs';
 import { LoadingSpinnerComponent } from 'src/app/shared/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
+import { MatExpansionModule } from '@angular/material/expansion';
+
 
 @Component({
   standalone: true,
   selector: 'app-notification',
   templateUrl: './notification.component.html',
-  imports: [CommonModule, LoadingSpinnerComponent]
+  imports: [CommonModule, LoadingSpinnerComponent, MatExpansionModule]
 })
 
 export class NotificationComponent implements OnInit, OnDestroy {
@@ -19,27 +21,56 @@ export class NotificationComponent implements OnInit, OnDestroy {
   notificatonSubscription: Subscription;
 
   isProcessing: boolean = false;
+  updateSeenStatusSubscription: any;
 
   constructor(private panelService: PanelService, private router: Router) { }
 
   ngOnInit(): void {
 
+    this.fetchNotifications();
+  }
+
+  fetchNotifications() {
     this.isProcessing = true;
+
     this.notificatonSubscription = this.panelService.fetchNotifications().subscribe(notifications => {
       this.notifications = notifications;
+
       this.isProcessing = false;
+
+    }, errorResponse => {
+      console.log(errorResponse);
+
+      this.isProcessing = false;
+
+      console.log(errorResponse.error.message)
+
+      switch (errorResponse.error.message) {
+        case 'Unauthenticated.':
+          this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
+      }
     });
   }
 
-  onNotificationShow(notificationId: Number) {
-    this.router.navigate(['/user/panel/notification-view']);
+  onNotificationShow(notificationId: Number, seen: Boolean) {
 
-    this.panelService.updateNotificationSeenStatus(notificationId);
+    if (!seen) {
+      this.updateSeenStatusSubscription = this.panelService.updateNotificationSeenStatus(notificationId).subscribe(() => {
+        console.log('seen');
+        this.notifications.filter(notification => notification.id === notificationId).map(notification => notification.seen = true);
+        this.panelService.updateBadgeValue();
+      });
+    }
   }
 
   ngOnDestroy(): void {
     if (this.notificatonSubscription) {
       this.notificatonSubscription.unsubscribe();
     }
+
+    if (this.updateSeenStatusSubscription) {
+      this.updateSeenStatusSubscription.unsubscribe();
+    }
+
   }
 }

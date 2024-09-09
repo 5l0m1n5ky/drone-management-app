@@ -20,6 +20,7 @@ import { NotificationComponent } from './user/panel/notification/notification.co
 import { AccountComponent } from './user/panel/account/account.component';
 import { ChooseServiceComponent } from './services/choose-service/choose-service.component';
 import { OrderViewComponent } from './user/panel/order-view/order-view.component';
+import { ContactComponent } from './contact/contact.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -35,6 +36,7 @@ const routes: Routes = [
   { path: 'electric-distribution-inspection', component: ElectricDistributionServiceComponent },
   { path: 'windmill-inspection', component: WindmillServiceComponent },
   { path: 'photogrammetry-service', component: PhotogrammetryServiceComponent },
+  { path: 'contact', component: ContactComponent },
   {
     path: 'user/panel',
     component: PanelComponent,

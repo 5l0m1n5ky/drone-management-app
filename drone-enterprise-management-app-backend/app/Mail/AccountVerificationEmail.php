@@ -3,25 +3,25 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Address;
 
 class AccountVerificationEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
+    public $token;
     public $emailSubject = 'Weryfikacja konta w systemie SlominSky';
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user)
+    public function __construct($token)
     {
-        $this->user = $user;
+        $this->token = $token;
     }
 
     /**
@@ -30,7 +30,8 @@ class AccountVerificationEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Account Verification Email',
+            from: new Address( env('MAIL_USERNAME'), env('MAIL_FROM_NAME')),
+            subject: $this->emailSubject,
         );
     }
 
@@ -40,7 +41,7 @@ class AccountVerificationEmail extends Mailable
     public function content(): Content
     {
 
-        $token = $this->user->verification_token;
+        $token = $this->token;
 
         return new Content(
             markdown: 'mail.accountVerificationEmail',

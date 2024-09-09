@@ -9,7 +9,7 @@
             <form #registerForm="ngForm" (ngSubmit)="onRegisterFormSubmit(registerForm)"
               class="form-horizontal w-3/4 mx-auto">
               <div class="flex flex-col mt-4">
-                <input id="email" type="email" #email="ngModel"
+                <input id="email" type="email" autocomplete="email" #email="ngModel"
                   [ngClass]="(!email.valid && email.touched) ? 'flex-grow h-8 px-2 rounded border border-red-700/50 text-red-700 bg-transparent transition-all outline-none' : 'flex-grow h-8 px-2 rounded border border-white-400/30 text-white-400 bg-transparent transition-all outline-none'"
                   ngModel required name="email" email placeholder="E-mail">
                 <div *ngIf="!email.valid && email.touched" class="w-full flex justify-left items-center">
@@ -25,7 +25,7 @@
                 </p>
               </div>
               <div class="flex flex-col mt-4 relative">
-                <input id="password" type="{{passwordVisible ? 'text' : 'password'}}" #password="ngModel"
+                <input id="password" autocomplete="password" type="{{passwordVisible ? 'text' : 'password'}}" #password="ngModel"
                   [ngClass]="(!password.valid && password.touched) ? 'flex-grow h-8 px-2 rounded border border-red-700/50 text-red-700 bg-transparent transition-all outline-none' : 'flex-grow h-8 px-2 rounded border border-white-400/30 text-white-400 bg-transparent transition-all outline-none'"
                   ngModel name="password" required password
                   pattern="(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" placeholder="Hasło">
@@ -40,7 +40,7 @@
                 </div>
               </div>
               <div class="flex flex-col mt-4 relative">
-                <input id="password_confirmation" type="{{confirmPasswordVisible ? 'text' : 'password'}}"
+                <input id="password_confirmation" autocomplete="password_confirmation" type="{{confirmPasswordVisible ? 'text' : 'password'}}"
                   #passwordConfirmation="ngModel"
                   [ngClass]="(!passwordConfirmation.valid && passwordConfirmation.touched) ? 'flex-grow h-8 px-2 rounded border border-red-700/50 text-red-700 bg-transparent transition-all outline-none' : 'flex-grow h-8 px-2 rounded border border-white-400/30 text-white-400 bg-transparent transition-all outline-none'"
                   ngModel name="password_confirmation" required password
