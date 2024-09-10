@@ -73,7 +73,7 @@ export class PhotogrammetryServiceComponent {
     {
       title: "Modele 3D",
       description: "Tworzenie modelu trójwymiarowego wybranego obiektu",
-      image: "https://media.sketchfab.com/models/25f78a4e738346ba9497c4f0d81dfe77/thumbnails/7adc4429b5bb4b9099cb730c9a98e3d4/01b8829cd1a34450b69577ca5557d2ee.jpeg"
+      image: "https://images.we-saas.com/insecure/fill/1000/0/ce/0/plain/https://businesspress.fra1.digitaloceanspaces.com/uploads/pix-prod/1665070091_How-to-get-started-with-3D-modeling.jpg@webp"
     },
     {
       title: "Pomiary",

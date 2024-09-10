@@ -5,6 +5,8 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\SubserviceController;
+use App\Mail\ContactMessageEmail;
+use App\Mail\NotifyAdminNewOrderEmail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BackgroundMusicController;
 use App\Mail\NotificationEmail;
@@ -38,6 +40,22 @@ Route::get('/notify-email', function () {
 
     return new NotificationEmail($title, $content, $state, $comment);
 
+});
+
+Route::get('/contact-email', function () {
+
+    $sender_email = "mail@mail.com";
+    $subject = "Prośba o stworzenie nowej usługi";
+    $content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+
+    return new ContactMessageEmail($sender_email, $subject, $content);
+});
+
+Route::get('/notify-admin', function () {
+
+    $link = '127.0.0.1:4200/user/panel/orders';
+
+    return new NotifyAdminNewOrderEmail($link);
 });
 
 

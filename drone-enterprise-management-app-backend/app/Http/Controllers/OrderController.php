@@ -9,12 +9,17 @@ use Illuminate\Support\Facades\DB;
 use App\Traits\HttpResponses;
 use Illuminate\Support\Facades\Auth;
 
-use Illuminate\Http\Request;
-
 class OrderController extends Controller
 {
 
     use HttpResponses;
+
+    protected $emailController;
+
+    public function __construct(EmailController $emailController)
+    {
+        $this->emailController = $emailController;
+    }
 
     public function index()
     {
@@ -139,8 +144,9 @@ class OrderController extends Controller
 
     public function store(OrderRequest $orderRequest)
     {
-
         $orderRequest->validated($orderRequest->all());
+
+        $admin = DB::table('users')->where('role', 'admin')->first();
 
         $user = auth()->user();
         $userId = $user->id;
@@ -177,6 +183,11 @@ class OrderController extends Controller
         ]);
 
         if ($order && $orderDetails) {
+
+            $link = env('FRONTEND_URL') . '/user/panel/orders/' . $order->id;
+
+            $this->emailController->notifyAdminNewOrder($admin->id, $link);
+
             return $this->success(
                 'Zamówienie zostało złożone',
                 'ORDER_PLACED',

@@ -9,7 +9,7 @@
     </div>
     <ul class="justify-center items-center gap-4 text-stone-400 font-montserrat text-[16px] hidden lg:flex">
       <li>
-        <a href="#" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-75 ">
+        <a routerLink="/about" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-75 ">
           O MNIE
         </a>
       </li>
@@ -24,14 +24,14 @@
         </a>
       </li>
       <li>
-        <a href="#" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-75 ">
+        <a routerLink="/contact" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-75 ">
           KONTAKT
         </a>
       </li>
     </ul>
     <ul class="justify-center items-center gap-4 text-[16px] w-72 text-stone-400 font-montserrat hidden lg:flex">
       <li *ngIf="isAuthenticated">
-        <a routerLink="/user/panel" class="hover:text-stone-200 ease-in duration-75">PANEL</a>
+        <a routerLink="/user/panel/orders" class="hover:text-stone-200 ease-in duration-75">PANEL</a>
       </li>
       <li *ngIf="!isAuthenticated">
         <a routerLink="/login" class="hover:text-stone-200 ease-in duration-75">ZALOGUJ</a>
@@ -48,16 +48,13 @@
         class="fill-stone-400 w-8 h-8 cursor-pointer opacity-85 hover:opacity-100 ease-in duration-150"
         [src]="!menuToggled ? './assets/icons/hamburger-menu-icon.png' : './assets/icons/cancel-icon.png'"
         (click)="onMenuToggled()">
-      <!-- <img src="./assets/icons8-hamburger-menu.png" alt="menu"
-        class="fill-stone-400 w-8 h-8 cursor-pointer opacity-85 hover:opacity-100 ease-in duration-150"
-        (click)="onMenuToggled()"> -->
     </div>
   </div>
   <div *ngIf="menuToggled" class="w-full grow flex flex-col justify-center items-center" (click)="onMenuToggled()">
     <ul class="justify-center flex flex-col items-center text-stone-400 font-montserrat text-xl">
       <div data-aos="fade-down" data-aos-duration="200" data-aos-once="true" data-aos-easing="ease">
         <li class="my-3 hover:my-5 ease-in duration-100 hover:scale-110">
-          <a class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-100">
+          <a routerLink="/about" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-100">
             O MNIE
           </a>
         </li>
@@ -81,24 +78,43 @@
       <div data-aos="fade-down" data-aos-duration="200" data-aos-delay="300" data-aos-once="true"
         data-aos-easing="ease">
         <li class="my-3 hover:my-5 ease-in duration-100 hover:scale-110">
-          <a href="#" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-100 ">
+          <a routerLink="/contact" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-100 ">
             KONTAKT
           </a>
         </li>
       </div>
-      <div data-aos="fade-down" data-aos-duration="200" data-aos-delay="400" data-aos-once="true"
-        data-aos-easing="ease">
+      <div *ngIf="!isAuthenticated" data-aos="fade-down" data-aos-duration="200" data-aos-delay="400"
+        data-aos-once="true" data-aos-easing="ease">
         <li class="my-3 hover:my-5 ease-in duration-100 hover:scale-110">
-          <a href="#" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-100 ">
+          <a routerLink="/login" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-100 ">
             ZALOGUJ SIĘ
           </a>
         </li>
       </div>
-      <div data-aos="fade-down" data-aos-duration="200" data-aos-delay="500" data-aos-once="true">
+      <div *ngIf="!isAuthenticated" data-aos="fade-down" data-aos-duration="200" data-aos-delay="500"
+        data-aos-once="true">
         <li class="my-3 hover:my-5 ease-in duration-100 hover:scale-110">
-          <a href="#" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-100 "
+          <a routerLink="/register" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-100 "
             data-aos-easing="ease">
             ZAREJESTRUJ SIĘ
+          </a>
+        </li>
+      </div>
+      <div *ngIf="isAuthenticated" data-aos="fade-down" data-aos-duration="200" data-aos-delay="400"
+        data-aos-once="true" data-aos-easing="ease">
+        <li class="my-3 hover:my-5 ease-in duration-100 hover:scale-110">
+          <a routerLink="/user/panel/orders"
+            class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-100 ">
+            PANEL
+          </a>
+        </li>
+      </div>
+      <div *ngIf="isAuthenticated" data-aos="fade-down" data-aos-duration="200" data-aos-delay="500"
+        data-aos-once="true">
+        <li class="my-3 hover:my-5 ease-in duration-100 hover:scale-110">
+          <a (click)="onLogout()" class="font-montserrat leading-normal hover:text-stone-200 ease-in duration-100 "
+            data-aos-easing="ease">
+            WYLOGUJ
           </a>
         </li>
       </div>

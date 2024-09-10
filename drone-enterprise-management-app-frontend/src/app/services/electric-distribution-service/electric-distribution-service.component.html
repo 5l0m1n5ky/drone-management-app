@@ -163,7 +163,7 @@
             class="w-[95%] md:w-[80%] py-10 text-left font-montserrat font-semibold text-neutral-500 text-4xl md:text-6xl">
             Inspekcja z powietrza
           </p>
-          <video [autoplay]="true" [muted]="true" [loop]="true" src="./assets/electric-distribution-service/electric-utility-poles.mp4"
+          <video [autoplay]="true" [muted]="true" [loop]="true" src="http://127.0.0.1:8000/storage/electric-distribution-service/electric-utility-poles.mp4"
             class="rounded-2xl brightness-[60%] w-[95%] md:w-[80%] h-auto">
           </video>
           <p
@@ -332,7 +332,7 @@
     <div data-aos="fade-up" data-aos-duration="750" data-aos-once="true" data-aos-easing="ease" class="my-40 w-auto">
       <div
         class="flex flex-row items-center ring-1 bg-gradient-to-t from-blue-500/20 ring-blue-200 px-7 py-3 rounded-full hover:scale-105 cursor-pointer ease-in-out duration-150 shadow-md shadow-blue-100/50 select-none">
-        <p class="text-blue-200 font-montserrat font-semibold  text-[18px] min-[450px]:text-[25px] lg:text-[30px]">
+        <p routerLink="/user/panel/create-order/4" class="text-blue-200 font-montserrat font-semibold  text-[18px] min-[450px]:text-[25px] lg:text-[30px]">
           Zamawiam usługę
         </p>
         <img src="./assets/icons/arrow-icon.svg" alt="arrow" class="h-10 w-10 ml-2">
@@ -346,7 +346,7 @@
         <p class="font-montserrat text-4xl lg:text-6xl text-neutral-500 font-semibold my-2">Masz pytania?</p>
         <p class="font-poppins text-3xl text-neutral-600 font-light my-2">Zapraszam do kontaktu</p>
         <img src="./assets/chat.png" alt="chat" class="block md:hidden md:h-[500px] lg:h-[600px] w-auto">
-        <p
+        <p routerLink="/contact"
           class="ring-1 my-10 bg-gradient-to-t from-blue-500/20 ring-blue-200 text-blue-200 font-montserrat font-semibold px-7 py-3 rounded-full text-[20px] hover:scale-105 cursor-pointer ease-in-out duration-150 shadow-md shadow-blue-100/50">
           Skontaktuj się
         </p>

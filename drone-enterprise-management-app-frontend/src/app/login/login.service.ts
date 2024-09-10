@@ -30,19 +30,10 @@ interface checkSessionResponseData {
 
 export class LoginService {
 
-  // user = new Subject<User>();
   user = new BehaviorSubject<User | null>(null);
 
   constructor(private http: HttpClient, private cookieService: CookieService) {
   }
-
-
-
-  // user = new BehaviorSubject<User>({ id: '', email: '', privileges: '' });
-
-  // getUserData(): Observable<User> {
-  //   return this.user.asObservable();
-  // }
 
   hasAdminPrivileges(): boolean {
     const user = this.user.value;
@@ -51,12 +42,6 @@ export class LoginService {
     }
     return false;
   }
-
-  // hasAdminPrivileges(): User | null {
-  //   return this.user.value;
-  // }
-
-
 
   login(email: string, password: string) {
     return this.http.post<LoginResponseData>('http://localhost:8000/login', {
@@ -109,16 +94,13 @@ export class LoginService {
   }
 
   autoLogin() {
-    const userData: User = JSON.parse(this.cookieService.get('user'));
+    const userData: User = JSON.parse(this.cookieService.get('user').toString());
 
     if (!userData) {
       return;
     }
 
     const loadedUser = new User(userData.id, userData.email, userData.privileges);
-    console.log(this.user.value);
     this.user.next(loadedUser);
-    console.log('just set user from cookie');
-    console.log(this.user.value);
   }
 }

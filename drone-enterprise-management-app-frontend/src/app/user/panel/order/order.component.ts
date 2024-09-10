@@ -9,7 +9,6 @@ import { OrderItem } from '../models/order-item.model';
 import { RouterLink } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 
-
 @Component({
   standalone: true,
   selector: 'app-order',

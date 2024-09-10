@@ -3,21 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Message;
-use Illuminate\Http\Request;
 use App\Http\Requests\StoreMessageRequest;
 use Psy\Exception\ErrorException;
 use App\Traits\HttpResponses;
+use Illuminate\Support\Facades\DB;
 
 class ContactControler extends Controller
 {
 
     use HttpResponses;
 
+    protected $emailController;
+
+    public function __construct(EmailController $emailController)
+    {
+        $this->emailController = $emailController;
+    }
+
     public function store(StoreMessageRequest $storeMessageRequest)
     {
         $storeMessageRequest->validated($storeMessageRequest->all());
 
         try {
+            $admin_email = DB::table('users')->where('role', 'admin')->pluck('email')->first();
 
             $message = Message::create([
                 'email' => $storeMessageRequest->email,
@@ -26,6 +34,9 @@ class ContactControler extends Controller
             ]);
 
             if ($message) {
+
+                $this->emailController->forwardMessageMail($admin_email, $storeMessageRequest->email, $storeMessageRequest->subject, $storeMessageRequest->content);
+
                 return $this->success(
                     'Wiadomość wysłana pomyślnie',
                     'MESSAGE_SENT',

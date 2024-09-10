@@ -36,8 +36,6 @@ export class ContactComponent implements OnInit, OnDestroy {
   }
 
   onMessageSend() {
-    this.contactForm.reset();
-
     this.isProcessing = true;
     this.sendMessageSubscription = this.contactService.sendMessage(
       this.contactForm.get('email')?.value,
@@ -46,9 +44,11 @@ export class ContactComponent implements OnInit, OnDestroy {
     ).subscribe(response => {
       this.isProcessing = false;
       this.toastService.generateToast('success', 'Przesyłanie wiadomości', response.data);
+      this.contactForm.reset();
     }, errorMessage => {
       this.isProcessing = false;
       this.toastService.generateToast('error', 'Przesyłanie wiadomości', errorMessage);
+      this.contactForm.reset();
     });
   }
 

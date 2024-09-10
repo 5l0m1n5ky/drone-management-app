@@ -21,6 +21,7 @@ import { AccountComponent } from './user/panel/account/account.component';
 import { ChooseServiceComponent } from './services/choose-service/choose-service.component';
 import { OrderViewComponent } from './user/panel/order-view/order-view.component';
 import { ContactComponent } from './contact/contact.component';
+import { AboutComponent } from './about/about.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -37,9 +38,9 @@ const routes: Routes = [
   { path: 'windmill-inspection', component: WindmillServiceComponent },
   { path: 'photogrammetry-service', component: PhotogrammetryServiceComponent },
   { path: 'contact', component: ContactComponent },
+  { path: 'about', component: AboutComponent },
   {
-    path: 'user/panel',
-    component: PanelComponent,
+    path: 'user/panel', component: PanelComponent,
     children: [
       { path: 'orders', component: OrderComponent },
       { path: 'create-order/:service_id', component: OrderCreateComponent },
