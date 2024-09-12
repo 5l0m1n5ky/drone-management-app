@@ -90,6 +90,7 @@ class AuthController extends Controller
                 $new_user = User::create([
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
+                    'newsletter' => $request->newsletter,
                 ]);
 
                 if (!$new_user->hasVerifiedEmail()) {
@@ -179,9 +180,49 @@ class AuthController extends Controller
         }
     }
 
-
-    public function regenerateToken()
+    public function regenerateToken(Request $request)
     {
+        $request = $request->validate(['user_id' => ['required', 'numeric']]);
+
+        $user_id = $request['user_id'];
+
+        try {
+            $user = User::find($user_id);
+
+            if (!$user->hasVerifiedEmail()) {
+
+                $exisitng_token = DB::table('tokens')->where('user_id', $user_id)->first();
+
+                if ($exisitng_token) {
+                    Token::find($exisitng_token->id)->delete();
+                }
+
+                $token = Token::create([
+                    'user_id' => $user->id,
+                    'token_value' => random_int(100000, 999999),
+                ]);
+
+                $this->emailController->sendRegistrationEmail($user->email, $token->token_value);
+
+                return $this->success(
+                    'Wygenerowano nowy token',
+                    'TOKEN_REGENERATED',
+                    200
+                );
+            } else {
+                return $this->error(
+                    'Wygenerowanie nowego tokena nie jest dostępne',
+                    'TOKEN_REGENERATION_ERROR',
+                    401
+                );
+            }
+        } catch (\ErrorException $errorException) {
+            return $this->error(
+                $errorException,
+                'TOKEN_REGENERATION_ERROR',
+                500
+            );
+        }
 
     }
 

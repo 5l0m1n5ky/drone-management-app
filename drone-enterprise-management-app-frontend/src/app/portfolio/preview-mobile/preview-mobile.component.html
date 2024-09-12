@@ -1,6 +1,6 @@
-<!-- mobile device -->
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 <div *ngIf="loadedPosts.length >= 1"
-  class="absolute flex flex-col justify-start items-center z-50 top-0 left-0 h-screen w-screen bg-neutral-900 backdrop-blur-sm overflow-y-auto overflow-x-hidden no-scrollbar">
+  class="relative flex flex-col justify-start items-center h-screen w-screen bg-neutral-900 backdrop-blur-sm overflow-y-auto overflow-x-hidden no-scrollbar">
 
   <div
     class="sticky top-0 py-2 pl-2 w-full h-10 flex flex-row text-base font-montserrat justify-start items-center text-neutral-600 bg-black/75 backdrop-blur-lg">
@@ -15,6 +15,7 @@
       POSTY
     </p>
   </div>
+  <div class="w-full h-32"></div>
 
   <!-- card -->
   <div *ngFor="let post of loadedPosts" id="{{'item_' + post.id }}"
@@ -25,19 +26,204 @@
           <img src="./assets/icons/location-icon.svg" alt="location-icon" class="w-8 h-8 mr-1">
           <span class="font-montserrat text-neutral-600 text-base font-normal">{{ post.location }}</span>
         </div>
-        <img src="./assets/icons/preferences-icon.svg" alt="preferences-icon"
+        <img *ngIf="isAdmin()" src="./assets/icons/preferences-icon.svg" alt="preferences-icon"
+          [matMenuTriggerFor]="settings"
           class="w-10 h-10 mr-2 cursor-pointer hover:brightness-150 transition-all ease-in-out duration-75">
+        <mat-menu #settings="matMenu" yPosition="below" xPosition="before">
+          <ng-template matMenuContent>
+            <div mat-menu-item (click)="onEditMode(post.id)">
+              <p class="text-neutral-400 font-montserrat text-sm">
+                EDYTUJ
+              </p>
+            </div>
+            <div mat-menu-item (click)="onDelete(post.id)">
+              <p class="text-red-600 font-montserrat text-sm">
+                USUŃ
+              </p>
+            </div>
+          </ng-template>
+        </mat-menu>
       </div>
       <div class="w-full h-auto bg-black flex flex-col items-center">
-        <!-- <img src="{{ post.path }}" alt="gallery-item" class="max-h-[80vh] w-auto object-contain"> -->
-        <img *ngIf="isImage(post.path)" src="{{post.path}}" alt="gallery-item"
+        <img *ngIf="isImage(post.path)" [src]="'http://127.0.0.1:8000' + post.path" alt="gallery-item"
           class="max-h-[80vh] w-auto object-contain">
-        <video onscrollAutoplay controls loop *ngIf="!isImage(post.path)" src="{{post.path}}" poster="{{post.cover}}"
-          alt="gallery-item" class="max-h-[80vh] w-auto object-contain">
+        <video onscrollAutoplay (pause)="isEditMode" controls loop *ngIf="!isImage(post.path)" [src]="'http://127.0.0.1:8000' + post.path"
+          [poster]="'http://127.0.0.1:8000' + post.cover" alt="gallery-item" class="max-h-[80vh] w-auto object-contain">
         </video>
       </div>
-      <p class="mx-5 my-5 text-neutral-600 text-sm font-montserrat text-justify text-pretty">
-        {{ post.description }}
-      </p>
+      <div class="w-full h-auto text-justify">
+        <p class="mx-5 my-5 text-neutral-600 text-sm font-montserrat text-left">
+          {{ post.description }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- edit overlay -->
+<div *ngIf="isEditMode"
+  class="fixed top-0 left-0 flex flex-col justify-center items-center z-50 w-full h-full overflow-hidden">
+  <div
+    class="relative w-[90%] h-[90%] bg-neutral-900/95 ring-1 ring-neutral-800 rounded-2xl flex flex-col justify-between items-center">
+    <div *ngIf="isUploading"
+      class="absolute flex flex-col gap-5 justify-center items-center left-0 top-0 rounded-2xl z-50 w-full h-full bg-black/70">
+      <span class="loader"></span>
+      <p class="text-sm text-neutral-600 font-montserrat font-normal">Publikowanie posta...</p>
+    </div>
+    <img src="./assets/icons/cancel-icon.png" alt="cancel-icon" (click)="onCancelEditMode()"
+      class="absolute z-40 right-4 top-4 w-5 h-5 brightness-75 hover:brightness-100 transition-all ease-in-out duration-100 cursor-pointer">
+    <div class="w-full h-auto p-3">
+      <form id="form" [formGroup]="editPostForm" (ngSubmit)="onEdit()">
+        <mat-vertical-stepper linear #stepper class="w-full h-full"
+          style="background-color: transparent; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+          <mat-step class="w-full h-[500px]">
+            <ng-template matStepLabel>PLIK</ng-template>
+            <div class="font-montserrat flex flex-col justify-start items-start">
+              <p class="text-2xl font-normal text-neutral-600">Wybierz plik foto/video</p>
+              <div (click)="inputFile.click()"
+                class="flex flex-col justify-center items-center h-[100px] mt-5 w-full border-dashed border-2 rounded-xl border-neutral-600 cursor-pointer">
+                <input type="file" #inputFile (change)="onFileSelected($event)" id="file" class="hidden">
+                <p class="p-5 font-semibold text-base font-montserrat text-neutral-600">
+                  WYBIERZ PLIK
+                </p>
+              </div>
+              <div
+                class="flex flex-row justify-between items-center w-full h-[75px] mt-5 text-neutral-600 font-montserrat text-base font-normal">
+                <img *ngIf="isImage(fileName)" [src]="file ? fileSrc : ''" class="h-full w-auto">
+                <img *ngIf="!isImage(fileName) && file"
+                  [src]="createPostForm.get('postCoverForm.cover') ? './assets/icons/movie-icon.svg' : ''"
+                  class="h-full w-auto">
+                <p>
+                  {{ file ? fileName : '' }}
+                </p>
+                <p>
+                  {{ file ? fileSize : '' }}
+                </p>
+              </div>
+              <div class="w-full flex justify-end">
+                <button matStepperNext type="button">
+                  <p
+                    [ngClass]="file === null ? 'text-neutral-900 font-semibold text-sm bg-neutral-800 px-7 py-1 rounded-md cursor-not-allowed' : 'text-neutral-900 font-semibold text-sm bg-neutral-600 px-7 py-1 rounded-md hover:bg-neutral-500 ease-in-out transition-all duration-150'">
+                    DALEJ
+                  </p>
+                </button>
+              </div>
+            </div>
+          </mat-step>
+
+          <!-- cover -->
+          <mat-step *ngIf="!isImage(postToEdit.path)" class="h-[500px]">
+            <ng-template matStepLabel>OKŁADKA</ng-template>
+            <div class="font-montserrat flex flex-col justify-start items-start">
+              <p class="text-2xl font-normal text-neutral-600">Wybierz okładkę materiału video</p>
+              <div (click)="inputCover.click()"
+                class="flex flex-col justify-center items-center h-[100px] mt-2 w-full border-dashed border-2 rounded-xl border-neutral-600 cursor-pointer">
+                <input type="file" #inputCover (change)="onCoverSelected($event)" id="cover" class="hidden">
+                <p class="p-5 font-semibold text-base font-montserrat text-neutral-600">
+                  WYBIERZ OKŁADKĘ
+                </p>
+              </div>
+              <div
+                class="flex flex-row justify-between items-center w-full h-[75px] mt-5 text-neutral-600 font-montserrat text-base font-normal">
+                <img [src]="cover ? coverSrc : ''" class="h-full w-auto">
+                <p>
+                  {{ cover ? coverName : '' }}
+                </p>
+                <p>
+                  {{ cover ? coverSize : '' }}
+                </p>
+              </div>
+              <div class="w-full flex justify-end mt-5">
+                <button matStepperNext type="button">
+                  <p
+                    [ngClass]="!cover ? 'text-neutral-900 font-semibold text-sm bg-neutral-800 px-7 py-1 rounded-md cursor-not-allowed' : 'text-neutral-900 font-semibold text-sm bg-neutral-600 px-7 py-1 rounded-md hover:bg-neutral-500 ease-in-out transition-all duration-150'">
+                    DALEJ
+                  </p>
+                </button>
+              </div>
+            </div>
+          </mat-step>
+          <mat-step>
+            <ng-template matStepLabel>LOKALIZACJA</ng-template>
+            <div class="font-montserrat flex flex-col justify-start items-start h-[200px]"
+              formGroupName="postLocationForm">
+              <p class="text-2xl font-normal text-neutral-600">Dodaj lokalizację</p>
+              <div class="h-[300px] mt-5 w-full">
+                <div class="flex flex-row items-center justify-start">
+                  <img src="./assets/icons/location-icon.svg" alt="location-icon" class="w-6 h-6 mr-1">
+                  <input type="text" id="location" formControlName="location"
+                    class="rounded-sm ring-1 ring-neutral-600 bg-black/15 w-[200px] outline-none px-2 text-neutral-500 text-8">
+                </div>
+              </div>
+              <div class="w-full flex justify-end gap-2">
+                <button matStepperPrevious type="button">
+                  <p
+                    class="text-neutral-600 font-semibold ring-2 text-sm ring-neutral-600 px-4 py-1 rounded-md hover:text-neutral-500 hover:ring-neutral-500 ease-in-out transition-all duration-150">
+                    POWRÓT
+                  </p>
+                </button>
+                <button matStepperNext type="button">
+                  <p
+                    [ngClass]="!editPostForm.get('postLocationForm.location')?.valid ? 'text-neutral-900 font-semibold text-sm bg-neutral-800 px-7 py-1 rounded-md cursor-not-allowed' : 'text-neutral-900 font-semibold text-sm bg-neutral-600 px-7 py-1 rounded-md hover:bg-neutral-500 ease-in-out transition-all duration-150'">
+                    DALEJ
+                  </p>
+                </button>
+              </div>
+            </div>
+          </mat-step>
+          <mat-step>
+            <ng-template matStepLabel>WIDOCZNOŚĆ</ng-template>
+            <div class="font-montserrat flex flex-col justify-start items-start h-[250px]"
+              formGroupName="postVisibilityForm">
+              <p class="text-3xl font-normal text-neutral-600">Widoczność posta</p>
+              <div class="h-[300px] mt-5">
+                <mat-slide-toggle formControlName="visibility" id="visibility" checked="true"
+                  (change)="onToggleChange()" color="accent">
+                </mat-slide-toggle>
+                <p class="text-sm text-neutral-600 mt-5">
+                  {{ !visibilityToggled ? 'Post będzie widoczny publicznie' : 'Post będzie ukryty' }}
+                </p>
+              </div>
+              <div class="w-full flex justify-end gap-2">
+                <button matStepperPrevious type="button">
+                  <p
+                    class="text-neutral-600 font-semibold ring-2 text-sm ring-neutral-600 px-4 py-1 rounded-md hover:text-neutral-500 hover:ring-neutral-500 ease-in-out transition-all duration-150">
+                    POWRÓT
+                  </p>
+                </button>
+                <button matStepperNext type="button">
+                  <p
+                    [ngClass]="!editPostForm.get('postVisibilityForm.visibility')?.valid ? 'text-neutral-900 font-semibold text-sm bg-neutral-800 px-7 py-1 rounded-md cursor-not-allowed' : 'text-neutral-900 font-semibold text-sm bg-neutral-600 px-7 py-1 rounded-md hover:bg-neutral-500 ease-in-out transition-all duration-150'">
+                    DALEJ
+                  </p>
+                </button>
+              </div>
+            </div>
+          </mat-step>
+          <mat-step>
+            <ng-template matStepLabel>OPIS</ng-template>
+            <div class="font-montserrat flex flex-col justify-start items-start" formGroupName="postDescriptionForm">
+              <p class="text-2xl font-normal text-neutral-600">Dodaj opis</p>
+              <div class="h-[300px] w-full mt-5">
+                <textarea autocapitalize="true" spellcheck="false" id="description" formControlName="description"
+                  class="w-full h-[90%] ring-1 ring-neutral-600 bg-black/15 rounded-md text-neutral-500 text-base outline-none resize-none p-2"></textarea>
+              </div>
+              <div class="w-full flex justify-end gap-2">
+                <button matStepperPrevious type="button">
+                  <p
+                    class="text-neutral-900 font-semibold text-sm bg-neutral-600 px-7 py-1 rounded-md hover:bg-neutral-500 ease-in-out transition-all duration-150">
+                    POWRÓT
+                  </p>
+                </button>
+                <button type="submit">
+                  <p
+                    class="text-neutral-600 font-semibold ring-2 text-sm ring-neutral-600 px-4 py-1 rounded-md hover:text-neutral-500 hover:ring-neutral-500 ease-in-out transition-all duration-150">
+                    EDYTUJ
+                  </p>
+                </button>
+              </div>
+            </div>
+          </mat-step>
+        </mat-vertical-stepper>
+      </form>
     </div>
   </div>

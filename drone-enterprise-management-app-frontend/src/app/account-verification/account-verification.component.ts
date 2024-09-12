@@ -1,22 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AccountVerificationService } from './account-verification.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-
-interface AccountVerificationResponseData {
-  status: string,
-  message: string,
-  data: [
-    user: [
-      email: string,
-      updated_at: Date,
-      created_at: Date,
-      id: string
-    ],
-    token: string
-  ]
-}
+import { ToastService } from '../shared/toast/toast.service';
 
 @Component({
   selector: 'app-verification-email',
@@ -36,9 +22,10 @@ export class AccountVerificationComponent implements OnInit {
   verificationToken!: string;
   user_id: number;
   private subscription: Subscription = new Subscription;
+  tokenRegenrationSubscription: Subscription;
 
 
-  constructor(private accountVerificationService: AccountVerificationService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private accountVerificationService: AccountVerificationService, private router: Router, private route: ActivatedRoute, private toastService: ToastService) { }
 
   ngOnInit(): void {
     this.subscription = this.route.params.subscribe((params: Params) => {
@@ -47,7 +34,8 @@ export class AccountVerificationComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscription?.unsubscribe();
+    this.tokenRegenrationSubscription?.unsubscribe()
   }
 
   onCodeChanged(code: string) {
@@ -99,6 +87,16 @@ export class AccountVerificationComponent implements OnInit {
   }
 
   onTokenResend() {
+    this.isVeryfing = true;
+
+    this.tokenRegenrationSubscription = this.accountVerificationService.tokenResend(this.user_id).subscribe(response => {
+      this.toastService.generateToast('success', 'Generowanie tokenu', response.data.toString());
+      this.isVeryfing = false;
+
+    }, errorResponse => {
+      this.toastService.generateToast('error', 'Generowanie tokenu', errorResponse.data.toString());
+      this.isVeryfing = false;
+    });
   }
 
   redirectToLogin() {

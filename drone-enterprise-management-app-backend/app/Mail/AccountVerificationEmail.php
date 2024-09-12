@@ -30,7 +30,6 @@ class AccountVerificationEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address( env('MAIL_USERNAME'), env('MAIL_FROM_NAME')),
             subject: $this->emailSubject,
         );
     }

@@ -2,20 +2,7 @@
 
 return [
 
-    /*
-    |--------------------------------------------------------------------------
-    | Cross-Origin Resource Sharing (CORS) Configuration
-    |--------------------------------------------------------------------------
-    |
-    | Here you may configure your settings for cross-origin resource sharing
-    | or "CORS". This determines what cross-origin operations may execute
-    | in web browsers. You are free to adjust these settings as needed.
-    |
-    | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-    |
-    */
-
-    'paths' => ['api/*', 'sanctum/csrf-cookie', '/login', '/logout', '/posts', '/posts/*', '/user/check', '/orders/*', '/orders', '/notifications', '/notifications/*', '/verifyAccount', '/contact'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie', '/login', '/register', '/logout', '/posts', '/posts/*', '/user/check', '/orders/*', '/orders', '/notifications', '/notifications/*', '/verifyAccount', '/regenerate-token', '/contact'],
 
     'allowed_methods' => ['*'],
 

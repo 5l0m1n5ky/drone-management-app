@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BackgroundMusicController;
 use App\Mail\NotificationEmail;
 
-Route::get('/posts', [PostController::class, 'index']);
+// Route::get('/posts', [PostController::class, 'index']);
 
 Route::post('/posts/create', [PostController::class, 'store']);
 

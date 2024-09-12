@@ -17,6 +17,13 @@ interface AccountVerificationResponseData {
   data: Data
 }
 
+interface ResponseData {
+  message: string,
+  data: Data
+}
+
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -41,4 +48,22 @@ export class AccountVerificationService {
         })
     );
   }
+
+  tokenResend(userId: number) {
+    return this.http.post<ResponseData>('http://localhost:8000/regenerate-token', {
+      user_id: userId
+    }, {
+      headers: new HttpHeaders({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }),
+      withCredentials: true
+    }).pipe(
+      catchError(
+        errorResponse => {
+          return throwError(errorResponse.error.message);
+        })
+    );
+  }
 }
+

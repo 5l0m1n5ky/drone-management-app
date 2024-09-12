@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { LoginService } from './login.service';
-import { CookieService } from 'ngx-cookie-service';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { Subscription } from 'rxjs';
 import { ToastService } from '../shared/toast/toast.service';
-
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   standalone: true,
@@ -19,17 +20,27 @@ import { ToastService } from '../shared/toast/toast.service';
     LoadingSpinnerComponent,
     FormsModule,
     CommonModule,
-    ToastModule
+    ToastModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatIconModule,
+    RouterLink
   ],
-  providers: [ToastService]
 })
 export class LoginComponent implements OnInit {
 
   queryParams: any = {};
-
-  constructor(private loginService: LoginService, private cookieService: CookieService, private router: Router, private activatedRoute: ActivatedRoute, private toastService: ToastService) { }
-
+  hide = true;
+  loginForm: any;
+  PasswordVisible: boolean = false;
+  isLoginError: boolean = false;
+  loginError: string;
+  isLoading: boolean = false;
   queryParamsSubscriber: Subscription;
+  isProcessing = false;
+
+  constructor(private loginService: LoginService, private router: Router, private activatedRoute: ActivatedRoute, private toastService: ToastService) { }
 
   ngOnInit(): void {
     this.queryParamsSubscriber = this.activatedRoute.queryParams.subscribe(params => {
@@ -45,41 +56,29 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  loginForm: any;
-  PasswordVisible: boolean = false;
-  isLoginError: boolean = false;
-  loginError: string;
-  isLoading: boolean = false;
-
-  changeVisibilityofPassword() {
-    this.PasswordVisible = !this.PasswordVisible;
-  }
-
   onLoginFormSubmit(form: NgForm) {
 
     if (!form.valid) {
       return;
     }
 
-    this.isLoading = true;
+    this.isProcessing = true;
     const email = form.value.email;
     const password = form.value.password;
 
     this.loginService.login(email, password).subscribe(
       responseData => {
-        this.isLoading = false;
+        this.isProcessing = false;
         this.router.navigate(['/'], { queryParams: { result: 'success' } });
+        form.reset();
       },
       errorMessage => {
         this.isLoginError = true;
         this.loginError = errorMessage;
-        this.isLoading = false;
+        this.isProcessing = false;
+        form.reset();
       }
     );
-
-    this.isLoading = false;
-
-    form.reset();
   }
 
 }

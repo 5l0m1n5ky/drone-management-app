@@ -68,14 +68,13 @@ class PostController extends Controller
         $path = $post->path;
         $cover = $post->cover;
 
-
         if ($request->hasFile('file')) {
 
             $post_filepath = $post->path;
-            $post_filename = Str::replace('http://127.0.0.1:8000/storage', 'public', $post_filepath);
+            $post_filename = Str::replace('/storage', '', $post_filepath);
 
-            if (Storage::exists($post_filename)) {
-                Storage::delete($post_filename);
+            if (Storage::disk('public')->exists($post_filename)) {
+                Storage::disk('public')->delete($post_filename);
             }
 
             $file = $request->file('file');
@@ -86,10 +85,10 @@ class PostController extends Controller
         if ($request->hasFile('cover')) {
 
             $cover_filepath = $post->cover;
-            $cover_filename = Str::replace('http://127.0.0.1:8000/storage', 'public', $cover_filepath);
+            $cover_filename = Str::replace('/storage', '', $cover_filepath);
 
-            if (Storage::exists($cover_filename)) {
-                Storage::delete($cover_filename);
+            if (Storage::disk('public')->exists($cover_filename)) {
+                Storage::disk('public')->delete($cover_filename);
             }
 
             $coverFile = $request->file('cover');

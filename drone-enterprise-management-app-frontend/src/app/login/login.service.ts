@@ -94,12 +94,13 @@ export class LoginService {
   }
 
   autoLogin() {
-    const userData: User = JSON.parse(this.cookieService.get('user').toString());
+    const userCookie = this.cookieService.get('user');
 
-    if (!userData) {
+    if (!userCookie) {
       return;
     }
 
+    const userData: User = JSON.parse(userCookie);
     const loadedUser = new User(userData.id, userData.email, userData.privileges);
     this.user.next(loadedUser);
   }

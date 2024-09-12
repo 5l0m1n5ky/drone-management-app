@@ -16,6 +16,7 @@ Route::get('/', function () {
 });
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -34,10 +35,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/notifications/seen', [NotificationController::class, 'update']);
 });
 
-Route::post('/register', [AuthController::class, 'register']);
 Route::post('/verifyAccount', [AuthController::class, 'verifyAccount']);
-Route::post('/regenerateToken/{user_id}', [AuthController::class, 'regenerateToken']);
+Route::post('/regenerate-token', [AuthController::class, 'regenerateToken']);
 Route::post('/contact', [ContactControler::class, 'store']);
+Route::get('/posts', [PostController::class, 'index']);
+
 
 
 

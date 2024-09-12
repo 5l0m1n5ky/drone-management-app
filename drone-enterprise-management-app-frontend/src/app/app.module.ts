@@ -48,10 +48,10 @@ import { OrderViewComponent } from './user/panel/order-view/order-view.component
 @NgModule({
   declarations: [
     AppComponent,
-    RegisterComponent,
     AccountVerificationComponent,
   ],
   imports: [
+    RegisterComponent,
     IndexComponent,
     BrowserModule,
     AppRoutingModule,

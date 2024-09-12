@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Token;
 
 class DeleteUnconfirmedUsers extends Command
 {
@@ -28,6 +29,13 @@ class DeleteUnconfirmedUsers extends Command
     public function handle()
     {
         $now = Carbon::now();
+
+        $tokens = Token::where('updated_at', '<', $now->subDay())->get();
+
+        foreach ($tokens as $token) {
+            $token->delete();
+        }
+
         $users = User::whereNull('email_verified_at')
             ->where('updated_at', '<', $now->subDay())
             ->get();

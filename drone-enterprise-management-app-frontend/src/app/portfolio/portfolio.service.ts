@@ -26,7 +26,7 @@ export class PortfolioService {
   constructor(private http: HttpClient, private router: Router) { }
 
   fetchPosts() {
-    return this.http.get<{ [post: string]: Post }>('http://localhost:8000/api/posts').pipe(map(responseData => {
+    return this.http.get<{ [post: string]: Post }>('http://localhost:8000/posts').pipe(map(responseData => {
       const postsArray: Post[] = [];
       for (const post in responseData) {
         if (responseData.hasOwnProperty(post)) {

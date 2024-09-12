@@ -6,7 +6,7 @@
 
     <!-- create overlay -->
     <div *ngIf="isCreateMode"
-      class="absolute flex flex-col justify-center items-center z-40 top-0 left-0 h-screen w-screen overflow-hidden">
+      class="absolute flex flex-col justify-center items-center z-30 top-0 left-0 h-screen w-screen overflow-hidden">
       <div
         class="relative w-[80%] h-[80%] bg-neutral-900/95 ring-1 ring-neutral-800 rounded-2xl flex flex-col justify-between items-center">
         <div *ngIf="isUploading"
@@ -15,22 +15,19 @@
           <p class="text-sm text-neutral-600 font-montserrat font-normal">Publikowanie posta...</p>
         </div>
         <img src="./assets/icons/cancel-icon.png" alt="cancel-icon" (click)="onCancelCreateMode()"
-          class="absolute right-4 top-4 w-5 h-5 brightness-75 hover:brightness-100 transition-all ease-in-out duration-100 cursor-pointer">
-        <div class="w-full h-auto mt-10 px-10">
+          class="absolute z-40 right-4 top-4 w-5 h-5 brightness-75 hover:brightness-100 transition-all ease-in-out duration-100 cursor-pointer">
+        <div class="w-full h-auto p-3 min-[1400px]:mt-10 min-[1400px]:px-10">
           <form id="form" [formGroup]="createPostForm" (ngSubmit)="onPostCreate()">
-            <mat-horizontal-stepper #stepper
+            <mat-horizontal-stepper linear [orientation]="isMobile ? 'vertical' : 'horizontal'" #stepper
               style="background-color: transparent; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
               <mat-step>
                 <ng-template matStepLabel>PLIK</ng-template>
-                <div class="font-montserrat flex flex-col justify-start items-start">
-                  <!-- <div class="font-montserrat flex flex-col justify-start items-start" formGroupName="postFileForm"> -->
-                  <p class="text-3xl font-normal text-neutral-600">Wybierz plik foto/video</p>
+                <div class="font-montserrat flex flex-col justify-start items-start max-[1400px]:h-[250px]">
+                  <p class="text-2xl mb-2 min-[1400px]:text-3xl font-normal text-neutral-600">Wybierz plik foto/video</p>
                   <div (click)="inputFile.click()"
-                    class="flex flex-col justify-center items-center h-[300px] mt-2 w-full border-dashed border-2 rounded-xl border-neutral-600 cursor-pointer">
+                    class="flex flex-col justify-center items-center h-[100px] min-[1400px]:h-[300px] mt-2 w-full border-dashed border-2 rounded-xl border-neutral-600 cursor-pointer">
                     <input type="file" #inputFile (change)="onFileSelected($event)" id="file" class="hidden">
-                    <!-- <input type="file" #inputFile (change)="onFileSelected($event)" id="file" formControlName="file"
-                      class="hidden"> -->
-                    <p class="p-5 font-semibold text-base font-montserrat text-neutral-600">
+                    <p class="p-3 min-[1400px]:p-5 font-semibold text-sm min-[1400px]:text-base font-montserrat text-neutral-600">
                       WYBIERZ PLIK
                     </p>
                   </div>
@@ -61,15 +58,12 @@
               <!-- cover -->
               <mat-step *ngIf="file && !isImage(fileName)">
                 <ng-template matStepLabel>OKŁADKA</ng-template>
-                <div class="font-montserrat flex flex-col justify-start items-start">
-                  <!-- <div class="font-montserrat flex flex-col justify-start items-start" formGroupName="postCoverForm"> -->
-                  <p class="text-3xl font-normal text-neutral-600">Wybierz okładkę materiału video</p>
+                <div class="max-[1400px]:h-[250px] font-montserrat flex flex-col justify-start items-start">
+                  <p class=" text-2xl min-[1400px]:text-3xl font-normal text-neutral-600">Wybierz okładkę materiału video</p>
                   <div (click)="inputCover.click()"
-                    class="flex flex-col justify-center items-center h-[300px] mt-2 w-full border-dashed border-2 rounded-xl border-neutral-600 cursor-pointer">
+                    class="flex flex-col justify-center items-center h-[100px] min-[1400px]:h-[300px] mt-2 w-full border-dashed border-2 rounded-xl border-neutral-600 cursor-pointer">
                     <input type="file" #inputCover (change)="onCoverSelected($event)" id="cover" class="hidden">
-                    <!-- <input type="file" #inputCover (change)="onCoverSelected($event)" id="cover" formControlName="cover"
-                      class="hidden"> -->
-                    <p class="p-5 font-semibold text-base font-montserrat text-neutral-600">
+                    <p class="p-3 min-[1400px]:p-5 font-semibold text-base font-montserrat text-neutral-600">
                       WYBIERZ OKŁADKĘ
                     </p>
                   </div>
@@ -97,12 +91,12 @@
               <mat-step>
                 <ng-template matStepLabel>LOKALIZACJA</ng-template>
                 <div class="font-montserrat flex flex-col justify-start items-start" formGroupName="postLocationForm">
-                  <p class="text-3xl font-normal text-neutral-600">Dodaj lokalizację</p>
-                  <div class="h-[300px] mt-5 w-full">
+                  <p class="text-2xl min-[1400px]:text-3xl font-normal text-neutral-600">Dodaj lokalizację</p>
+                  <div class="h-[100px] min-[1400px]:h-[300px] mt-5 w-full">
                     <div class="flex flex-row items-center justify-start">
-                      <img src="./assets/icons/location-icon.svg" alt="location-icon" class="w-8 h-8 mr-3">
+                      <img src="./assets/icons/location-icon.svg" alt="location-icon" class="w-8 h-8 mr-1 min-[100px]:mr-3">
                       <input type="text" id="location" formControlName="location"
-                        class="rounded-sm ring-1 ring-neutral-600 bg-black/15 w-[50%] outline-none px-2 text-neutral-500 text-8">
+                        class="rounded-sm ring-1 ring-neutral-600 bg-black/15 w-[175px] min-[1400px]:w-[50%] outline-none px-2 text-neutral-500 text-8">
                     </div>
                   </div>
                   <div class="w-full flex justify-end gap-2">
@@ -124,8 +118,8 @@
               <mat-step>
                 <ng-template matStepLabel>WIDOCZNOŚĆ</ng-template>
                 <div class="font-montserrat flex flex-col justify-start items-start" formGroupName="postVisibilityForm">
-                  <p class="text-3xl font-normal text-neutral-600">Widoczność posta</p>
-                  <div class="h-[300px] mt-5">
+                  <p class="text-2xl min-[1400px]:text-3xl font-normal text-neutral-600">Widoczność posta</p>
+                  <div class="h-[150px] min-[1400px]:h-[300px] mt-5">
                     <mat-slide-toggle formControlName="visibility" id="visibility" checked="true"
                       (change)="onToggleChange()" color="accent">
                     </mat-slide-toggle>
@@ -153,10 +147,10 @@
                 <ng-template matStepLabel>OPIS</ng-template>
                 <div class="font-montserrat flex flex-col justify-start items-start"
                   formGroupName="postDescriptionForm">
-                  <p class="text-3xl font-normal text-neutral-600">Dodaj opis</p>
-                  <div class="h-[300px] w-full mt-5">
+                  <p class="text-2xl min-[1400px]:text-3xl font-normal text-neutral-600">Dodaj opis</p>
+                  <div class="h-[200px] min-[1400px]:h-[300px] w-full mt-5">
                     <textarea autocapitalize="true" spellcheck="false" id="description" formControlName="description"
-                      class="w-full h-[90%] ring-1 ring-neutral-600 bg-black/15 rounded-md text-neutral-500 text-base outline-none resize-none p-2"></textarea>
+                      class="w-full h-[70%] min-[1400px]:h-[90%] ring-1 ring-neutral-600 bg-black/15 rounded-md text-neutral-500 text-base outline-none resize-none p-2"></textarea>
                   </div>
                   <div class="w-full flex justify-end gap-2">
                     <button matStepperPrevious type="button">
@@ -196,7 +190,7 @@
           <form id="form" [formGroup]="editPostForm" (ngSubmit)="onEdit()">
             <mat-horizontal-stepper #stepper
               style="background-color: transparent; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-              <mat-step>
+              <mat-step class="w-full">
                 <ng-template matStepLabel>PLIK</ng-template>
                 <div class="font-montserrat flex flex-col justify-start items-start">
                   <p class="text-3xl font-normal text-neutral-600">Wybierz plik foto/video</p>
@@ -367,11 +361,11 @@
         class="absolute right-5 top-5 w-8 h-8 brightness-50 cursor-pointer hover:brightness-100 transition-all ease-in-out duration-75">
       <div class="flex flex-row justify-center items-center max-w-[90%] h-[90%]">
         <div class="flex flex-row justify-center items-center bg-neutral-900 h-full  rounded-l-xl">
-          <img *ngIf="isImage(currentPost.path)" src="{{currentPost.path}}" alt="gallery-item"
+          <img *ngIf="isImage(currentPost.path)" [src]="'http://127.0.0.1:8000' + currentPost.path" alt="gallery-item"
             class="w-full h-full object-contain rounded-l-xl">
-          <video *ngIf="!isImage(currentPost.path)" src="{{currentPost.path}}" poster="{{currentPost.cover}}"
-            alt="gallery-item" class="w-full h-full object-contain rounded-l-xl" controls autoplay loop
-            disablepictureinpicture>
+          <video *ngIf="!isImage(currentPost.path)" [src]="'http://127.0.0.1:8000' + currentPost.path"
+            [poster]="'http://127.0.0.1:8000' + currentPost.cover" alt="gallery-item"
+            class="w-full h-full object-contain rounded-l-xl" controls autoplay loop disablepictureinpicture>
           </video>
         </div>
         <div class="bg-neutral-900 h-full max-w-[25%] flex-grow rounded-r-xl flex-col items-start justify-start">
@@ -428,14 +422,16 @@
       </div>
 
       <!-- post grid -->
-      <div *ngIf="loadedPosts.length >= 1" class="w-[85%] mb-36 h-auto grid grid-cols-3 gap-6">
+      <div *ngIf="loadedPosts.length > 0"
+        class="w-[90%] min-[1025px]:w-[85%] mb-36 h-auto grid grid-cols-3 gap-2 min-[1025px]:gap-6">
         <div *ngFor="let post of loadedPosts"
           class="flex flex-col justify-center items-center aspect-w-1 aspect-h-1 cursor-pointer rounded-lg overflow-hidden">
-          <img [src]="isImage(post.path) ? post.path : post.cover" alt="gallery-item"
-            (click)="onGalleryItemShow(post.id)"
+          <img *ngIf="post.visibility" [src]="isImage(post.path) ? 'http://127.0.0.1:8000' + post.path : 'http://127.0.0.1:8000' + post.cover"
+            alt="gallery-item" (click)="onGalleryItemShow(post.id)"
             class="h-full w-full object-cover rounded-lg hover:scale-110 transition-all ease-in-out duration-500">
-          <!-- <img src="{{ post.path }}" alt="gallery-item" (click)="onGalleryItemShow(post.id)"
-            class="h-full w-full object-cover rounded-lg hover:scale-110 transition-all ease-in-out duration-500"> -->
+          <img *ngIf="!post.visibility && isAdmin" [src]="isImage(post.path) ? 'http://127.0.0.1:8000' + post.path : 'http://127.0.0.1:8000' + post.cover"
+            alt="gallery-item" (click)="onGalleryItemShow(post.id)"
+            class="h-full w-full object-cover rounded-lg hover:scale-110 transition-all ease-in-out duration-500 opacity-25">
         </div>
       </div>
     </div>

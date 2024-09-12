@@ -22,18 +22,20 @@ interface RegisterResponseData {
 export class RegisterService {
   constructor(private http: HttpClient) { }
 
-  register(email: string, password: string, password_confirmation: string) {
-    return this.http.post<RegisterResponseData>('http://localhost:8000/api/register', {
+  register(email: string, password: string, password_confirmation: string, newsletter: boolean) {
+    return this.http.post<RegisterResponseData>('http://localhost:8000/register', {
       email: email,
       password: password,
-      password_confirmation: password_confirmation
+      password_confirmation: password_confirmation,
+      newsletter: newsletter
     }, {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
       }),
       withCredentials: true
     }).pipe(catchError(errorResponse => {
-      let errorMessage = 'Error occured';
+      let errorMessage = 'Wystapił błąd';
 
       if (!errorResponse.error) {
         return throwError(errorMessage);

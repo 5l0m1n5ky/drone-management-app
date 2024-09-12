@@ -10,7 +10,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Button } from 'primeng/button';
-import { exhaustMap, Observable, Subject, Subscription, take } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -20,7 +20,6 @@ import { MessageService } from 'primeng/api';
 import { ToastService } from '../shared/toast/toast.service';
 import { LoginService } from '../login/login.service';
 import { AppComponent } from '../app.component';
-import { User } from '../user/user.model';
 
 @Component({
   standalone: true,
@@ -43,7 +42,6 @@ import { User } from '../user/user.model';
     PortfolioService,
     MessageService,
     ToastService,
-    // LoginService,
     AppComponent
   ]
 })
@@ -57,13 +55,11 @@ export class PortfolioComponent implements OnInit, OnDestroy {
   swipeLeftDisabled: boolean = false;
   swipeRightDisabled: boolean = false;
   screenWidth: number;
-  isMobile: boolean;
+  isMobile: boolean = false;
   isEditMode: boolean = false;
-  isCreateMode: boolean = false;
-
-  createPostForm: FormGroup
-  editPostForm: FormGroup
-
+  isCreateMode: boolean = true;
+  createPostForm: FormGroup;
+  editPostForm: FormGroup;
   isUploading: boolean = false;
 
   @ViewChild('fileInput') fileInput: HTMLElement;
@@ -274,7 +270,6 @@ export class PortfolioComponent implements OnInit, OnDestroy {
       }
       this.dialogActionSubscription.unsubscribe();
     });
-
   }
 
   onCreate() {
@@ -351,11 +346,9 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 
   onCancelEditMode() {
 
-    if (!this.editPostForm.touched) {
+    if (!this.editPostForm.touched && this.file === null) {
       this.isEditMode = false;
-      console.log('didnt touched');
     } else {
-      console.log('touched');
       this.openDialog(30, 30, 'Anulować?', 'Wszystkie zmiany zostaną utracone', 'WRÓĆ', 'ANULUJ');
       this.dialogActionSubscription = this.action$.subscribe(action => {
         if (action === 'confirm') {
@@ -369,7 +362,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
       this.fileSize = '';
       this.fileSrc = undefined;
       this.file = null;
-      this.file = null;
+      this.cover = null;
     }
   }
 
@@ -453,13 +446,6 @@ export class PortfolioComponent implements OnInit, OnDestroy {
     const extension = this.getFileExtension(url);
     return extension ? imageExtensions.includes(extension) : false;
   }
-
-  // checkAdminPrivileges() {
-  //   if (this.loginService.hasAdminPrivileges()) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
 
   isAdmin() {
     return this.loginService.hasAdminPrivileges();
