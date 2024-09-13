@@ -7,17 +7,16 @@
       <p routerLink="/user/panel/orders" class="hover:brightness-125 ease-in-out duration-200 cursor-pointer">
         ZLECENIA
       </p>
-      <img src="./assets/icons/swipe-right.svg" alt="">
+      <img src="./assets/icons/swipe-right.svg" alt="badge-arrow">
       <p> {{ order[0].alias.toUpperCase() }}</p>
       <p>
         ZLECENIE
       </p>
-      <p (click)="openBottomSheet()"
+      <p *ngIf="isAdmin" (click)="openBottomSheet()"
         class="ml-5 text-xs bg-neutral-600 text-neutral-900 font-semibold py-1 px-2 rounded-full hover:brightness-125 ease-in-out duration-200 cursor-pointer">
         ZMIEŃ STATUS
       </p>
     </div>
-
     <div class="w-full h-full flex flex-row items-start justify-start">
       <section class="p-5 flex flex-wrap gap-10 h-auto w-auto max-w-[50%]">
         <div class="text-left font-montserrat w-48 h-8">
@@ -76,7 +75,7 @@
             {{ order[0].format }}
           </p>
         </div>
-        <div class="text-left font-montserrat w-48 h-8">
+        <div *ngIf="order[0].service !== 'foto/video'" class="text-left font-montserrat w-48 h-8">
           <h4 class="text-neutral-700 text-xs">
             GENEROWANIE RAPORTU
           </h4>
@@ -173,28 +172,26 @@
   class="block min-[1024px]:hidden absolute top-0 left-0 z-0 w-screen h-screen bg-[#202020] px-3 pt-3 pb-32 overflow-hidden">
   <div class="w-full h-full bg-[#202020] rounded-xl">
     <div *ngIf="order"
-      class="flex flex-col justify-start items-start gap-5 w-full h-full rounded-xl overflow-x-hidden overflow-y-auto">
+      class="flex flex-col justify-start items-center gap-5 w-full h-full rounded-xl overflow-x-hidden overflow-y-auto">
       <div class="flex p-3 w-full flex-wrap gap-3 font-montserrat text-neutral-600 text-xs">
         <p routerLink="/user/panel/orders" class="hover:brightness-125 ease-in-out duration-200 cursor-pointer">
           ZLECENIA
         </p>
         <img src="./assets/icons/swipe-right.svg" alt="arrow-icon">
         <p> {{ order[0].alias.toUpperCase() }}</p>
-        <p (click)="openBottomSheet()"
+        <p *ngIf="isAdmin" (click)="openBottomSheet()"
           class="text-xs bg-neutral-600 text-neutral-900 font-semibold py-1 px-2 rounded-full hover:brightness-125 ease-in-out duration-200 cursor-pointer">
           ZMIEŃ STATUS
         </p>
       </div>
-
-      <!-- <div class="w-full h-full flex flex-col items-start justify-start"> -->
-        <section class="flex flex-col items-center justify-start p-5 w-full">
-          <div class="w-[100%] h-[300px] bg-black">
-            <google-map height="100%" width="100%" [options]="options" [center]="center">
-              <map-advanced-marker *ngFor="let position of markerPositions" [position]="position" />
-            </google-map>
-          </div>
-        </section>
-      <section class="p-5 flex flex-wrap gap-10 h-auto w-auto max-w-[50%]">
+      <section class="flex flex-col items-center justify-start p-5 w-full">
+        <div class="w-[100%] h-[300px] bg-black">
+          <google-map height="100%" width="100%" [options]="options" [center]="center">
+            <map-advanced-marker *ngFor="let position of markerPositions" [position]="position" />
+          </google-map>
+        </div>
+      </section>
+      <section class="p-5 flex flex-col items-start justify-start gap-10 h-auto w-full">
         <div class="text-left font-montserrat w-48 h-8">
           <h4 class="text-neutral-700 text-xs">
             NAZWA ZLECENIA
@@ -251,7 +248,7 @@
             {{ order[0].format }}
           </p>
         </div>
-        <div class="text-left font-montserrat w-48 h-8">
+        <div *ngIf="order[0].service !== 'foto/video'" class="text-left font-montserrat w-48 h-8">
           <h4 class="text-neutral-700 text-xs">
             GENEROWANIE RAPORTU
           </h4>
@@ -280,7 +277,7 @@
             UWAGI DO ZAMÓWIENIA
           </h4>
           <p class="text-base text-neutral-500 font-semibold">
-            {{ order[0].customerComment }}
+            {{ order[0].customerComment === '' ? 'brak' : order[0].customerComment }}
           </p>
         </div>
         <div *ngIf="isAdmin" class="text-left font-montserrat w-48 h-8">
@@ -312,7 +309,8 @@
             ADRES
           </h4>
           <p class="text-base text-neutral-500 font-semibold">
-            {{ order[0].streetName }} {{ order[0].streetNumber }} {{ order[0].apartmentNumber ? '/' + order[0].apartmentNumber :
+            {{ order[0].streetName }} {{ order[0].streetNumber }} {{ order[0].apartmentNumber ? '/' +
+            order[0].apartmentNumber :
             ''}} {{ order[0].zip }} {{ order[0].city }}
           </p>
         </div>
@@ -333,8 +331,6 @@
           </p>
         </div>
       </section>
-
-      <!-- </div> -->
     </div>
   </div>
 </div>

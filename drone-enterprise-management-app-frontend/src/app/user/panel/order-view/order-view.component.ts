@@ -27,13 +27,9 @@ export class OrderViewComponent implements OnInit {
 
   order: OrderItem[] | null;
   orderItem: OrderItem;
-
   states: State[] = [];
-
   isProcessing: boolean = false;
-
   isAdmin: boolean = false;
-
   latitude: number = 53.122028;
   longitude: number = 18.000292;
   center: google.maps.LatLngLiteral;

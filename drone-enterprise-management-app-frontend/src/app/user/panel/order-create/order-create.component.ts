@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NgModel, Validators } from '@angular/forms';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -16,7 +16,7 @@ import { GoogleMapsModule } from "@angular/google-maps";
 import { OrderCreateService } from './order-create.service';
 import { LoadingSpinnerComponent } from 'src/app/shared/loading-spinner/loading-spinner.component';
 import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from 'rxjs';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -115,25 +115,26 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
 
   fetchedDates: String[];
   disabledOrderDates: Date[] = [];
-  isFilterProcessed: boolean = false; //forced initialization of calendar only after fetching filter dates
+  isFilterProcessed: boolean = false;
 
 
-  // Date filter function
   orderDatesFilter = (date: Date): boolean => {
     const dateToFilter = (date || new Date());
 
-    // Check if the current date is in the disabled dates array
     return !this.disabledOrderDates.some(disabledOrderDate =>
       disabledOrderDate.getDate() === dateToFilter.getDate() &&
       disabledOrderDate.getMonth() === dateToFilter.getMonth() &&
       disabledOrderDate.getFullYear() === dateToFilter.getFullYear()
     );
   }
+  isMobile: boolean;
 
 
   constructor(private orderCreateService: OrderCreateService, private route: ActivatedRoute, private datePipe: DatePipe, private dialog: MatDialog, private router: Router, private toastService: ToastService, private loginService: LoginService, private appComponent: AppComponent, private panelService: PanelService) { }
 
   ngOnInit(): void {
+
+    this.onResize();
 
     this.isProcessing = true;
 
@@ -164,15 +165,6 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
     });
 
     this.orderDatesSubscription = this.orderCreateService.fetchOrderDates().subscribe(dates => {
-      console.log(dates);
-      // this.fetchedDates = dates.map(date => new Date(date));
-      // this.fetchedDates.map(date => this.datePipe.transform(new Date(date), 'yyyy-MM-dd'));
-      // this.disabledOrderDates = this.fetchedDates;
-      //  this.disabledOrderDates
-      // const orderDates = dates.map(date => new Date(date.valueOf()));
-      // this.fetchedDates = dates.map(date => new Date(date.date.toString()));
-
-
       this.fetchedDates = dates.map(date => date.date);
 
       this.fetchedDates.forEach(date => {
@@ -180,15 +172,6 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
       });
 
       this.isFilterProcessed = true;
-
-      // this.disabledOrderDates = this.fetchedDates.map(date => new Date(date.toString()))
-
-      // this.fetchedDates.map(date => this.datePipe.transform(date, 'yyyy-MM-dd'));
-
-      // this.disabledOrderDates = orderDates;
-      console.log(this.fetchedDates);
-      console.log(this.disabledOrderDates);
-      // console.log(this.disabledOrderDates);
       this.areOrderDatesFetched$.next(true);
     });
 
@@ -215,7 +198,7 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
         amount: new FormControl(null, Validators.required),
         bgMusicId: new FormControl(null),
         format: new FormControl(null),
-        report: new FormControl(true),
+        report: new FormControl(false),
       }),
       OrderLocationForm: new FormGroup({
         latitude: new FormControl(null, Validators.required),
@@ -242,6 +225,15 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
         price: new FormControl(null, Validators.required),
       })
     });
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    if (window.innerWidth <= 1024) {
+      this.isMobile = true;
+    } else {
+      this.isMobile = false;
+    }
   }
 
   onStepChange(event: StepperSelectionEvent) {
@@ -275,22 +267,18 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
     switch (this.currentSubserviceName) {
 
       case "fotografia":
-        console.log('foto ', this.currentSubserviceName);
         this.setValidatorsForPhoto();
         break;
 
       case "relacja z wydarzenia":
-        console.log('video ', this.currentSubserviceName);
         this.setValidatorsForVideo();
         break;
 
       case "spot reklamowy":
-        console.log('video ', this.currentSubserviceName);
         this.setValidatorsForVideo();
         break;
 
       case "inspekcja RGB" || "inspekcja IR" || "inspekcja RGB+IR" || "ortofotomapa" || "ortomozaika" || "model 3D":
-        console.log('ins ', this.currentSubserviceName);
         this.setValidatorsForInspection()
         break;
     }
@@ -301,8 +289,6 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
   }
 
   onPlaceOrder() {
-    console.log(this.placeOrderForm.value);
-
     this.isProcessing = true;
 
     this.order = {
@@ -346,7 +332,6 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
   }
 
   onCancel() {
-    console.log('cancel');
     if (!this.placeOrderForm.get('ServiceDetailsForm')?.touched) {
       this.router.navigate(['/user/panel/orders'])
     } else {
@@ -459,11 +444,6 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
     this.priceNetto = Number((priceBrutto * 0.77).toFixed(2));
 
     this.placeOrderForm.get("OrderDetailForm.price")?.patchValue(this.priceBrutto);
-
-    console.log('unit price: ', this.currentSubserviceUnitPrice);
-    console.log('amount: ', amount);
-    console.log('distance: ', this.orderFromOriginToDestinationDistance);
-    console.log('kilometrage: ', environment.kilometreage);
   }
 
   calculateDistance() {
@@ -483,16 +463,13 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
       (response, status) => {
         if (status === 'OK') {
           const results = response?.rows[0].elements[0];
-          const distanceText = results?.distance.text;  // Get the distance as a string with units (future feature)
-          const distanceValue = results?.distance.value; // Get the distance in meters
-          const durationText = results?.duration.text;  // Get the travel duration as text (future feature)
+          const distanceText = results?.distance.text;
+          const distanceValue = results?.distance.value;
+          const durationText = results?.duration.text;
 
           if (distanceValue) {
             this.orderFromOriginToDestinationDistance = distanceValue / 1000;
           }
-
-        } else {
-          console.error('Error calculating distance:', status);
         }
       }
     );

@@ -6,7 +6,8 @@
     <div class="font-montserrat text-neutral-600 text-sm w-full text-center mt-5">
       <p *ngIf="notifications.length === 0">Brak powiadomień</p>
     </div>
-    <div *ngIf="notifications.length < 0" class="w-full h-auto flex flex-col justify-start items-center p-5 gap-5 select-none">
+    <div *ngIf="notifications.length < 0"
+      class="w-full h-auto flex flex-col justify-start items-center p-5 gap-5 select-none">
       <mat-accordion *ngFor="let notification of notifications" class="example-headers-align w-full" multi>
         <mat-expansion-panel style="background-color: #202020;"
           (opened)="onNotificationShow(notification.id, notification.seen)">
@@ -50,6 +51,9 @@
 <div class="block min-[1024px]:hidden absolute top-0 left-0 z-0 w-full min-h-screen overflow-hidden font-montserrat">
   <div class="w-full min-h-screen flex flex-col justify-start items-start bg-neutral-900 pt-5 pb-[78px]">
     <div class="w-full h-auto flex flex-col justify-start items-center p-3 gap-5">
+      <div class="font-montserrat text-neutral-600 text-sm w-full text-center mt-2">
+        <p *ngIf="notifications.length === 0">Brak powiadomień</p>
+      </div>
       <mat-accordion *ngFor="let notification of notifications" class="example-headers-align w-full" multi>
         <mat-expansion-panel style="background-color: #202020;"
           (opened)="onNotificationShow(notification.id, notification.seen)">

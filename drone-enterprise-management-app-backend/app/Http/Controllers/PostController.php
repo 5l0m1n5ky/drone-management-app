@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Post;
 use App\Http\Requests\ValidatePostRequest;
 use App\Http\Requests\ValidatePostUpdateRequest;
-use Illuminate\Validation\ValidationException;
 use App\Traits\HttpResponses;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
-
 
 class PostController extends Controller
 {

@@ -42,7 +42,6 @@ class OrderController extends Controller
                     $orderDetailsId = $order->order_details_id;
                     $orderDetails = DB::table('order_details')->where('id', $orderDetailsId)->orderBy('id')->first();
                     $orderItem = [
-                        // 'order' => [
                         'id' => $order->id,
                         'service' => $services->where('id', $order->service_id)->pluck('service_type')->first(),
                         'subservice' => $subservices->where('id', $orderDetails->subservice_id)->pluck('subservice')->first(),
@@ -69,7 +68,6 @@ class OrderController extends Controller
                         'customerComment' => $order->customer_comment,
                         'email' => $order->email,
                         'tel' => $order->tel,
-                        // ]
                     ];
 
                     $orderData[] = $orderItem;
@@ -85,7 +83,6 @@ class OrderController extends Controller
                     $orderDetailsId = $order->order_details_id;
                     $orderDetails = DB::table('order_details')->where('id', $orderDetailsId)->orderBy('id')->first();
                     $orderItem = [
-                        // 'order' => [
                         'id' => $order->id,
                         'service' => $services->where('id', $order->service_id)->pluck('service_type')->first(),
                         'subservice' => $subservices->where('id', $orderDetails->subservice_id)->pluck('subservice')->first(),
@@ -110,7 +107,6 @@ class OrderController extends Controller
                         'customerComment' => $order->customer_comment,
                         'email' => $order->email,
                         'tel' => $order->tel,
-                        // ]
                     ];
 
                     $orderData[] = $orderItem;
@@ -186,7 +182,7 @@ class OrderController extends Controller
 
             $link = env('FRONTEND_URL') . '/user/panel/orders/' . $order->id;
 
-            $this->emailController->notifyAdminNewOrder($admin->id, $link);
+            $this->emailController->notifyAdminNewOrder($admin->email, $link);
 
             return $this->success(
                 'Zamówienie zostało złożone',

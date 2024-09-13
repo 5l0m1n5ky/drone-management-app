@@ -57,7 +57,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
   screenWidth: number;
   isMobile: boolean = false;
   isEditMode: boolean = false;
-  isCreateMode: boolean = true;
+  isCreateMode: boolean = false;
   createPostForm: FormGroup;
   editPostForm: FormGroup;
   isUploading: boolean = false;
@@ -96,7 +96,11 @@ export class PortfolioComponent implements OnInit, OnDestroy {
     this.updateScreenSize();
     this.isLoading = true;
     this.onFetchSubscription = this.portfolioService.fetchPosts().subscribe(posts => {
-      this.loadedPosts = posts;
+      if (this.isAdmin()) {
+        this.loadedPosts = posts;
+      } else {
+        this.loadedPosts = posts.filter(post => post.visibility === true);
+      }
       this.isLoading = false;
     });
 

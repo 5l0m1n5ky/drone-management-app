@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoginService } from 'src/app/login/login.service';
 import { LoadingSpinnerComponent } from 'src/app/shared/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
@@ -7,7 +7,7 @@ import { AppComponent } from 'src/app/app.component';
 import { PanelService } from '../panel.service';
 import { OrderItem } from '../models/order-item.model';
 import { RouterLink } from '@angular/router';
-import { ToastModule } from 'primeng/toast';
+import { Subscription } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -15,18 +15,15 @@ import { ToastModule } from 'primeng/toast';
   templateUrl: './order.component.html',
   imports: [CommonModule, LoadingSpinnerComponent, RouterLink],
 })
-export class OrderComponent implements OnInit {
+export class OrderComponent implements OnInit, OnDestroy {
 
   orderSubscription: any;
-  ServiceSubscription: any;
   musicSubscription: any;
-  fetchFlagsSubscription: any;
-
-  constructor(private loginService: LoginService, private router: Router, private appComponent: AppComponent, private panelService: PanelService) { }
-
+  onCheckSubscription: Subscription;
   orders: OrderItem[] = [];
   isProcessing: boolean = false;
-  onCheckSubscription: any;
+
+  constructor(private loginService: LoginService, private router: Router, private appComponent: AppComponent, private panelService: PanelService) { }
 
   ngOnInit(): void {
 
@@ -35,10 +32,8 @@ export class OrderComponent implements OnInit {
     this.isProcessing = true;
     this.onCheckSubscription = this.loginService.checkSession().subscribe(responseData => {
       if (responseData && responseData.message && responseData.message.toString() === 'ACTIVE_SESSION') {
-        // this.isProcessing = false;
         this.orderSubscription = this.panelService.fetchOrders().subscribe(orders => {
           this.orders = orders;
-          // console.log(this.orders);
           this.isProcessing = false;
         });
       }
@@ -49,6 +44,10 @@ export class OrderComponent implements OnInit {
     });
   }
 
+  isAdmin() {
+    return this.loginService.hasAdminPrivileges();
+  }
+
   onOrderDetails(orderId: Number) {
     if (this.orders) {
       this.panelService.assignOrderItem(this.orders.filter(order => order.id === orderId));
@@ -56,5 +55,11 @@ export class OrderComponent implements OnInit {
     } else {
       this.router.navigate(['/user/panel/order-view']);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.orderSubscription?.unsubscribe();
+    this.musicSubscription?.unsubscribe();
+    this.onCheckSubscription?.unsubscribe();
   }
 }

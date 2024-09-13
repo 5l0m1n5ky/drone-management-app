@@ -1,11 +1,12 @@
 <div
-  class="hidden min-[1024px]:block absolute top-0 left-0 z-0 w-full h-full bg-neutral-800 pl-[6.5rem] py-5 pr-5 overflow-hidden">
-  <div class="relative w-full h-full bg-neutral-900 rounded-xl p-5">
+  class="absolute top-0 left-0 z-0 w-full h-full bg-neutral-800 lg:pl-[6.5rem] lg:py-5 lg:pr-5 pb-20 overflow-x-hidden">
+  <div class="relative w-full h-full bg-neutral-900 rounded-xl p-5 overflow-y-auto">
     <img (click)="onCancel()" src="./assets/icons/cancel-icon.png" alt="cancel-icon"
       class="absolute right-3 top-3 w-4 h-4 brightness-50 hover:brightness-100 transition-all ease-in-out duration-200 cursor-pointer">
     <app-loading-spinner *ngIf="isProcessing"></app-loading-spinner>
     <form id="form" [formGroup]="placeOrderForm" (ngSubmit)="onPlaceOrder()">
-      <mat-horizontal-stepper #stepper [linear]="false" (selectionChange)="onStepChange($event)"
+      <mat-horizontal-stepper #stepper [orientation]="isMobile ? 'vertical' : 'horizontal'" linear
+        (selectionChange)="onStepChange($event)"
         style="background-color: transparent; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
         <mat-step [stepControl]="placeOrderForm.get('ServiceDetailsForm')!">
           <ng-template matStepLabel>USŁUGA
@@ -149,7 +150,7 @@
           </ng-template>
           <div matStepContent class="flex flex-col justify-center items-center">
             <section>
-              <google-map height="550px" width="800px" [options]="options" (mapClick)="addMarker($event)">
+              <google-map height="300px" width="300px" [options]="options" (mapClick)="addMarker($event)">
                 <map-advanced-marker *ngFor="let position of markerPositions" [position]="position" />
               </google-map>
             </section>
@@ -182,7 +183,7 @@
                 <p class="font-montserrat text-xl text-neutral-300">{{orderDate}}</p>
               </div>
             </section>
-            <div class="w-full flex justify-end gap-2">
+            <div class="mt-4 lg:mt-0 w-full flex justify-end gap-2">
               <button matStepperPrevious type="button">
                 <p
                   class="text-neutral-600 font-semibold ring-1 text-sm ring-neutral-600 px-4 py-1 rounded-full hover:text-neutral-500 hover:ring-neutral-500 ease-in-out transition-all duration-150">
@@ -201,8 +202,6 @@
         <mat-step [stepControl]="placeOrderForm.get('CustomerDataForm')!">
           <ng-template matStepLabel>FV</ng-template>
           <div matStepContent class="w-full" formGroupName="CustomerDataForm">
-
-
             <div class="flex flex-row items-center justify-start gap-2 py-2">
               <p class="font-montserrat text-sm text-neutral-500">
                 Osoba fizyczna
@@ -214,10 +213,9 @@
                 Firma
               </p>
             </div>
-
             <section class="mt-5 w-full flex flex-col justify-start items-start gap-3">
               <div *ngIf="isEnterprise" class="flex flex-row items-center gap-5">
-                <mat-form-field style="width: 450px;">
+                <mat-form-field class="w-[150px] lg:w-[450px]">
                   <mat-label>Nazwa Firmy</mat-label>
                   <input matInput formControlName="name">
                   <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.name')?.hasError('required')"
@@ -225,7 +223,7 @@
                     Podaj nazwę firmy
                   </mat-error>
                 </mat-form-field>
-                <mat-form-field style="width: 450px;">
+                <mat-form-field class="w-[150px] lg:w-[450px]">
                   <mat-label>NIP</mat-label>
                   <input matInput formControlName="nip" minlength="10" maxlength="10">
                   <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.nip')?.hasError('required')"
@@ -239,7 +237,7 @@
                 </mat-form-field>
               </div>
               <div *ngIf="!isEnterprise" class="flex flex-row items-center gap-5">
-                <mat-form-field style="width: 450px;">
+                <mat-form-field class="w-[150px] lg:w-[450px]">
                   <mat-label>Imię</mat-label>
                   <input matInput formControlName="name">
                   <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.name')?.hasError('required')"
@@ -247,7 +245,7 @@
                     Podaj imię
                   </mat-error>
                 </mat-form-field>
-                <mat-form-field style="width: 450px;">
+                <mat-form-field class="w-[150px] lg:w-[450px]">
                   <mat-label>Nazwisko</mat-label>
                   <input matInput formControlName="surname">
                   <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.surname')?.hasError('required')"
@@ -256,8 +254,8 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="flex flex-row items-center gap-5">
-                <mat-form-field style="width: 450px;">
+              <div class="hidden lg:flex flex-row items-center gap-5">
+                <mat-form-field class="w-[150px] lg:w-[450px]">
                   <mat-label>Ulica</mat-label>
                   <input matInput formControlName="streetName">
                   <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.streetName')?.hasError('required')"
@@ -286,7 +284,39 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="flex flex-row items-center gap-5">
+              <div class="flex lg:hidden flex-col items-start gap-5">
+                <mat-form-field class="w-[425px]">
+                  <mat-label>Ulica</mat-label>
+                  <input matInput formControlName="streetName">
+                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.streetName')?.hasError('required')"
+                    class="font-montserrat text-xs text-red-600">
+                    Podaj nazwę ulicy
+                  </mat-error>
+                </mat-form-field>
+                <div class="flex flex-row items-center gap-5">
+                  <mat-form-field style="width: 150px;">
+                    <mat-label>Numer</mat-label>
+                    <input matInput formControlName="streetNumber">
+                    <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.streetNumber')?.hasError('required')"
+                      class="font-montserrat text-xs text-red-600">
+                      Podaj numer ulicy
+                    </mat-error>
+                    <!-- <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.streetNumber')?.hasError('required')"
+                      class="font-montserrat text-xs text-red-600">
+                      Niewłaściwy format
+                    </mat-error> -->
+                  </mat-form-field>
+                  <mat-form-field style="width: 150px;">
+                    <mat-label>Nr lokalu</mat-label>
+                    <input matInput formControlName="apartmentNumber">
+                    <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.apartmentNumber')?.hasError('pattern')"
+                      class="font-montserrat text-xs text-red-600">
+                      Nieprawidłowy format
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="hidden lg:flex flex-row items-center gap-5">
                 <mat-form-field style="width: 450px;">
                   <mat-label>Miasto</mat-label>
                   <input matInput formControlName="city">
@@ -308,7 +338,56 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class=" flex flex-row items-center gap-5">
+              <div class="flex lg:hidden flex-col items-start gap-5">
+                <mat-form-field style="width: 450px;">
+                  <mat-label>Miasto</mat-label>
+                  <input matInput formControlName="city">
+                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.city')?.hasError('required')"
+                    class="font-montserrat text-xs text-red-600">
+                    Podaj miasto
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field style="width: 450px;">
+                  <mat-label>Kod pocztowy</mat-label>
+                  <input matInput formControlName="zip" minlength="5" maxlength="5">
+                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.zip')?.hasError('required')"
+                    class="font-montserrat text-xs text-red-600">
+                    Podaj kod pocztowy
+                  </mat-error>
+                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.zip')?.hasError('pattern')"
+                    class="font-montserrat text-xs text-red-600">
+                    Niperawidłowy format
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="hidden lg:flex flex-row items-center gap-5">
+                <mat-form-field style="width: 450px;">
+                  <mat-label>Telefon</mat-label>
+                  <span matPrefix>&nbsp;+48&nbsp;</span>
+                  <input matInput formControlName="tel" type="tel" maxlength="9" minlength="9">
+                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.tel')?.hasError('required')"
+                    class="font-montserrat text-xs text-red-600">
+                    Podaj numer kontaktowy
+                  </mat-error>
+                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.tel')?.hasError('pattern')"
+                    class="font-montserrat text-xs text-red-600">
+                    Niperawidłowy format
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field style="width: 450px;">
+                  <mat-label>E-mail</mat-label>
+                  <input matInput formControlName="email" type="email">
+                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.email')?.hasError('required')"
+                    class="font-montserrat text-xs text-red-600">
+                    Podaj adres mailowy
+                  </mat-error>
+                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.email')?.hasError('email')"
+                    class="font-montserrat text-xs text-red-600">
+                    Niperawidłowy format
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="flex lg:hidden flex-col items-center gap-5">
                 <mat-form-field style="width: 450px;">
                   <mat-label>Telefon</mat-label>
                   <span matPrefix>&nbsp;+48&nbsp;</span>
@@ -354,23 +433,25 @@
         </mat-step>
         <mat-step [stepControl]="placeOrderForm.get('OrderDetailForm')!">
           <ng-template matStepLabel>FINALIZACJA</ng-template>
-          <div matStepContent class="w-full flex items-start justify-between mt-2" formGroupName="OrderDetailForm">
-            <section class="w-full h-[500px] flex flex-col items-start justify-start gap-5 mt-5">
-              <mat-form-field style="width: 450px;">
+          <div matStepContent
+            class="w-full flex flex-col lg:flex-row items-start justify-start lg:justify-between mt-2 max-lg:gap-5"
+            formGroupName="OrderDetailForm">
+            <section class="w-full h-auto lg:h-[500px] flex flex-col items-start justify-start gap-5 mt-5">
+              <mat-form-field class="w-full lg:w-[450px]">
                 <mat-label>Nazwa Twojego zlecenia</mat-label>
-                <input matInput value="{{ orderAlias }}" formControlName="alias">
+                <input matInput value="{{ orderAlias }}" formControlName="alias" class="w-full">
                 <mat-error *ngIf="placeOrderForm.get('OrderDetailForm.alias')?.hasError('required')"
                   class="font-montserrat text-xs text-red-600">
                   Alias zlecena nie może być pusty
                 </mat-error>
               </mat-form-field>
-              <mat-form-field style="width: 450px;">
+              <mat-form-field class="w-full lg:w-[450px]">
                 <mat-label>Uwagi do zlecenia</mat-label>
                 <input matInput formControlName="description">
               </mat-form-field>
             </section>
             <section
-              class="w-[30%] h-[500px] flex flex-col items-start justify-start gap-2 rounded-2xl bg-neutral-800 font-montserrat">
+              class="w-full lg:w-[30%] h-[350px] flex flex-col items-start justify-start gap-2 rounded-2xl bg-neutral-800 font-montserrat">
               <h2 class="p-5 text-3xl text-neutral-300">Podsumowanie</h2>
               <div class="pl-5 flex flex-col gap-2 mt-5">
                 <h4 class="text-sm text-neutral-500">Kwota netto</h4>
@@ -397,35 +478,6 @@
           </div>
         </mat-step>
       </mat-horizontal-stepper>
-    </form>
-  </div>
-</div>
-
-<div class="block min-[1024px]:hidden absolute top-0 left-0 z-0 w-full h-screen bg-neutral-800 p-5 overflow-hidden">
-  <div class="w-full h-full bg-[#202020] rounded-xl p-5">
-    <form id="form" [formGroup]="placeOrderForm" (ngSubmit)="onPlaceOrder()">
-      <mat-vertical-stepper #stepper color="accent"
-        style="background-color: transparent; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-        <mat-step>
-          <ng-template matStepLabel>USŁUGA
-          </ng-template>
-          <div matStepContent>
-            <mat-form-field color="accent">
-              <mat-label>Select</mat-label>
-              <mat-select>
-                <mat-option value="one">First option</mat-option>
-                <mat-option value="two">Second option</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </mat-step>
-        <mat-step>
-          <ng-template matStepLabel>LOKALIZACJA</ng-template>
-        </mat-step>
-        <mat-step>
-          <ng-template matStepLabel>TERMIN</ng-template>
-        </mat-step>
-      </mat-vertical-stepper>
     </form>
   </div>
 </div>
