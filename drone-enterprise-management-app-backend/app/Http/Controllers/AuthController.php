@@ -32,7 +32,6 @@ class AuthController extends Controller
         try {
             $request->validated($request->all());
 
-
             if (!Auth::attempt($request->only(['email', 'password']))) {
                 return $this->error(
                     [
@@ -138,22 +137,35 @@ class AuthController extends Controller
         $user = User::find($user_id);
         $token = DB::table('tokens')->where('user_id', $user_id)->pluck('token_value')->first();
 
-        if (!$user->hasVerifiedEmail()) {
+        try {
+            if ($user && !$user->hasVerifiedEmail()) {
 
-            if ($tokenToVerify === $token) {
+                if ($tokenToVerify === $token) {
 
-                $user->markEmailAsVerified();
+                    $user->markEmailAsVerified();
 
-                return $this->success(
-                    [
-                        'request' => [
-                            'id' => $user_id,
-                            'token' => $token
+                    return $this->success(
+                        [
+                            'request' => [
+                                'id' => $user_id,
+                                'token' => $token
+                            ],
                         ],
-                    ],
-                    'ACCOUNT_VERIFIED'
-                );
+                        'ACCOUNT_VERIFIED'
+                    );
 
+                } else {
+                    return $this->error(
+                        [
+                            'request' => [
+                                'id' => $user_id,
+                                'token' => $token
+                            ]
+                        ],
+                        'VERIFICATION_TOKEN_MISMATCH',
+                        401
+                    );
+                }
             } else {
                 return $this->error(
                     [
@@ -162,20 +174,15 @@ class AuthController extends Controller
                             'token' => $token
                         ]
                     ],
-                    'VERIFICATION_TOKEN_MISMATCH',
+                    'VERIFICATION_ERROR',
                     401
                 );
             }
-        } else {
+        } catch (\ErrorException $errorException) {
             return $this->error(
-                [
-                    'request' => [
-                        'id' => $user_id,
-                        'token' => $token
-                    ]
-                ],
-                'VERIFICATION_ERROR',
-                401
+                $errorException,
+                'ERROR_OCCURED',
+                500
             );
         }
     }
@@ -189,7 +196,7 @@ class AuthController extends Controller
         try {
             $user = User::find($user_id);
 
-            if (!$user->hasVerifiedEmail()) {
+            if ($user && !$user->hasVerifiedEmail()) {
 
                 $exisitng_token = DB::table('tokens')->where('user_id', $user_id)->first();
 

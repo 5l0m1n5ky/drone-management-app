@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignId('service_id')->references('id')->on('services');
             $table->foreignId('user_id')->references('id')->on('users');
             $table->foreignId('state_id')->references('id')->on('states');
-            $table->foreignId('order_details_id')->references('id')->on('order_details');
+            $table->foreignId('order_details_id')->references('id')->on('order_details')->onDelete('cascade');
             $table->float('price_brutto');
             $table->date('date');
             $table->float('order_latitude');
@@ -23,9 +23,9 @@ return new class extends Migration {
             $table->string('customer_name');
             $table->string('customer_surname')->nullable();
             $table->string('nip')->nullable();
-            $table->string('streetName');
-            $table->integer('streetNumber');
-            $table->integer('apartmentNumber')->nullable();
+            $table->string('street_name');
+            $table->integer('street_number');
+            $table->integer('apartment_number')->nullable();
             $table->integer('zip');
             $table->string('city');
             $table->longText('customer_comment')->nullable();

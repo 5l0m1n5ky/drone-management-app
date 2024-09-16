@@ -39,7 +39,7 @@ export class PanelService {
   }
 
   fetchServices() {
-    return this.http.get<{ [service: string]: Service }>('http://localhost:8000/api/services').pipe(map(responseData => {
+    return this.http.get<{ [service: string]: Service }>('http://localhost:8000/services').pipe(map(responseData => {
       const servicesArray: Service[] = [];
       for (const service in responseData) {
         if (responseData.hasOwnProperty(service)) {
@@ -52,7 +52,7 @@ export class PanelService {
   }
 
   fetchSubervices() {
-    return this.http.get<{ [subservice: string]: Subservice }>('http://localhost:8000/api/subservices').pipe(map(responseData => {
+    return this.http.get<{ [subservice: string]: Subservice }>('http://localhost:8000/subservices').pipe(map(responseData => {
       const subservicesArray: Subservice[] = [];
       for (const subservice in responseData) {
         if (responseData.hasOwnProperty(subservice)) {
@@ -65,7 +65,7 @@ export class PanelService {
   }
 
   fetchBackgroundMusicTypes() {
-    return this.http.get<{ [bgMusc: string]: BgMusic }>('http://localhost:8000/api/background-music').pipe(map(responseData => {
+    return this.http.get<{ [bgMusc: string]: BgMusic }>('http://localhost:8000/background-music').pipe(map(responseData => {
       const backgroundMusicArray: BgMusic[] = [];
       for (const musicType in responseData) {
         if (responseData.hasOwnProperty(musicType)) {
@@ -78,7 +78,7 @@ export class PanelService {
   }
 
   fetchStates() {
-    return this.http.get<{ [state: string]: State }>('http://localhost:8000/api/states').pipe(map(responseData => {
+    return this.http.get<{ [state: string]: State }>('http://localhost:8000/states').pipe(map(responseData => {
       const statesArray: State[] = [];
       for (const state in responseData) {
         if (responseData.hasOwnProperty(state)) {

@@ -7,8 +7,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\ContactControler;
-use App\Mail\InvoicePaid;
-use App\Models\Invoice;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\SubserviceController;
+use App\Http\Controllers\BackgroundMusicController;
 
 
 Route::get('/', function () {
@@ -28,17 +29,23 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('/posts/delete/{post_id}', [PostController::class, 'delete'])->middleware('restrictRole:admin');
 
     Route::post('/orders/create', [OrderController::class, 'store']);
-    Route::get('/orders', [OrderController::class, 'index']);
+    // Route::get('/orders', [OrderController::class, 'index']);
     Route::post('/orders/state-update', [StateController::class, 'update'])->middleware('restrictRole:admin');
 
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/notifications/seen', [NotificationController::class, 'update']);
 });
 
-Route::post('/verifyAccount', [AuthController::class, 'verifyAccount']);
-Route::post('/regenerate-token', [AuthController::class, 'regenerateToken']);
+Route::post('/verify-account', [AuthController::class, 'verifyAccount']); //tested
+Route::post('/regenerate-token', [AuthController::class, 'regenerateToken']); //tested
 Route::post('/contact', [ContactControler::class, 'store']);
-Route::get('/posts', [PostController::class, 'index']);
+Route::get('/posts', [PostController::class, 'index']); //tested
+Route::get('/services', [ServiceController::class, 'index']);  //tested
+Route::get('/subservices', [SubserviceController::class, 'index']); //tested
+Route::get('/background-music', [BackgroundMusicController::class, 'index']); //tested
+Route::get('/states', [StateController::class, 'index']); //tested
+Route::get('/dates', [OrderController::class, 'indexOrderDates']); //tested
+Route::get('/orders', [OrderController::class, 'index']); //tested
 
 
 

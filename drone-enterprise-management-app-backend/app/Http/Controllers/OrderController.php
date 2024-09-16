@@ -23,7 +23,6 @@ class OrderController extends Controller
 
     public function index()
     {
-
         $user = Auth::user();
 
         $services = collect(DB::table('services')->get());
@@ -32,7 +31,8 @@ class OrderController extends Controller
         $bgMusic = collect(DB::table('background_music')->get());
 
         try {
-            if ($user->role === 'admin') {
+
+            if ($user && $user->role === 'admin') {
 
                 $orderData = [];
                 $orders = DB::table('orders')->orderBy('id')->get();
@@ -60,9 +60,9 @@ class OrderController extends Controller
                         'customerName' => $order->customer_name,
                         'customerSurname' => $order->customer_surname,
                         'nip' => $order->nip,
-                        'streetName' => $order->streetName,
-                        'streetNumber' => $order->streetNumber,
-                        'apartmentNumber' => $order->apartmentNumber,
+                        'streetName' => $order->street_name,
+                        'streetNumber' => $order->street_number,
+                        'apartmentNumber' => $order->apartment_number,
                         'zip' => $order->zip,
                         'city' => $order->city,
                         'customerComment' => $order->customer_comment,
@@ -74,10 +74,10 @@ class OrderController extends Controller
                 }
                 return response()->json($orderData);
 
-            } else if ($user->role === 'user') {
+            } else if ($user && $user->role === 'user') {
 
                 $orderData = [];
-                $orders = DB::table('orders')->where('id', $user->id)->orderBy('id')->get();
+                $orders = DB::table('orders')->where('user_id', $user->id)->orderBy('id')->get();
                 foreach ($orders as $order) {
 
                     $orderDetailsId = $order->order_details_id;
@@ -101,9 +101,9 @@ class OrderController extends Controller
                         'customerName' => $order->customer_name,
                         'customerSurname' => $order->customer_surname,
                         'nip' => $order->nip,
-                        'streetName' => $order->streetName,
-                        'streetNumber' => $order->streetNumber,
-                        'apartmentNumber' => $order->apartmentNumber,
+                        'streetName' => $order->street_name,
+                        'streetNumber' => $order->street_number,
+                        'apartmentNumber' => $order->apartment_number,
                         'customerComment' => $order->customer_comment,
                         'email' => $order->email,
                         'tel' => $order->tel,
@@ -135,6 +135,12 @@ class OrderController extends Controller
             $orderDates = Order::select('date')->orderBy('id')->get();
 
             return response()->json($orderDates);
+        } else {
+            return $this->error(
+                'You have no previleges to make this request',
+                'ACCESS_DENIED',
+                500
+            );
         }
     }
 
@@ -167,9 +173,9 @@ class OrderController extends Controller
             'customer_name' => $orderRequest->name,
             'customer_surname' => $orderRequest->surname,
             'nip' => $orderRequest->nip,
-            'streetName' => $orderRequest->streetName,
-            'streetNumber' => $orderRequest->streetNumber,
-            'apartmentNumber' => $orderRequest->apartmentNumber,
+            'streetName' => $orderRequest->street_name,
+            'streetNumber' => $orderRequest->street_number,
+            'apartmentNumber' => $orderRequest->apartment_number,
             'zip' => $orderRequest->zip,
             'city' => $orderRequest->city,
             'email' => $orderRequest->email,

@@ -16,7 +16,6 @@ class PostController extends Controller
     use HttpResponses;
     public function index()
     {
-        // $posts = DB::table('posts')->get();
         $posts = DB::table('posts')->orderBy('id')->get();
 
         return response()->json($posts);

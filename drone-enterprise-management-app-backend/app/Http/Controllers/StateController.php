@@ -35,7 +35,6 @@ class StateController extends Controller
 
             $result = DB::table('orders')->where('id', $order_id)->update(['state_id' => $state_id]);
             $userId = DB::table('orders')->where('id', $order_id)->pluck('user_id')->first();
-            // $state_type = DB::table('states')->where('id', $state_id)->pluck('state_type')->first();
             $user = DB::table('users')->where('id', $userId)->first();
             $email = $user->email;
 
