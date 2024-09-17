@@ -8,6 +8,7 @@ use Tests\TestCase;
 
 class indexPostsTest extends TestCase
 {
+
     /** @test */
     public function checks_if_json_response_has_required_fields(): void
     {
