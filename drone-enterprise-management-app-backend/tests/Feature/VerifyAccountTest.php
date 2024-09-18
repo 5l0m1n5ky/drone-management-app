@@ -96,18 +96,16 @@ class VerifyAccountTest extends TestCase
         ]);
     }
 
-    // /** @test */
-    // public function check_csrf_protection(): void
-    // {
-    //     $this->assertGuest('web');
+    /** @test */
+    public function check_csrf_protection(): void
+    {
+        $this->assertGuest('web');
 
-    //     $response = $this->postJson('/verify-account?token=' . random_int(000000, 999999) . '&user_id=999');
+        $response = $this->postJson('/verify-account?token=' . random_int(000000, 999999) . '&user_id=999');
 
-    //     dump($response->json());
+        $response->assertStatus(500)->assertJsonStructure([
+            'message'
+        ]);
 
-    //     $response->assertStatus(500)->assertJsonStructure([
-    //         'message'
-    //     ]);
-
-    // }
+    }
 }

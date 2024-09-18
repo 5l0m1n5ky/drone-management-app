@@ -1,0 +1,57 @@
+<?php
+
+namespace Tests\Feature;
+
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
+use App\Models\User;
+
+class CheckAuthTest extends TestCase
+{
+    /** @test */
+    public function successful_check_if_user_is_still_authenticated(): void
+    {
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
+
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/user/check');
+
+        $response->assertStatus(200)->assertJsonStructure([
+            'data',
+            'message'
+        ]);
+    }
+
+    /** @test */
+    public function unsuccessful_check_if_user_is_still_authenticated(): void
+    {
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
+
+        $this->assertGuest('web');
+
+        $response = $this->postJson('/user/check');
+
+        $response->assertStatus(401)->assertJsonStructure([
+            'message'
+        ]);
+
+        $errorMessage = $response->decodeResponseJson()['message'];
+
+        $this->assertTrue($errorMessage === 'Unauthenticated.');
+    }
+
+    /** @test */
+    public function check_csrf_protection(): void
+    {
+
+        $this->assertGuest('web');
+
+        $response = $this->postJson('/user/check');
+
+        $response->assertStatus(500)->assertJsonStructure([
+            'message'
+        ]);
+    }
+}

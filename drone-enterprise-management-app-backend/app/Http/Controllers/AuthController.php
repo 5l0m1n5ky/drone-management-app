@@ -235,13 +235,22 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->session()->invalidate();
+        try {
+            $request->session()->invalidate();
 
-        return $this->success(
-            'Wylogowano pomyślnie',
-            'SUCCESSFUL_LOGOUT',
-            200
-        );
+            return $this->success(
+                'Wylogowano pomyślnie',
+                'SUCCESSFUL_LOGOUT',
+                200
+            );
+
+        } catch (\ErrorException $errorException) {
+            return $this->error(
+                'Bład w operaci wylogowywania',
+                'UNSUCCESSFUL_LOGOUT',
+                500
+            );
+        }
     }
 
     public function check(Request $request)

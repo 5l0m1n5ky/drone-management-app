@@ -3,9 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\File;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Illuminate\Support\Facades\Auth;
 
 
 class ValidatePostUpdateRequest extends FormRequest
@@ -15,7 +13,7 @@ class ValidatePostUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Auth::check();
     }
 
     /**

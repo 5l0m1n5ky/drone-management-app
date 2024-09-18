@@ -3,10 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\File;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
-
+use Illuminate\Support\Facades\Auth;
 
 class ValidatePostRequest extends FormRequest
 {
@@ -15,7 +12,7 @@ class ValidatePostRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Auth::check();
     }
 
     /**
@@ -26,16 +23,11 @@ class ValidatePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'file' => [
-            //     'required',
-            //     File::types(['jpg', 'jpeg', 'png', 'mp4', 'mov'])
-            //         ->max(10 * 1024),
-            // ],
-            'file' => 'file|required|mimes:png,jpg,jpeg,mp4,mov|max:51200',
-            'cover' => 'file|mimes:png,jpg,jpeg,mp4,mov|max:5120',
+            'file' => 'file|required|mimes:png,jpg,jpeg,mp4,mov|max:10000',
+            'cover' => 'file|mimes:png,jpg,jpeg,mp4,mov|max:10000',
             'location' => ['required', 'string', 'max:50'],
             'description' => ['required', 'string', 'max:500'],
-            'visibility' => ['required']
+            'visibility' => ['required', 'boolean']
         ];
     }
 }

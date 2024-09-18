@@ -16,20 +16,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login']); //tested
 Route::post('/register', [AuthController::class, 'register']); //tested
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/user/check', [AuthController::class, 'check']);
+    Route::post('/logout', [AuthController::class, 'logout']); //tested
+    Route::post('/user/check', [AuthController::class, 'check']); //tested
 
-    Route::post('/posts/create', [PostController::class, 'store'])->middleware('restrictRole:admin');
+    Route::post('/posts/create', [PostController::class, 'store'])->middleware('restrictRole:admin'); //tested
     //POST method works with usage of Angular FormData body unlike to PUT or PATCH
-    Route::post('/posts/update/{post_id}', [PostController::class, 'update'])->middleware('restrictRole:admin');
-    Route::delete('/posts/delete/{post_id}', [PostController::class, 'delete'])->middleware('restrictRole:admin');
+    Route::post('/posts/update/{post_id}', [PostController::class, 'update'])->middleware('restrictRole:admin'); //tested
+    Route::delete('/posts/delete/{post_id}', [PostController::class, 'delete'])->middleware('restrictRole:admin'); //tested
 
     Route::post('/orders/create', [OrderController::class, 'store']);
-    // Route::get('/orders', [OrderController::class, 'index']);
     Route::post('/orders/state-update', [StateController::class, 'update'])->middleware('restrictRole:admin');
 
     Route::get('/notifications', [NotificationController::class, 'index']);
