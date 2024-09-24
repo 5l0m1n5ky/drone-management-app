@@ -3,13 +3,24 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\User;
 use App\Models\Post;
-use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Database\Seeders\DatabaseSeeder;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class DeletePostTest extends TestCase
 {
+
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(DatabaseSeeder::class);
+    }
 
     function generateUniqueId()
     {

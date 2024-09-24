@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\NotificationSeenUpdateRequest;
-use App\Models\Notification;
 use App\Models\State;
+use App\Models\Notification;
 use App\Traits\HttpResponses;
-use Illuminate\Http\Request;
-use App\Http\Controllers\EmailController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\EmailController;
+use App\Http\Requests\NotificationSeenUpdateRequest;
 
 
 class NotificationController extends Controller
@@ -59,11 +58,11 @@ class NotificationController extends Controller
             } else if ($user->role === 'user') {
 
                 $notificationsData = [];
-                $notifications = DB::table('notifications')->where('id', $user_id)->orderBy('created_at')->get();
+                $notifications = DB::table('notifications')->where('user_id', $user_id)->orderBy('created_at')->get();
 
                 foreach ($notifications as $notification) {
 
-                    $state = DB::table('states')->where('state_id', $notification->state_id)->pluck('state_type')->first('state_type');
+                    $state = DB::table('states')->where('id', $notification->state_id)->pluck('state_type')->first();
 
                     $notificationData = [
                         'id' => $notification->id,
@@ -127,9 +126,17 @@ class NotificationController extends Controller
 
             $notification = Notification::find($notificationSeenUpdateRequest->notificationId);
 
+            if (!$notification) {
+                return $this->error(
+                    'Bład aktualizacji powiadomienia',
+                    'NOTIFICATION_UPDATE_ERROR',
+                    500
+                );
+            }
+
             $result = $notification->update(['seen' => true]);
 
-            if ($result && $result) {
+            if ($result) {
                 return $this->success(
                     'Zaktualizowano status powiadomienia',
                     'NOTIFICATION_UPDATED',

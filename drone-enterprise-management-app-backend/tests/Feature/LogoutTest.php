@@ -2,17 +2,26 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
+use Database\Seeders\DatabaseSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LogoutTest extends TestCase
 {
+
+    use RefreshDatabase; 
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(DatabaseSeeder::class);
+    }
+    
     /** @test */
     public function logout_successful_attempt_test(): void
     {
-
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
 
         $user = User::factory()->create();
@@ -32,7 +41,6 @@ class LogoutTest extends TestCase
     /** @test */
     public function logout_unsuccessful_attempt_test(): void
     {
-
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
 
         $this->assertGuest('web');

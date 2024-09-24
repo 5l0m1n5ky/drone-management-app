@@ -2,17 +2,25 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\OrderDetails;
 use Illuminate\Support\Facades\DB;
+use Database\Seeders\DatabaseSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class indexOrdersTest extends TestCase
+class IndexOrdersTest extends TestCase
 {
+
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(DatabaseSeeder::class);
+    }
 
     /** @test */
     public function checks_response_when_authenticated(): void

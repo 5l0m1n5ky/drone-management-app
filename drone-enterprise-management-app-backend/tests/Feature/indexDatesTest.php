@@ -2,14 +2,22 @@
 
 namespace Tests\Feature;
 
-use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
+use Database\Seeders\DatabaseSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class indexDatesTest extends TestCase
+class IndexDatesTest extends TestCase
 {
+
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(DatabaseSeeder::class);
+    }
 
     /** @test */
     public function checks_if_json_response_has_required_fields(): void

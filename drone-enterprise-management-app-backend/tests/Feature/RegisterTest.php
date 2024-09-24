@@ -2,19 +2,27 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Database\Seeders\DatabaseSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RegisterTest extends TestCase
 {
 
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(DatabaseSeeder::class);
+    }
+
     /** @test */
     public function register_attempt_test(): void
     {
-
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
 
         $this->assertGuest('web');
@@ -49,7 +57,6 @@ class RegisterTest extends TestCase
     /** @test */
     public function register_attempt_with_invalid_password_format_test(): void
     {
-
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
 
         $this->assertGuest('web');
@@ -72,7 +79,6 @@ class RegisterTest extends TestCase
     /** @test */
     public function register_attempt_with_passwords_mismatch_format_test(): void
     {
-
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
 
         $this->assertGuest('web');
@@ -93,7 +99,6 @@ class RegisterTest extends TestCase
     /** @test */
     public function register_attempt_while_user_already_exists_test(): void
     {
-
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
 
         $this->assertGuest('web');
@@ -130,7 +135,6 @@ class RegisterTest extends TestCase
     /** @test */
     public function check_csrf_protection(): void
     {
-
         $this->assertGuest('web');
 
         $password = 'P455word!';

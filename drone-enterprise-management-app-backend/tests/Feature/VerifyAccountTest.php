@@ -2,27 +2,33 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Token;
+use Database\Seeders\DatabaseSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class VerifyAccountTest extends TestCase
 {
 
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(DatabaseSeeder::class);
+    }
+
     /** @test */
     public function verify_account_attempt_by_unverified_user(): void
     {
-
-        config(['mail.mailers.smtp.driver' => 'log']);
-
         $user = User::factory()->create(['email_verified_at' => null]);
         $token = Token::factory()->create(['user_id' => $user->id]);
 
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
 
-        $this->assertGuest('web');
+        $this->assertGuest(guard: 'web');
 
         $response = $this->actingAs($user)
             ->postJson('/verify-account?token=' . $token->token_value . '&user_id=' . $user->id);
@@ -44,10 +50,6 @@ class VerifyAccountTest extends TestCase
     /** @test */
     public function verify_account_attempt_by_verified_user(): void
     {
-
-        config(['mail.mailers.smtp.driver' => 'log']);
-
-
         $user = User::factory()->create(['email_verified_at' => now()]);
         $token = Token::factory()->create(['user_id' => $user->id]);
 
@@ -75,10 +77,6 @@ class VerifyAccountTest extends TestCase
     /** @test */
     public function verify_account_attempt_by_nonexisting_user(): void
     {
-
-        config(['mail.mailers.smtp.driver' => 'log']);
-
-
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
 
         $this->assertGuest('web');

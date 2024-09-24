@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\OrderRequest;
 use App\Models\Order;
 use App\Models\OrderDetails;
-use Illuminate\Support\Facades\DB;
 use App\Traits\HttpResponses;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\OrderRequest;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
@@ -173,9 +173,9 @@ class OrderController extends Controller
             'customer_name' => $orderRequest->name,
             'customer_surname' => $orderRequest->surname,
             'nip' => $orderRequest->nip,
-            'streetName' => $orderRequest->street_name,
-            'streetNumber' => $orderRequest->street_number,
-            'apartmentNumber' => $orderRequest->apartment_number,
+            'street_name' => $orderRequest->streetName,
+            'street_number' => $orderRequest->streetNumber,
+            'apartment_number' => $orderRequest->apartmentNumber,
             'zip' => $orderRequest->zip,
             'city' => $orderRequest->city,
             'email' => $orderRequest->email,

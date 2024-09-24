@@ -2,13 +2,23 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
+use Database\Seeders\DatabaseSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CheckAuthTest extends TestCase
 {
+
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(DatabaseSeeder::class);
+    }
+
     /** @test */
     public function successful_check_if_user_is_still_authenticated(): void
     {
@@ -22,6 +32,8 @@ class CheckAuthTest extends TestCase
             'data',
             'message'
         ]);
+
+        $user->delete();
     }
 
     /** @test */
@@ -45,7 +57,6 @@ class CheckAuthTest extends TestCase
     /** @test */
     public function check_csrf_protection(): void
     {
-
         $this->assertGuest('web');
 
         $response = $this->postJson('/user/check');
