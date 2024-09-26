@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { RegisterService } from './register.service';
 import { Router } from '@angular/router';
@@ -11,6 +11,7 @@ import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinn
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ToastModule } from 'primeng/toast';
 import { ToastService } from '../shared/toast/toast.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -19,7 +20,7 @@ import { ToastService } from '../shared/toast/toast.service';
   templateUrl: './register.component.html',
 })
 
-export class RegisterComponent {
+export class RegisterComponent implements OnDestroy {
 
   loginForm: any;
   isProcessing: boolean = false;
@@ -29,6 +30,7 @@ export class RegisterComponent {
   user_id: number;
   areTermsAccepted: boolean = false;
   termsToggleMessage: boolean = false;
+  registerSubscription: Subscription;
 
   constructor(private registerService: RegisterService, private router: Router, private toastService: ToastService) { }
 
@@ -44,8 +46,6 @@ export class RegisterComponent {
   onRegisterFormSubmit(registerForm: NgForm) {
 
     this.termsAccepted();
-
-    console.log(registerForm.value);
 
     if (!registerForm.valid) {
       return;
@@ -68,7 +68,7 @@ export class RegisterComponent {
 
     this.isProcessing = true;
 
-    this.registerService.register(email, password, password_confirmation, newsletter).subscribe(responseData => {
+    this.registerSubscription = this.registerService.register(email, password, password_confirmation, newsletter).subscribe(responseData => {
       console.log(responseData);
       this.isProcessing = false;
       this.user_id = +responseData.data!.user.id;
@@ -85,6 +85,9 @@ export class RegisterComponent {
     );
   }
 
+  ngOnDestroy(): void {
+    this.registerSubscription?.unsubscribe();
+  }
 }
 
 
