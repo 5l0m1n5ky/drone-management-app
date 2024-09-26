@@ -6,8 +6,5 @@ import { RouterLink } from '@angular/router';
   imports: [RouterLink],
   selector: 'app-home-portfolio',
   templateUrl: './home-portfolio.component.html',
-  styleUrls: []
 })
-export class HomePortfolioComponent {
-
-}
+export class HomePortfolioComponent { }

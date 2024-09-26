@@ -8,7 +8,7 @@ export class IntersectionObserverDirective implements OnInit, OnDestroy {
   @Output() inView = new EventEmitter<void>();
 
   private observer: IntersectionObserver;
-  private isActive: boolean = false;
+  isActive: boolean = false;
 
   constructor(private element: ElementRef) { }
 
@@ -27,12 +27,9 @@ export class IntersectionObserverDirective implements OnInit, OnDestroy {
 
   scrollObserverDisconnect() {
     this.observer.disconnect();
-    // this.isActive = false;
   }
 
   ngOnDestroy(): void {
-    // if (!this.isActive) {
     this.scrollObserverDisconnect();
-    // }
   }
 }

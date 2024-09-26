@@ -8,6 +8,4 @@ import { NavbarComponent } from '../navbar/navbar.component';
   imports: [CommonModule, NavbarComponent],
   templateUrl: './about.component.html',
 })
-export class AboutComponent {
-
-}
+export class AboutComponent {}

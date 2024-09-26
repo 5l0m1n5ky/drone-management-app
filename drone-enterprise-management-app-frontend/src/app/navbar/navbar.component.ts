@@ -9,7 +9,10 @@ import { MessageService } from 'primeng/api';
 @Component({
   standalone: true,
   selector: 'app-navbar',
-  imports: [RouterLink, CommonModule],
+  imports: [
+    RouterLink,
+    CommonModule
+  ],
   templateUrl: './navbar.component.html',
   providers: [
     LogoutService,

@@ -1,7 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { LoginService } from "../login/login.service";
-import { User } from "../user/user.model";
 import { Router } from "@angular/router";
 import { catchError, tap, throwError } from "rxjs";
 import { CookieService } from "ngx-cookie-service";
@@ -28,7 +27,6 @@ export class LogoutService {
     }).pipe(catchError(this.handleError),
       tap(response => {
         this.loginService.user.next({ id: '', email: '', privileges: '' });
-        // this.loginService.user.next({} as User);
         this.cookieService.deleteAll();
         if (response) {
           return response;
@@ -42,6 +40,5 @@ export class LogoutService {
     let errorMessage = 'Wystapił błąd. Spróbuj ponownie';
     return throwError(errorMessage);
   }
-
 }
 

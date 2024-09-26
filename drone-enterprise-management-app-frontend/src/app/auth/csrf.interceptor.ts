@@ -1,29 +1,27 @@
 import { Injectable } from '@angular/core';
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http'
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, from, lastValueFrom, switchMap } from 'rxjs';
-import { CookieService } from 'ngx-cookie-service';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Observable, from, switchMap } from 'rxjs';
 import { CsrfService } from './csrf.service';
 
-// @Injectable({
-//   providedIn: 'root'
-// })
-
 @Injectable()
-
 export class CsrfInterceptor implements HttpInterceptor {
-
   csrfToken: string | null | undefined;
 
-  constructor(private csrfService: CsrfService, private cookieService: CookieService) { }
+  constructor(private csrfService: CsrfService) { }
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
     if (req.method !== 'GET') {
       return from(this.csrfService.fetchCsrfToken()).pipe(
         switchMap(() => {
           const csrfToken = this.csrfService.getCsrfToken();
           const clonedRequest = req.clone({
-            headers: req.headers.set('X-XSRF-TOKEN', csrfToken ? csrfToken : '')
+            headers: req.headers.set(
+              'X-XSRF-TOKEN',
+              csrfToken ? csrfToken : ''
+            ),
           });
           return next.handle(clonedRequest);
         })
@@ -33,4 +31,3 @@ export class CsrfInterceptor implements HttpInterceptor {
     }
   }
 }
-

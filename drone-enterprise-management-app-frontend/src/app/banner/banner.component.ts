@@ -1,5 +1,4 @@
-import { ViewportScroller } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   standalone: true,
@@ -16,10 +15,6 @@ export class BannerComponent {
       inline: "nearest"
     });
   }
-
-  // constructor(private scroller: ViewportScroller) { }
-
-
 }
 
 

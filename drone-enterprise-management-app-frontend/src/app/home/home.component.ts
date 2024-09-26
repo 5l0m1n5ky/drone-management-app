@@ -6,7 +6,6 @@ import { HomeServicesComponent } from './home-services/home-services.component';
 import { HomePortfolioComponent } from './home-portfolio/home-portfolio.component';
 import { FooterComponent } from '../footer/footer.component';
 
-
 @Component({
   standalone: true,
   imports: [
@@ -21,6 +20,4 @@ import { FooterComponent } from '../footer/footer.component';
   templateUrl: './home.component.html',
   styleUrls: []
 })
-export class HomeComponent {
-
-}
+export class HomeComponent { }

@@ -9,6 +9,4 @@ import { RouterLink } from '@angular/router';
   imports: [CommonModule, NavbarComponent, RouterLink],
   templateUrl: './choose-service.component.html',
 })
-export class ChooseServiceComponent {
-
-}
+export class ChooseServiceComponent { }

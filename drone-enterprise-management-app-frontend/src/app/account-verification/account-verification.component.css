@@ -1,7 +1,5 @@
 code-input {
-
   /*
-
 RULESETS
 
 --text-security-type: disc;	Text presentation type when the isCodeHidden is enabled
@@ -20,6 +18,7 @@ RULESETS
 --color: #171516;	Text color of input items
 
 */
+
   --item-height: 5rem;
   --item-width: 2rem;
   --color: #ffffff;

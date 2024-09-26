@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './/login/login.component';
 import { BannerComponent } from './banner/banner.component';
 import { FooterComponent } from './footer/footer.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { HTTP_INTERCEPTORS, HttpClientModule, HttpClientXsrfModule, HttpXsrfTokenExtractor } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HomeDetailsComponent } from './home/home-details/home-details.component';
 import { HomeServicesComponent } from './home/home-services/home-services.component';
 import { HomePortfolioComponent } from './home/home-portfolio/home-portfolio.component';
@@ -41,25 +40,21 @@ import { OrderComponent } from './user/panel/order/order.component';
 import { NotificationComponent } from './user/panel/notification/notification.component';
 import { AccountComponent } from './user/panel/account/account.component';
 import { OrderCreateComponent } from './user/panel/order-create/order-create.component';
-import { IndexComponent } from './index/index.component';
 import { OrderViewComponent } from './user/panel/order-view/order-view.component';
-
 
 @NgModule({
   declarations: [
-    AppComponent,
-    AccountVerificationComponent,
+    AppComponent
   ],
   imports: [
+    LoginComponent,
     RegisterComponent,
-    IndexComponent,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HomeComponent,
     NavbarComponent,
     BannerComponent,
-    LoginComponent,
     HttpClientModule,
     HomeDetailsComponent,
     HomeServicesComponent,
@@ -89,6 +84,7 @@ import { OrderViewComponent } from './user/panel/order-view/order-view.component
     AccountComponent,
     NotificationComponent,
     OrderViewComponent,
+    AccountVerificationComponent,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
@@ -98,9 +94,6 @@ import { OrderViewComponent } from './user/panel/order-view/order-view.component
     CookieService,
     ToastService,
     MessageService
-  ],
-  exports: [
-    // MatDialogModule,
   ],
   bootstrap: [AppComponent]
 })

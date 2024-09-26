@@ -7,8 +7,5 @@ import { RouterLink } from '@angular/router';
   imports: [NavbarComponent, RouterLink],
   selector: 'app-services',
   templateUrl: './services.component.html',
-  styleUrls: []
 })
-export class ServicesComponent {
-
-}
+export class ServicesComponent { }

@@ -3,8 +3,6 @@ import { Injectable } from '@angular/core';
 import { catchError, map, tap, throwError } from 'rxjs';
 import { Post } from './portfolio.model';
 import { Router } from '@angular/router';
-import { ToastService } from '../shared/toast/toast.service';
-import { PostFormData } from './form-data-interface';
 
 interface PostHandleResponseData {
   data: PostData,

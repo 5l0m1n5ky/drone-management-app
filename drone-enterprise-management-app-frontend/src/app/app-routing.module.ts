@@ -12,7 +12,6 @@ import { ElectricDistributionServiceComponent } from './services/electric-distri
 import { WindmillServiceComponent } from './services/windmill-service/windmill-service.component';
 import { PhotogrammetryServiceComponent } from './services/photogrammetry-service/photogrammetry-service.component';
 import { PreviewMobileComponent } from './portfolio/preview-mobile/preview-mobile.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { PanelComponent } from './user/panel/panel.component';
 import { OrderComponent } from './user/panel/order/order.component';
 import { OrderCreateComponent } from './user/panel/order-create/order-create.component';
@@ -32,7 +31,7 @@ const routes: Routes = [
   { path: 'account-verification/:user_id', component: AccountVerificationComponent },
   { path: 'portfolio', component: PortfolioComponent },
   { path: 'portfolio/mobile/:post_id', component: PreviewMobileComponent },
-  { path: 'foto-video', component: FotoVideoServiceComponent },
+  { path: 'photo-video', component: FotoVideoServiceComponent },
   { path: 'pv-inspection', component: PvInspectionServiceComponent },
   { path: 'electric-distribution-inspection', component: ElectricDistributionServiceComponent },
   { path: 'windmill-inspection', component: WindmillServiceComponent },
@@ -49,7 +48,7 @@ const routes: Routes = [
       { path: 'order-view', component: OrderViewComponent },
     ]
   },
-  // { path: '*', component: ServicesComponent }, TODO ANY LINK
+  { path: '**', redirectTo: '', pathMatch: 'full'},
 ];
 
 @NgModule({

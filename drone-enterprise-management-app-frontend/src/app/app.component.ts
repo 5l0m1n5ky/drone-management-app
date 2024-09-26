@@ -1,23 +1,28 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import * as Aos from 'aos';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoginService } from './login/login.service';
-import { exhaustMap, Subscription, take } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { ActivatedRoute } from '@angular/router';
 import { ToastService } from './shared/toast/toast.service';
 import { environment } from 'src/environments/environment';
+import * as Aos from 'aos';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  providers: [ToastService]
+  providers: [ToastService],
 })
 export class AppComponent implements OnInit, OnDestroy {
+  constructor(
+    private loginService: LoginService,
+    private cookieService: CookieService,
+    private activatedRoute: ActivatedRoute,
+    private toastService: ToastService
+  ) { }
 
-  constructor(private loginService: LoginService, private cookieService: CookieService, private activatedRoute: ActivatedRoute, private toastService: ToastService) { }
+  userSubscription: Subscription;
 
-  userSubscription: Subscription
-  queryParamsSubscriber: Subscription
+  queryParamsSubscriber: Subscription;
 
   isAuthenticated: boolean = false;
 
@@ -27,19 +32,26 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     Aos.init();
-    // this.userSubscription = this.loginService.getUserData().subscribe(user => {
-    this.loginService.user.pipe(take(1)).subscribe(user => {
+    this.loginService.user.pipe(take(1)).subscribe((user) => {
       this.isAuthenticated = !!user;
-      // this.cookieService.set('user', JSON.stringify({ id: user?.id, email: user?.email, privileges: user?.privileges }));
     });
 
-    this.queryParamsSubscriber = this.activatedRoute.queryParams.subscribe(params => {
-      this.queryParams = params;
+    this.queryParamsSubscriber = this.activatedRoute.queryParams.subscribe(
+      (params) => {
+        this.queryParams = params;
 
-      if (this.queryParams['result'] && this.queryParams['result'] === 'success') {
-        this.toastService.generateToast('success', 'Logowanie', 'Zalogowano pomyślnie');
+        if (
+          this.queryParams['result'] &&
+          this.queryParams['result'] === 'success'
+        ) {
+          this.toastService.generateToast(
+            'success',
+            'Logowanie',
+            'Zalogowano pomyślnie'
+          );
+        }
       }
-    });
+    );
 
     this.loginService.autoLogin();
 
@@ -47,18 +59,17 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   getLoginState(): boolean {
-
     if (this.cookieService.get('user') || this.isAuthenticated) {
       return true;
     } else {
       return false;
     }
-
   }
 
   addGoogleMapsScript() {
     const script = document.createElement('script');
-    const scriptContent = `
+    const scriptContent =
+      `
       (g => {
         var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window;
         b = b[c] || (b[c] = {});
@@ -76,7 +87,9 @@ export class AppComponent implements OnInit, OnDestroy {
         d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n));
       })({
         v: "weekly",
-        key: "` + environment.googleMapsApiKey + `"
+        key: "` +
+      environment.googleMapsApiKey +
+      `"
       });
     `;
 
@@ -96,5 +109,4 @@ export class AppComponent implements OnInit, OnDestroy {
     this.userSubscription?.unsubscribe();
     this.queryParamsSubscriber?.unsubscribe();
   }
-
 }

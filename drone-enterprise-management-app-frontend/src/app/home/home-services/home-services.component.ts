@@ -8,7 +8,6 @@ import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { CarouselModule, CarouselResponsiveOptions } from 'primeng/carousel';
 
-
 interface ServiceData {
   title?: string,
   title_top?: string,
@@ -47,14 +46,6 @@ export class HomeServicesComponent {
       image: "./assets/drone_pv_services.png",
       discover: false
     },
-    // {
-    //   title_top: "POMIARY",
-    //   title_bottom: "FOTOGRAMETRYCZNE",
-    //   title_top_size: "5vw",
-    //   title_bottom_size: "3vw",
-    //   image: "./assets/fotogrammetry-services.png",
-    //   discover: false
-    // },
     {
       title: "Zobacz więcej",
       discover: true

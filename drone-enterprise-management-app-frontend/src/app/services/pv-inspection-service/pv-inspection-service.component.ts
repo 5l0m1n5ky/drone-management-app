@@ -4,8 +4,6 @@ import { CommonModule } from '@angular/common';
 import { TimelineModule } from 'primeng/timeline';
 import { RouterLink } from '@angular/router';
 import { CarouselModule } from 'primeng/carousel';
-// import { CarouselModule, CarouselResponsiveOptions } from 'primeng/carousel';
-
 
 interface StepsData {
   icon: string,
@@ -27,8 +25,6 @@ interface InspectionFeaturesData {
   imports: [NavbarComponent, NavbarComponent, CommonModule, TimelineModule, RouterLink, CarouselModule]
 })
 export class PvInspectionServiceComponent {
-
-  // responsiveOptions: CarouselResponsiveOptions[] | undefined;
 
   steps: StepsData[] = [
     {
@@ -115,7 +111,6 @@ export class PvInspectionServiceComponent {
       image: "https://eurosol.eu/wp-content/uploads/2023/07/DJI_0355-1024x538.jpg"
     },
   ]
-
 
   onShowProcess(): void {
     document.getElementById("order-steps")?.scrollIntoView({

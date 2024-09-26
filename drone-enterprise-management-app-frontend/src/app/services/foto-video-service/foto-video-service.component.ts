@@ -22,11 +22,9 @@ interface StepsData {
   styleUrls: []
 })
 
-
 export class FotoVideoServiceComponent {
 
   @ViewChild(IntersectionObserverDirective) intersectionObserverDirective: IntersectionObserverDirective;
-
 
   services: string[] = [
     "Spotu reklamowego",
@@ -72,7 +70,6 @@ export class FotoVideoServiceComponent {
   subscription: Subscription;
 
   onServicesInView(): void {
-    // this.intersectionObserverDirective.scrollObserverDisconnect();
     this.subscription = interval(1250).subscribe({
       next: (val) => {
         if ((val + 1) < this.services.length) {
@@ -84,13 +81,6 @@ export class FotoVideoServiceComponent {
       }
     });
   }
-
-
-  // ngOnDestroy(): void {
-  //   if (this.subscription) {
-  //     this.subscription.unsubscribe();
-  //   }
-  // }
 
   onShowProcess(): void {
     document.getElementById("order-steps")?.scrollIntoView({

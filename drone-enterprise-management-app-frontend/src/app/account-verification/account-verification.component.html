@@ -1,108 +1,147 @@
 <p-toast></p-toast>
-<div class="bg-gradient-to-b from-stone-800 to-black h-screen w-screen font-montserrat">
-  <div class="flex flex-col items-center h-full justify-center px-4 sm:px-0 transition duration-150 ease-in bottom-0">
+<div
+  class="bg-gradient-to-b from-stone-800 to-black h-screen w-screen font-montserrat"
+>
+  <div
+    class="flex flex-col items-center h-full justify-center px-4 sm:px-0 transition duration-150 ease-in bottom-0"
+  >
     <div
-      class="flex flex-col justify-around items-center rounded-[1rem] w-4/5 sm:w-4/5 md:w-3/5 lg:w-2/5 bg-stone-900 shadow-xl shadow-black">
+      class="flex flex-col justify-around items-center rounded-[1rem] w-4/5 sm:w-4/5 md:w-3/5 lg:w-2/5 bg-stone-900 shadow-xl shadow-black"
+    >
       <p
-        class="text-white-400 w-full px-10 text-left font-montserrat text-[28px] sm:text-[2.5rem] font-extrabold mx-10 my-5 text-wrap ">
+        class="text-white-400 w-full px-10 text-left font-montserrat text-[28px] sm:text-[2.5rem] font-extrabold mx-10 my-5 text-wrap"
+      >
         Weryfikacja
-        <br>
+        <br />
         Twojego konta
       </p>
       <div *ngIf="isVerification">
         <p
-          class="text-stone-500 font-montserrat text-left text-[0.75rem] sm:text-[1rem] sm:text-justify  font-medium mx-10 my-2">
-          Na podany adres przesłany został kod aktywacyjny, którym zweryfikujesz poprawność Swojego konta.
-          W przypadku nieotrzymania wiadomości sprawdź folder Spam na swojej poczcie e-mailowej, skorzystaj z
-          poniższego przycisku lub skontaktuj się z administratorem.
+          class="text-stone-500 font-montserrat text-left text-[0.75rem] sm:text-[1rem] sm:text-justify font-medium mx-10 my-2"
+        >
+          Na podany adres przesłany został kod aktywacyjny, którym zweryfikujesz
+          poprawność Swojego konta. W przypadku nieotrzymania wiadomości sprawdź
+          folder Spam na swojej poczcie e-mailowej, skorzystaj z poniższego
+          przycisku lub skontaktuj się z administratorem.
         </p>
         <div class="my-10 mx-1 sm:mx-10">
-          <code-input style="font-size: xx-large; caret-color: transparent;" #codeInput [isCodeHidden]="false"
-            [isCharsCode]="false" [codeLength]="6" (codeChanged)="onCodeChanged($event)"
-            (codeCompleted)="onCodeCompleted($event)">
+          <code-input
+            style="font-size: xx-large; caret-color: transparent"
+            #codeInput
+            [isCodeHidden]="false"
+            [isCharsCode]="false"
+            [codeLength]="6"
+            (codeChanged)="onCodeChanged($event)"
+            (codeCompleted)="onCodeCompleted($event)"
+          >
           </code-input>
           <p *ngIf="isTokenMismatch" class="text-red-700 ml-3 mt-3">
             Wprowadzony kod jest nieprawidłowy
           </p>
         </div>
         <div class="mb-10 flex flex-col justify-center items-center w-full">
-
           <!-- ZWERYFIKUJ -->
-          <div *ngIf="!isVeryfing && verifyButtonDisable" class="flex flex-row items-center justify-center w-[80%] sm:w-72 border-2 py-2 my-5
-             border-stone-700 bg-stone-950 rounded-lg cursor-not-allowed transition ease-in-out">
-            <p class="text-base text-stone-500 select-none">
-              ZWERYFIKUJ
-            </p>
+          <div
+            *ngIf="!isVeryfing && verifyButtonDisable"
+            class="flex flex-row items-center justify-center w-[80%] sm:w-72 border-2 py-2 my-5 border-stone-700 bg-stone-950 rounded-lg cursor-not-allowed transition ease-in-out"
+          >
+            <p class="text-base text-stone-500 select-none">ZWERYFIKUJ</p>
           </div>
 
-          <div *ngIf="!isVeryfing && !verifyButtonDisable" class="flex flex-row items-center justify-center w-[80%] sm:w-72 border-2 py-2 my-5
-             border-stone-500 bg-stone-900 rounded-lg hover:scale-105 transition ease-in-out
-             cursor-pointer active:bg-stone-800" (click)="onVerify()">
-            <p class="text-base text-stone-500 select-none">
-              ZWERYFIKUJ
-            </p>
+          <div
+            *ngIf="!isVeryfing && !verifyButtonDisable"
+            class="flex flex-row items-center justify-center w-[80%] sm:w-72 border-2 py-2 my-5 border-stone-500 bg-stone-900 rounded-lg hover:scale-105 transition ease-in-out cursor-pointer active:bg-stone-800"
+            (click)="onVerify()"
+          >
+            <p class="text-base text-stone-500 select-none">ZWERYFIKUJ</p>
           </div>
 
           <!-- ZWERYFIKUJ - SPINNER -->
-          <div *ngIf="isVeryfing"
-            class="flex flex-row items-center justify-center w-[80%] sm:w-72 border-2 py-2 my-5 border-stone-500 bg-stone-900 rounded-lg transition ease-in-out">
-            <svg role="status"
+          <div
+            *ngIf="isVeryfing"
+            class="flex flex-row items-center justify-center w-[80%] sm:w-72 border-2 py-2 my-5 border-stone-500 bg-stone-900 rounded-lg transition ease-in-out"
+          >
+            <svg
+              role="status"
               class="inline h-[19.5px] w-[19.5px] animate-spin mr-2 text-gray-200 dark:text-gray-600 fill-blue-600"
-              viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+              viewBox="0 0 100 101"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path
                 d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                fill="currentColor" />
+                fill="currentColor"
+              />
               <path
                 d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                fill="currentFill" />
+                fill="currentFill"
+              />
             </svg>
           </div>
 
           <!-- WYŚLIJ PONOWNIE -->
-          <div *ngIf="!(isResendLoading || isResendDone)" class="flex flex-row items-center justify-center w-[80%] sm:w-72 border-2 py-2 my-5 border-stone-500 bg-stone-900 rounded-lg
-            hover:scale-105 transition ease-in-out cursor-pointer
-             active:bg-stone-800" (click)="onTokenResend()">
-            <p class="text-base text-stone-500 select-none">
-              WYŚLIJ PONOWNIE
-            </p>
+          <div
+            *ngIf="!(isResendLoading || isResendDone)"
+            class="flex flex-row items-center justify-center w-[80%] sm:w-72 border-2 py-2 my-5 border-stone-500 bg-stone-900 rounded-lg hover:scale-105 transition ease-in-out cursor-pointer active:bg-stone-800"
+            (click)="onTokenResend()"
+          >
+            <p class="text-base text-stone-500 select-none">WYŚLIJ PONOWNIE</p>
           </div>
           <!-- WYŚLIJ PONOWNIE - SPINNER -->
-          <div *ngIf="isResendLoading"
-            class="flex flex-row items-center justify-center w-[80%] sm:w-72 border-2 py-2 my-5 border-stone-500 bg-stone-900 rounded-lg transition ease-in-out">
-            <svg role="status"
+          <div
+            *ngIf="isResendLoading"
+            class="flex flex-row items-center justify-center w-[80%] sm:w-72 border-2 py-2 my-5 border-stone-500 bg-stone-900 rounded-lg transition ease-in-out"
+          >
+            <svg
+              role="status"
               class="inline h-[19.5px] w-[19.5px] animate-spin mr-2 text-gray-200 dark:text-gray-600 fill-blue-600"
-              viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+              viewBox="0 0 100 101"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path
                 d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                fill="currentColor" />
+                fill="currentColor"
+              />
               <path
                 d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                fill="currentFill" />
+                fill="currentFill"
+              />
             </svg>
           </div>
 
           <!-- WYSŁANO PONOWNIE -->
-          <div *ngIf="isResendDone"
-            class="flex flex-row items-center justify-center w-[80%] sm:w-72 border-2 py-2 my-5 border-green-800 bg-green-700/20 rounded-lg transition ease-in-out">
-            <p class="text-base text-stone-400 select-none">
-              WYSŁANO PONOWNIE
-            </p>
-            <img class="pl-2 select-none" src="./assets/icons/approve-icon.svg">
+          <div
+            *ngIf="isResendDone"
+            class="flex flex-row items-center justify-center w-[80%] sm:w-72 border-2 py-2 my-5 border-green-800 bg-green-700/20 rounded-lg transition ease-in-out"
+          >
+            <p class="text-base text-stone-400 select-none">WYSŁANO PONOWNIE</p>
+            <img
+              class="pl-2 select-none"
+              src="./assets/icons/approve-icon.svg"
+            />
           </div>
         </div>
       </div>
 
       <!-- SUCCESS -->
-      <div *ngIf="isVerificationSuccess" class="pb-10 flex flex-col items-center">
+      <div
+        *ngIf="isVerificationSuccess"
+        class="pb-10 flex flex-col items-center"
+      >
         <div class="pb-10 px-5 flex flex-col items-center justify-center">
-          <img class="w-40 h-40 m-10 select-none" src="./assets/icons/approve-icon.svg">
+          <img
+            class="w-40 h-40 m-10 select-none"
+            src="./assets/icons/approve-icon.svg"
+          />
           <p class="text-xl text-stone-400">
             Twoje konto zostało pomyślnie zweryfikowane
           </p>
         </div>
-        <div class="flex flex-row items-center justify-center w-[80%] sm:w-72 border-2 py-2 mb-5 mt-10
-           border-stone-500 bg-stone-900 rounded-lg hover:scale-105
-           transition ease-in-out cursor-pointer active:bg-stone-800" (click)="redirectToLogin()">
+        <div
+          class="flex flex-row items-center justify-center w-[80%] sm:w-72 border-2 py-2 mb-5 mt-10 border-stone-500 bg-stone-900 rounded-lg hover:scale-105 transition ease-in-out cursor-pointer active:bg-stone-800"
+          (click)="redirectToLogin()"
+        >
           <p class="text-base text-stone-500 select-none">
             PRZEJDŹ DO LOGOWANIA
           </p>
@@ -112,14 +151,18 @@
       <!-- FAIL -->
       <div *ngIf="isVerificationFail" class="pb-10 flex flex-col items-center">
         <div class="pb-10 px-5 flex flex-col items-center justify-center">
-          <img class="w-40 h-40 m-10 select-none drop-shadow-lg" src="./assets/icons/fail-icon.svg">
+          <img
+            class="w-40 h-40 m-10 select-none drop-shadow-lg"
+            src="./assets/icons/fail-icon.svg"
+          />
           <p class="text-xl text-stone-400">
             Twoje konto nie może zostać zweryfikowane
           </p>
         </div>
-        <div class="flex flex-row items-center justify-center w-[80%] sm:w-72 border-2 py-2 mb-5 mt-10
-           border-stone-500 bg-stone-900 rounded-lg hover:scale-105 transition ease-in-out cursor-pointer
-            active:bg-stone-800" (click)="redirectToRegister()">
+        <div
+          class="flex flex-row items-center justify-center w-[80%] sm:w-72 border-2 py-2 mb-5 mt-10 border-stone-500 bg-stone-900 rounded-lg hover:scale-105 transition ease-in-out cursor-pointer active:bg-stone-800"
+          (click)="redirectToRegister()"
+        >
           <p class="text-base text-stone-500 select-none">
             WRÓĆ DO REJESTRACJI
           </p>

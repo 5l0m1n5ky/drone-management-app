@@ -218,7 +218,6 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 
   onEdit() {
     this.isUploading = true;
-    console.log(this.editPostForm);
     this.onEditSubscription = this.portfolioService.updatePost(
       this.currentPost.id,
       this.file,
@@ -279,7 +278,6 @@ export class PortfolioComponent implements OnInit, OnDestroy {
   onCreate() {
     this.isLoading = true;
     this.onCheckSubscription = this.loginService.checkSession().subscribe(responseData => {
-      console.log('session state: ', responseData);
       if (responseData && responseData.message && responseData.message.toString() === 'ACTIVE_SESSION') {
         this.isCreateMode = true;
         this.isLoading = false;
@@ -302,7 +300,6 @@ export class PortfolioComponent implements OnInit, OnDestroy {
     ).subscribe(responseData => {
       this.isUploading = false;
       this.toastService.generateToast('success', 'Publikacja Posta', responseData.message.toString());
-      console.log(responseData);
       this.file = null;
       this.file = null;
       this.createPostForm.reset();

@@ -51,9 +51,6 @@ export class RegisterComponent {
       return;
     }
 
-    console.log('password mismatch', this.passwordMismatch);
-
-
     const email = registerForm.value.email;
     const password = registerForm.value.password;
     const password_confirmation = registerForm.value.password_confirmation;

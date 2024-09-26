@@ -1,5 +1,3 @@
-
-
 import { Component } from "@angular/core";
 
 @Component({
@@ -8,6 +6,4 @@ import { Component } from "@angular/core";
   templateUrl: './loading-spinner.component.html',
 })
 
-export class LoadingSpinnerComponent {
-
-}
+export class LoadingSpinnerComponent { }

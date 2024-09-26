@@ -425,7 +425,7 @@
         class="w-[90%] min-[1025px]:w-[85%] mb-36 h-auto grid grid-cols-3 gap-2 min-[1025px]:gap-6">
         <div *ngFor="let post of loadedPosts"
           class="flex flex-col justify-center items-center aspect-w-1 aspect-h-1 cursor-pointer rounded-lg overflow-hidden">
-          <img [src]="isImage(post.path) ? 'http://127.0.0.1:8000' + post.path : 'http://127.0.0.1:8000' + post.cover"
+          <img [src]="isImage(post.path) ? post.path : post.cover"
             [ngClass]="!post.visibility ? 'opacity-25' : 'opacity-100'" alt="gallery-item"
             (click)="onGalleryItemShow(post.id)"
             class="h-full w-full object-cover rounded-lg hover:scale-110 transition-all ease-in-out duration-500">
