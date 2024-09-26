@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { PanelService } from '../user/panel/panel.service';
 import { Notification } from '../user/panel/models/notification.model';
@@ -11,9 +11,10 @@ import { Subscription } from 'rxjs';
   templateUrl: './sidebar.component.html',
   imports: [CommonModule, RouterLink, RouterLinkActive]
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
 
   notificationSubsciption: Subscription;
+  badgeSubscription: Subscription;
   isMobile: boolean = false;
   notifications: Notification[] = [];
   unseenNotifications: Notification[] = [];
@@ -25,10 +26,8 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
     this.onResize();
-
     this.fetchNotifications();
-
-    this.panelService.badgeValue$.subscribe(action => {
+    this.badgeSubscription = this.panelService.badgeValue$.subscribe(action => {
 
       if (action) {
         this.fetchNotifications();
@@ -56,10 +55,13 @@ export class SidebarComponent implements OnInit {
   }
 
   checkBadgeValue() {
-
     this.unseenNotifications = [...this.notifications.filter(notification => notification.seen === false)];
     this.badgeValue = this.unseenNotifications.length;
+  }
 
+  ngOnDestroy(): void {
+    this.notificationSubsciption?.unsubscribe();
+    this.badgeSubscription?.unsubscribe();
   }
 }
 
