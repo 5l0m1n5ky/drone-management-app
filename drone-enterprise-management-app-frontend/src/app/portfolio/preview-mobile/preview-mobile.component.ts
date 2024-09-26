@@ -39,7 +39,6 @@ export class PreviewMobileComponent implements OnInit, AfterViewInit, OnDestroy 
   loadedPosts: Post[] = [];
   postToEdit: Post;
   postIdToPreview: number;
-  postsSubsription: Subscription;
   isAdminMode: boolean = false;
   isEditMode: boolean = false;
   isUploading: boolean = false;
@@ -56,6 +55,7 @@ export class PreviewMobileComponent implements OnInit, AfterViewInit, OnDestroy 
   onFetchSubscription: Subscription;
   onDeleteSubscription: Subscription;
   onCheckSubscription: Subscription;
+  postsSubsription: Subscription;
   file: File | null;
   cover: File | null;
 
@@ -175,10 +175,6 @@ export class PreviewMobileComponent implements OnInit, AfterViewInit, OnDestroy 
       this.cover = null;
       this.isEditMode = false;
       this.isLoading = true;
-      // this.onFetchSubscription = this.portfolioService.fetchPosts().subscribe(posts => {
-      //   this.loadedPosts = posts;
-      //   this.isLoading = false;
-      // });
       this.location.back();
     }, errorMessage => {
       this.toastService.generateToast('error', 'Edycja Posta', errorMessage.toString());
@@ -215,13 +211,10 @@ export class PreviewMobileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.openDialog(90, 30, 'Usunąć post?', 'Post zostanie trwale usunięty z portfolio', 'WRÓĆ', 'USUŃ');
     this.dialogActionSubscription = this.action$.subscribe(action => {
       if (action === 'confirm') {
-
         this.isUploading = true;
-
         this.onFetchSubscription = this.onDeleteSubscription = this.portfolioService.deletePost(postId).subscribe(responseData => {
           this.isUploading = false;
           this.toastService.generateToast('success', 'Usuwanie Posta', responseData.data.toString());
-
           this.portfolioService.fetchPosts().subscribe(posts => {
             this.loadedPosts = posts;
             this.isLoading = false;
@@ -276,7 +269,14 @@ export class PreviewMobileComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnDestroy(): void {
-    this.postsSubsription.unsubscribe()
+    this.dialogSubscription?.unsubscribe();
+    this.dialogActionSubscription?.unsubscribe();
+    this.onCreateSubscription?.unsubscribe();
+    this.onEditSubscription?.unsubscribe();
+    this.onFetchSubscription?.unsubscribe();
+    this.onDeleteSubscription?.unsubscribe();
+    this.onCheckSubscription?.unsubscribe();
+    this.postsSubsription?.unsubscribe()
   }
 
   public getFileExtension(url: string): string | null {
