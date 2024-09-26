@@ -1,17 +1,20 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AppComponent } from '../app.component';
 import { LogoutService } from '../auth/logout.service';
 import { ToastService } from '../shared/toast/toast.service';
 import { MessageService } from 'primeng/api';
+import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   standalone: true,
   selector: 'app-navbar',
   imports: [
     RouterLink,
-    CommonModule
+    CommonModule,
+    LoadingSpinnerComponent
   ],
   templateUrl: './navbar.component.html',
   providers: [
@@ -20,12 +23,13 @@ import { MessageService } from 'primeng/api';
     MessageService
   ]
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
 
   public isAuthenticated: boolean = false;
+  isProcessing: boolean = false;
+  logoutSubscription: Subscription;
 
-  constructor(private appComponent: AppComponent, private logoutService: LogoutService, private toastService: ToastService, private router: Router
-  ) { }
+  constructor(private appComponent: AppComponent, private logoutService: LogoutService, private toastService: ToastService, private router: Router) { }
 
   ngOnInit(): void {
     this.isAuthenticated = this.appComponent.getLoginState();
@@ -45,12 +49,19 @@ export class NavbarComponent implements OnInit {
   }
 
   onLogout() {
-    this.logoutService.logoutHandle().subscribe(response => {
+    this.isProcessing = true;
+    this.logoutSubscription = this.logoutService.logoutHandle().subscribe(response => {
       if (response.data.toString() === 'Wylogowano pomyślnie') {
         this.router.navigate(['/login'], { queryParams: { action: 'logout' } });
       }
+      this.isProcessing = false;
     }, errorMessage => {
       this.router.navigate(['/login']);
+      this.isProcessing = false;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.logoutSubscription?.unsubscribe();
   }
 }
