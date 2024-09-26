@@ -74,9 +74,6 @@ export class PortfolioComponent implements OnInit, OnDestroy {
 
   visibilityToggled: boolean = false;
 
-  dialogSubscription = new Subscription;
-  dialogActionSubscription = new Subscription;
-
   private actionSubject = new Subject<any>();
   action$: Observable<any> = this.actionSubject.asObservable();
 
@@ -88,7 +85,8 @@ export class PortfolioComponent implements OnInit, OnDestroy {
   onFetchSubscription: Subscription;
   onDeleteSubscription: Subscription;
   onCheckSubscription: Subscription;
-
+  dialogSubscription = new Subscription;
+  dialogActionSubscription = new Subscription;
 
   constructor(private portfolioService: PortfolioService, private router: Router, private dialog: MatDialog, private toastService: ToastService, private loginService: LoginService, private appComponent: AppComponent) { }
 
@@ -456,5 +454,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
     this.onCreateSubscription?.unsubscribe();
     this.onEditSubscription?.unsubscribe();
     this.onFetchSubscription?.unsubscribe();
+    this.onDeleteSubscription?.unsubscribe();
+    this.onCheckSubscription?.unsubscribe();
   }
 }

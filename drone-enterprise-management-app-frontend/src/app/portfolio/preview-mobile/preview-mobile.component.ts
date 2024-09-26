@@ -212,10 +212,10 @@ export class PreviewMobileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.dialogActionSubscription = this.action$.subscribe(action => {
       if (action === 'confirm') {
         this.isUploading = true;
-        this.onFetchSubscription = this.onDeleteSubscription = this.portfolioService.deletePost(postId).subscribe(responseData => {
+        this.onDeleteSubscription = this.portfolioService.deletePost(postId).subscribe(responseData => {
           this.isUploading = false;
           this.toastService.generateToast('success', 'Usuwanie Posta', responseData.data.toString());
-          this.portfolioService.fetchPosts().subscribe(posts => {
+          this.onFetchSubscription = this.portfolioService.fetchPosts().subscribe(posts => {
             this.loadedPosts = posts;
             this.isLoading = false;
           });
@@ -269,8 +269,6 @@ export class PreviewMobileComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnDestroy(): void {
-    this.dialogSubscription?.unsubscribe();
-    this.dialogActionSubscription?.unsubscribe();
     this.onCreateSubscription?.unsubscribe();
     this.onEditSubscription?.unsubscribe();
     this.onFetchSubscription?.unsubscribe();
