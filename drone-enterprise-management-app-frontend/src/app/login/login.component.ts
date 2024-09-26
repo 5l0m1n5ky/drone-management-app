@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { LoginService } from './login.service';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner.component';
@@ -28,7 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
     RouterLink
   ],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   queryParams: any = {};
   hide = true;
@@ -38,6 +38,7 @@ export class LoginComponent implements OnInit {
   loginError: string;
   isLoading: boolean = false;
   queryParamsSubscriber: Subscription;
+  loginSubscription: Subscription;
   isProcessing = false;
 
   constructor(private loginService: LoginService, private router: Router, private activatedRoute: ActivatedRoute, private toastService: ToastService) { }
@@ -66,7 +67,7 @@ export class LoginComponent implements OnInit {
     const email = form.value.email;
     const password = form.value.password;
 
-    this.loginService.login(email, password).subscribe(
+    this.loginSubscription = this.loginService.login(email, password).subscribe(
       responseData => {
         this.isProcessing = false;
         this.router.navigate(['/'], { queryParams: { result: 'success' } });
@@ -79,5 +80,10 @@ export class LoginComponent implements OnInit {
         form.reset();
       }
     );
+  }
+
+  ngOnDestroy(): void {
+    this.queryParamsSubscriber?.unsubscribe();
+    this.loginSubscription?.unsubscribe();
   }
 }
