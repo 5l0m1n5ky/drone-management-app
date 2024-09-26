@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from 'src/app/sidebar/sidebar.component';
 import { ToastModule } from 'primeng/toast';
-import { BehaviorSubject, ReplaySubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { OrderItem } from './models/order-item.model';
 import { PanelService } from './panel.service';
 
@@ -16,7 +16,7 @@ import { PanelService } from './panel.service';
     ToastModule
   ]
 })
-export class PanelComponent implements OnInit {
+export class PanelComponent implements OnInit, OnDestroy {
 
   constructor(private panelService: PanelService) { }
 
@@ -35,4 +35,7 @@ export class PanelComponent implements OnInit {
     return this.order
   }
 
+  ngOnDestroy(): void {
+    this.orderSubscription?.unsubscribe();
+  }
 }

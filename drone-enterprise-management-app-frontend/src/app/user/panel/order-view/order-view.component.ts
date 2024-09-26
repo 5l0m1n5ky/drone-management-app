@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { OrderItem } from '../models/order-item.model';
 import { PanelComponent } from '../panel.component';
@@ -23,15 +23,15 @@ import { ToastService } from 'src/app/shared/toast/toast.service';
   imports: [CommonModule, RouterLink, GoogleMapsModule, GoogleMap, MapAdvancedMarker, MatBottomSheetModule, LoadingSpinnerComponent],
   templateUrl: './order-view.component.html'
 })
-export class OrderViewComponent implements OnInit {
+export class OrderViewComponent implements OnInit, OnDestroy {
 
   order: OrderItem[] | null;
   orderItem: OrderItem;
   states: State[] = [];
   isProcessing: boolean = false;
   isAdmin: boolean = false;
-  latitude: number = 53.122028;
-  longitude: number = 18.000292;
+  latitude: number = environment.origin.lat;
+  longitude: number = environment.origin.lng;
   center: google.maps.LatLngLiteral;
 
   options: google.maps.MapOptions = {
@@ -106,4 +106,8 @@ export class OrderViewComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.statesSubscription?.unsubscribe();
+    this.updateStateSubscription?.unsubscribe();
+  }
 }

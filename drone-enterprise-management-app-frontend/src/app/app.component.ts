@@ -21,7 +21,6 @@ export class AppComponent implements OnInit, OnDestroy {
   ) { }
 
   userSubscription: Subscription;
-
   queryParamsSubscriber: Subscription;
 
   isAuthenticated: boolean = false;
