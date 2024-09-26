@@ -22,7 +22,7 @@ interface StepsData {
   styleUrls: []
 })
 
-export class FotoVideoServiceComponent {
+export class FotoVideoServiceComponent implements OnDestroy {
 
   @ViewChild(IntersectionObserverDirective) intersectionObserverDirective: IntersectionObserverDirective;
 
@@ -90,6 +90,9 @@ export class FotoVideoServiceComponent {
     });
   }
 
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
 }
 
 
