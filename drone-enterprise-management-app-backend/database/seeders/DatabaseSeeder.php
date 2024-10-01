@@ -15,30 +15,28 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
+        \App\Models\Post::create([
+            'visibility' => true,
+            'location' => 'Ostromecko',
+            'path' => env('APP_ADDRESS') . '/storage/posts/Ostromecko_18IX.png',
+            'cover' => null,
+            'description' => 'Ostromecko na jesiennym progu',
+        ]);
 
         \App\Models\Post::create([
             'visibility' => true,
-            'location' => 'Zalew Koronowski',
-            'path' => env('APP_ADDRESS') . '/storage/posts/square.jpg',
+            'location' => 'Bydgoszcz - Plac Teatralny',
+            'path' => env('APP_ADDRESS') . '/storage/posts/wheel.png',
             'cover' => null,
-            'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex',
+            'description' => 'Takie widoki tylko na Bydgoskim Jarmarku Bożonarodzeniowym',
         ]);
 
         \App\Models\Post::create([
             'visibility' => false,
-            'location' => 'Bydgoszcz',
-            'path' => env('APP_ADDRESS') . '/storage/posts/vertical.jpg',
+            'location' => 'Maksymilianowo',
+            'path' => env('APP_ADDRESS') . '/storage/posts/DJI_0033_retouch.jpg',
             'cover' => null,
-            'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex',
-        ]);
-
-        \App\Models\Post::create([
-            'visibility' => true,
-            'location' => 'Mosty Kolejowe nad Brdą',
-            'path' => env('APP_ADDRESS') . '/storage/posts/windmill.jpg',
-            'cover' => null,
-            'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+            'description' => 'Nightrain',
         ]);
 
         \App\Models\Post::create([
@@ -46,7 +44,7 @@ class DatabaseSeeder extends Seeder
             'location' => 'Chojnice',
             'path' => env('APP_ADDRESS') . '/storage/posts/chojnice lipiec 2024.mp4',
             'cover' => env('APP_ADDRESS') . '/storage/posts/covers/chojnice-cover.png',
-            'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+            'description' => 'Tymczasem na rynku w Chojnicach...',
         ]);
 
         // User

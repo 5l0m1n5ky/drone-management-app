@@ -131,17 +131,17 @@ class OrderController extends Controller
 
     public function indexOrderDates()
     {
-        if (Auth::user()) {
+        // if (Auth::user()) {
             $orderDates = Order::select('date')->orderBy('id')->get();
 
             return response()->json($orderDates);
-        } else {
-            return $this->error(
-                'You have no previleges to make this request',
-                'ACCESS_DENIED',
-                500
-            );
-        }
+        // } else {
+            // return $this->error(
+            //     'You have no previleges to make this request',
+            //     'ACCESS_DENIED',
+            //     500
+            // );
+        // }
     }
 
     public function store(OrderRequest $orderRequest)

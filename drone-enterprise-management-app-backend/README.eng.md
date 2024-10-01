@@ -1,46 +1,46 @@
 # Drone Enterprise Management App
 
-[English version](./README.eng.md)
+[Polish version](./README.md)
 
-Aplikacja stworzona z myślą o własnej działalności związanej z usługami z wykorzystaniem Bezzałogowych Statków Powietrznych. Niniejszy projekt stanowi jednocześnie moją pracą inżynierską pod tytułem "Aplikacja Internetowa wspomagająca działanie i promocję przedsiębiorstwa na przykładzie firmy świadczącej usługi z wykorzystaniem dronów" .
+An application developed for my own enterprise related to services using Unmanned Aerial Vehicles. This project is simultaneously my bachelor's thesis entitled ‘Single Page Application supporting a company providing services with the use of unmanned aerial vehicles’.
 
-Aplikacja obejmuje warstwę prezentacji usług i aspektów współpracy, prezentację wybranych usług w formie portfolio stworzonego na wzór poplarnego serwisu mediów społecznościowych oraz warstwę autoryzacji gdzie zalogowany użytkownik ma dostęp do panelu użytkownika oraz formularza składania zamówienia na zlecenie. Administrator ma dostęp do modyfikowania zawartości portfolio jak również zarządzania stanem zlecenia na usługę.
+The application includes a layer for the presentation of services and key aspects of providing services, the overview of selected services in the form of a portfolio modelled on a popular social media platform and an authorisation layer where a logged-in user has access to a user panel including a form for placing an order for a service. The administrator has restricted access to modify the content of the portfolio as well as to manage the status of the order state.
 
-## Najważniejsze aspekty aplikacji
+## Key featurees
 
--   Responsywność (RWD)
--   Autoryzacja oparta na sesji użytkownika z pomocą plików cookie
--   Funkcjonalne i estetyczne UI/UX
--   Pokrycie testami
--   Zastosowanie efektywnych rozwiązań oferowanych przez poszczególne framework'i
--   Powiadomienia e-mailowe
+-   Responsivity (RWD)
+-   User session-based authentication with cookie files
+-   Robust and elaborated UI/UX
+-   Testing coverage
+-   Usage of efficient solutions provided by the various frameworks
+-   E-mail notifications
 
-## Stack technologiczny
+## Technology stack
 
 -   Frontend: Angular (Typescript)
 -   Backend: Laravel (PHP)
 -   DB: PostgreSQL
 -   Style: Tailwind, CSS3
--   Komponenty: Angular Materials, PrimeNG
--   Testy: PHPUint (Backend), Cypress (Frontend)
+-   Components: Angular Materials, PrimeNG
+-   Tests: PHPUint (Backend), Cypress (Frontend)
 
-Frontend został stworzony z wykorzystaniem frameworku Angular w wyniku czego powstała aplikacja jednostronicowa (SPA). Przy zastosowaniu framework'u Laravel stworzono REST API z warstwą autoryzacyjną (biblioteka Sanctum). Zastosowano wydajny silnik relacyjnej bazy danych - PostgreSQL.
+The frontend was created using the Angular framework resulting in a single-page application (SPA). A REST API with an authorisation layer (Sanctum library) was created using the Laravel framework. A powerful relational database engine, PostgreSQL, was used.
 
-Style zdefiniowano głównie przy użyciu biblioteki Tailwind z lekkimi modyfikacjami po stronie CSS3. Projekt korzysta również z gotowych komponentów takich jak Carousel, Timeline, Stepper czy Toast oferowanych przez Angular Materials oraz PrimeNG.
+Styles were mainly defined using the Tailwind library with slight modifications on the CSS3 side. The project also uses ready to use components such as Carousel, Timeline, Stepper or Toast offered by Angular Materials and PrimeNG.
 
-## Biblioteki zewnętrzne
+## Used Extensions
 
--   [AOS - Animate On Scroll](https://www.npmjs.com/package/aos) - biblioteka wykorzystana do implementacji animacji sprzężonych ze scrollowaniem
--   [Cookie Service](https://www.npmjs.com/package/ngx-cookie-service) - biblioteka wspomagająca działanie na plikach cookie
--   [Angular Materials](https://v16.material.angular.io/) - biblioteka typu Materials ściśle związana i dedykowana do framework'a Angular
--   [PrimeNG](https://primeng.org) - biblioteka komponentów dedykowanych dla framework'a Angular
--   [Angular Code Input](https://www.npmjs.com/package/angular-code-input) - biblioteka wspomagająca obsługę kodów weryfkacyjnych
--   [@tailwindcss/aspect-ratio](https://www.npmjs.com/package/@tailwindcss/aspect-ratio) - biblioteka wspomagająca responsywność elementów określonych proporcją
--   [Google Maps API](https://www.npmjs.com/package/@angular/google-maps) - biblioteka wspierająca zastosowanie funkcjonalności oferowanych przez platformę Google Maps
+-   [AOS - Animate On Scroll](https://www.npmjs.com/package/aos) - library used to implement scroll-sensitive animations
+-   [Cookie Service](https://www.npmjs.com/package/ngx-cookie-service) - cookie support library
+-   [Angular Materials](https://v16.material.angular.io/) - Materials type library closely related and dedicated to the Angular framework
+-   [PrimeNG](https://primeng.org) - component library dedicated to the Angular framework
+-   [Angular Code Input](https://www.npmjs.com/package/angular-code-input) - a library to support the handling of verification codes
+-   [@tailwindcss/aspect-ratio](https://www.npmjs.com/package/@tailwindcss/aspect-ratio) - a library to support the responsiveness of elements defined by fixed proportion
+-   [Google Maps API](https://www.npmjs.com/package/@angular/google-maps) - a library to support the use of the functionalities offered by the Google Maps API platform
 
-## Przegląd funkcjonalności
+## Features overview
 
-### Strona główna
+### Landing Page
 
 ![Strona główna](./storage/documentation-assets/menu.png)
 

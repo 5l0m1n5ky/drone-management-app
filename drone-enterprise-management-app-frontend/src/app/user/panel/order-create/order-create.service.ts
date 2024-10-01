@@ -35,7 +35,7 @@ export class OrderCreateService {
   }
 
   fetchOrderDates() {
-    return this.http.get<{ [date: string]: OrderDates }>('http://localhost:8000/api/dates').pipe(map(responseData => {
+    return this.http.get<{ [date: string]: OrderDates }>('http://localhost:8000/dates').pipe(map(responseData => {
       const datesArray: OrderDates[] = [];
       for (const date in responseData) {
         if (responseData.hasOwnProperty(date)) {
@@ -61,8 +61,6 @@ export class OrderCreateService {
       }
       ));
   }
-
-
 
   private handleError(errorResponse: HttpErrorResponse) {
 

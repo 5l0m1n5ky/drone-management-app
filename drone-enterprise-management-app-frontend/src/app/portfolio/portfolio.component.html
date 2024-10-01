@@ -361,10 +361,10 @@
         class="absolute right-5 top-5 w-8 h-8 brightness-50 cursor-pointer hover:brightness-100 transition-all ease-in-out duration-75">
       <div class="flex flex-row justify-center items-center max-w-[90%] h-[90%]">
         <div class="flex flex-row justify-center items-center bg-neutral-900 h-full  rounded-l-xl">
-          <img *ngIf="isImage(currentPost.path)" [src]="'http://127.0.0.1:8000' + currentPost.path" alt="gallery-item"
+          <img *ngIf="isImage(currentPost.path)" [src]="currentPost.path" alt="gallery-item"
             class="w-full h-full object-contain rounded-l-xl">
-          <video *ngIf="!isImage(currentPost.path)" [src]="'http://127.0.0.1:8000' + currentPost.path"
-            [poster]="'http://127.0.0.1:8000' + currentPost.cover" alt="gallery-item"
+          <video *ngIf="!isImage(currentPost.path)" [src]="currentPost.path"
+            [poster]="currentPost.cover" alt="gallery-item"
             class="w-full h-full object-contain rounded-l-xl" controls autoplay loop disablepictureinpicture>
           </video>
         </div>

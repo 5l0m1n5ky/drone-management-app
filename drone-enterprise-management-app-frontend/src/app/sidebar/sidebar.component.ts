@@ -48,7 +48,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   fetchNotifications() {
     this.notificationSubsciption = this.panelService.fetchNotifications().subscribe(notifications => {
-      console.log(notifications);
       this.notifications = notifications;
       this.checkBadgeValue();
     });

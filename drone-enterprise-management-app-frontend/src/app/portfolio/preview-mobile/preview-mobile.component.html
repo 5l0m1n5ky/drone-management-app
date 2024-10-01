@@ -45,10 +45,10 @@
         </mat-menu>
       </div>
       <div class="w-full h-auto bg-black flex flex-col items-center">
-        <img *ngIf="isImage(post.path)" [src]="'http://127.0.0.1:8000' + post.path" alt="gallery-item"
+        <img *ngIf="isImage(post.path)" [src]="post.path" alt="gallery-item"
           class="max-h-[80vh] w-auto object-contain">
         <video onscrollAutoplay (pause)="isEditMode" controls loop *ngIf="!isImage(post.path)"
-          [src]="'http://127.0.0.1:8000' + post.path" [poster]="'http://127.0.0.1:8000' + post.cover" alt="gallery-item"
+          [src]="post.path" [poster]="post.cover" alt="gallery-item"
           class="max-h-[80vh] w-auto object-contain">
         </video>
       </div>

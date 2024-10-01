@@ -39,7 +39,13 @@ export class PanelService {
   }
 
   fetchServices() {
-    return this.http.get<{ [service: string]: Service }>('http://localhost:8000/services').pipe(map(responseData => {
+    return this.http.get<{ [service: string]: Service }>('http://localhost:8000/services', {
+      headers: new HttpHeaders({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }),
+      withCredentials: true
+    }).pipe(map(responseData => {
       const servicesArray: Service[] = [];
       for (const service in responseData) {
         if (responseData.hasOwnProperty(service)) {
@@ -52,7 +58,13 @@ export class PanelService {
   }
 
   fetchSubervices() {
-    return this.http.get<{ [subservice: string]: Subservice }>('http://localhost:8000/subservices').pipe(map(responseData => {
+    return this.http.get<{ [subservice: string]: Subservice }>('http://localhost:8000/subservices', {
+      headers: new HttpHeaders({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }),
+      withCredentials: true
+    }).pipe(map(responseData => {
       const subservicesArray: Subservice[] = [];
       for (const subservice in responseData) {
         if (responseData.hasOwnProperty(subservice)) {
@@ -65,7 +77,13 @@ export class PanelService {
   }
 
   fetchBackgroundMusicTypes() {
-    return this.http.get<{ [bgMusc: string]: BgMusic }>('http://localhost:8000/background-music').pipe(map(responseData => {
+    return this.http.get<{ [bgMusc: string]: BgMusic }>('http://localhost:8000/background-music', {
+      headers: new HttpHeaders({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }),
+      withCredentials: true
+    }).pipe(map(responseData => {
       const backgroundMusicArray: BgMusic[] = [];
       for (const musicType in responseData) {
         if (responseData.hasOwnProperty(musicType)) {
@@ -78,7 +96,13 @@ export class PanelService {
   }
 
   fetchStates() {
-    return this.http.get<{ [state: string]: State }>('http://localhost:8000/states').pipe(map(responseData => {
+    return this.http.get<{ [state: string]: State }>('http://localhost:8000/states', {
+      headers: new HttpHeaders({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }),
+      withCredentials: true
+    }).pipe(map(responseData => {
       const statesArray: State[] = [];
       for (const state in responseData) {
         if (responseData.hasOwnProperty(state)) {
@@ -167,20 +191,11 @@ export class PanelService {
   private handleError(errorResponse: HttpErrorResponse) {
 
     let errorMessage = 'Wystapił błąd';
-    // if (errorResponse.error.data) {
-    //   errorMessage = errorResponse.error.data;
-    // } else {
-    //   errorMessage = errorResponse.error.message;
 
     if (errorResponse.error) {
       errorMessage = errorResponse.error.message;
     }
-    // }
 
     return throwError(errorMessage);
   }
-
-  // private handleRevesrseGeocodingResponse(responseData: string) {
-  //   console.log(responseData);
-  // }
 }

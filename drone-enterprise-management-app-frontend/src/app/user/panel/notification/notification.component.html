@@ -6,7 +6,7 @@
     <div class="font-montserrat text-neutral-600 text-sm w-full text-center mt-5">
       <p *ngIf="notifications.length === 0">Brak powiadomień</p>
     </div>
-    <div *ngIf="notifications.length < 0"
+    <div
       class="w-full h-auto flex flex-col justify-start items-center p-5 gap-5 select-none">
       <mat-accordion *ngFor="let notification of notifications" class="example-headers-align w-full" multi>
         <mat-expansion-panel style="background-color: #202020;"

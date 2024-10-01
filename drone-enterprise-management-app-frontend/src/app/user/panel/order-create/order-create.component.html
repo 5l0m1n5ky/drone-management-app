@@ -149,8 +149,8 @@
             LOKALIZACJA
           </ng-template>
           <div matStepContent class="flex flex-col justify-center items-center">
-            <section>
-              <google-map height="300px" width="300px" [options]="options" (mapClick)="addMarker($event)">
+            <section class="w-full border-2">
+              <google-map width="100p" height="500px" [options]="options" (mapClick)="addMarker($event)">
                 <map-advanced-marker *ngFor="let position of markerPositions" [position]="position" />
               </google-map>
             </section>
@@ -301,10 +301,6 @@
                       class="font-montserrat text-xs text-red-600">
                       Podaj numer ulicy
                     </mat-error>
-                    <!-- <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.streetNumber')?.hasError('required')"
-                      class="font-montserrat text-xs text-red-600">
-                      Niewłaściwy format
-                    </mat-error> -->
                   </mat-form-field>
                   <mat-form-field style="width: 150px;">
                     <mat-label>Nr lokalu</mat-label>

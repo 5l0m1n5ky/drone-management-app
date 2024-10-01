@@ -56,7 +56,6 @@ export class NotificationComponent implements OnInit, OnDestroy {
 
     if (!seen) {
       this.updateSeenStatusSubscription = this.panelService.updateNotificationSeenStatus(notificationId).subscribe(() => {
-        console.log('seen');
         this.notifications.filter(notification => notification.id === notificationId).map(notification => notification.seen = true);
         this.panelService.updateBadgeValue();
       });

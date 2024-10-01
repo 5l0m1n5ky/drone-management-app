@@ -33,18 +33,4 @@ class IndexDatesTest extends TestCase
             ]
         ]);
     }
-
-    /** @test */
-    public function checks_response_when_user_unauthenticated(): void
-    {
-        $this->assertGuest('web');
-
-        $response = $this->get('/dates');
-
-        $response->assertStatus(500)->assertJson([
-            'status' => 'Error has occured',
-            'message' => 'ACCESS_DENIED',
-            'data' => 'You have no previleges to make this request',
-        ]);
-    }
 }
