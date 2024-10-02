@@ -42,7 +42,7 @@ Style zdefiniowano głównie przy użyciu biblioteki Tailwind z lekkimi modyfika
 
 ### Strona główna
 
-![Strona główna](./storage/documentation-assets/menu.png)
+![Strona główna](drone-enterprise-management-app-backend/storage/documentation-assets/menu.png)
 
 Strona główna składa się z powyższego banneru, prezentacji mocnych stron wspołpracy, skrótu oferowanych usług, skrótu do portolio oraz skrótu do formularza kontaktowego - oczywiście w pełnej responsywności na innych urządzeniach w myśl zasady mobile-first. Podobnie pasek nawigacji - dla odpowiedniej szerokości menu przechodzi w tryb "hamburger". Zawartość paska nawigacji jest ściśle związana ze stanem autoryzacji użytkownika.
 
@@ -50,11 +50,11 @@ Strona główna składa się z powyższego banneru, prezentacji mocnych stron ws
 
 Aplikacja posiada dedykowaną zakładkę zawierającą skrót to wszystkich dostępnych usług. Przejście do szczegółów usługi następuje po wybraniu odpowiedniej karty z usługą.
 
-![Karty usług](./storage/documentation-assets/services-menu.png)
+![Karty usług](drone-enterprise-management-app-backend/storage/documentation-assets/services-menu.png)
 
 Po wybraniu usługi przechodzimy do szczegółow z nią związanych. Z tego poziomu można przejść do informacji związanych z procedurą realizacji zamówienia, formularza składania zamówienia, formularza kontaktowego lub portfolio.
 
-![Szczegóły usługi](./storage/documentation-assets/service-info.png)
+![Szczegóły usługi](drone-enterprise-management-app-backend/storage/documentation-assets/service-info.png)
 
 ### Autoryzacja
 
@@ -165,15 +165,15 @@ Aplikacja umożliwia założenie konta użytkownika poprzez podanie adresu mailo
   POST /register
 ```
 
-![Rejestracja](./storage/documentation-assets/register.png)
+![Rejestracja](drone-enterprise-management-app-backend/storage/documentation-assets/register.png)
 
 Aplikacja dynamicznie kontroluje walidację pól formularza jak również informuje o wystąpieniu błędu w postaci powiadmienia w formularzu lub w postaci dynamiczych komponentów _Toasts_.
 
 Kolejnym etapem po pomyślnym wysłaniu formularza jest weryfikacja konta. W tym celu na podany adres mailowy wysyłany jest 6-cyfrowy kod, który należy wpisać w odpowiednie miejsce na stronie weryfikacyjnej. Kod ma ważność 24h a po upływie tego czasu jest usuwany razem z niezweryfikowanym kontem.
 
-![Mail weryfikacyjny](./storage/documentation-assets/verification-email.png)
+![Mail weryfikacyjny](drone-enterprise-management-app-backend/storage/documentation-assets/verification-email.png)
 
-![Strona weryfikacyjna](./storage/documentation-assets/verification.png)
+![Strona weryfikacyjna](drone-enterprise-management-app-backend/storage/documentation-assets/verification.png)
 
 #### Logowanie
 
@@ -181,7 +181,7 @@ Kolejnym etapem po pomyślnym wysłaniu formularza jest weryfikacja konta. W tym
   POST /login
 ```
 
-![Logowanie](./storage/documentation-assets/login.png)
+![Logowanie](drone-enterprise-management-app-backend/storage/documentation-assets/login.png)
 
 Proces logowania zakończony sukcesem niesie za sobą utworzenia pliku cookie sesji oraz pliku cookie z danymi użytkownika
 
@@ -199,15 +199,15 @@ Login Check służy do usprawnienia działania aplikacji. W momencie wykonywania
 
 Istotnym aspektem aplikacji jest prezentacja wybranych realizacji. Założeniem dotyczącym formy portfolio było to aby przypominało użytkownikowi odczucia związane z ergonomicznymi rozwiązanami oferowanymi przez popularne media społecznościowe.
 
-![Portoflio](./storage/documentation-assets/portfolio.png)
+![Portoflio](drone-enterprise-management-app-backend/storage/documentation-assets/portfolio.png)
 
 Dla urządzeń o większym rozmiarze ekranu przewidziany jest podgląd posta w postaci slider/carousel.
 
-![Post](./storage/documentation-assets/post.png)
+![Post](drone-enterprise-management-app-backend/storage/documentation-assets/post.png)
 
 Dla urządzeń o mniejszym rozmiarze ekranu uznawany za urządzenie mobilne przewidziany jest podgląd postów w formie poziomej, przewijanej galerii.
 
-![Post mobile](./storage/documentation-assets/post-mobile.png)
+![Post mobile](drone-enterprise-management-app-backend/storage/documentation-assets/post-mobile.png)
 
 W tym przypadku, wymagane jest aby post, który został wybrany w podglądzie znajdował się na początku Viewport. W tym celu zastosowano poniższą funkcję, która scrolluje do odpowiedniego elementu w galerii:
 
@@ -282,9 +282,9 @@ private observer: IntersectionObserver;
 
 Administrator jako uprawniony użytkownik ma wyłączne prawo do modyfikowania zawartości portfolio. Ma do dyspozycji utworzenie nowego posta, jego modyfikację lub usunięcie. Siłą rzeczy ma również dostęp do postów oznaczonych jako ukryte. W przypadku dodawania/edytowania posta w charakterze materiału video, responsywny formularz zadba o dodanie okładki do video.
 
-![Dodawanie posta](./storage/documentation-assets/create.png)
+![Dodawanie posta](drone-enterprise-management-app-backend/storage/documentation-assets/create.png)
 
-![Edycja posta](./storage/documentation-assets/update.png)
+![Edycja posta](drone-enterprise-management-app-backend/storage/documentation-assets/update.png)
 
 ### Panel użytkownika
 
@@ -292,74 +292,74 @@ Panel użytkownika skupia w sobie kluczowe funkcjonalności bezpośrednio związ
 
 Zakładka _Zlecenia_ umożliwia podgląd zleconych zamówień lub utworzenie nowego.
 
-![Zakładka zlecenia](./storage/documentation-assets/orders.png)
+![Zakładka zlecenia](drone-enterprise-management-app-backend/storage/documentation-assets/orders.png)
 
 Tworzenie nowego zlecenia powoduje otwarcie nowego okna. Formularz podzielony jest na kroki podawania odpowiednich danych, skupionych w _stepperze_.
 
 _Szczegóły zlecenia_
 
 Po kliknięciu przycisku DODAJ należy wybrać odpowiedni typ usługi. Następnie przechodzimy do pierwszego etapu formularza podając w nim rodzaj usługi. Responsywny formularz dba o to aby opcje dodatkowe takie jak podkład muzyczny czy generowanie dokumentacji z inspekcji pojawiły sie adekwatnie do wybranego typu usługi.
-![Krok 1](./storage/documentation-assets/step1.png)
+![Krok 1](drone-enterprise-management-app-backend/storage/documentation-assets/step1.png)
 
 _Lokalizacja_
 
 Lokalizacja wybierana jest na podstawie dodania markera do mapy, w tym wypadku komponentu Google Maps. Event związany z dodaniem markera odczytuje współrzędne geograficzne dodając je do danych formularza.
 
-![Krok 2](./storage/documentation-assets/step2.png)
+![Krok 2](drone-enterprise-management-app-backend/storage/documentation-assets/step2.png)
 
 _Termin_
 
 Istotnym parametrem zlecenia jest data realizacji. Spodziewaną datę można wybrać za pomocą komponentu Angulr Materials o nazwie _datepicker_. Co więcej, datepicker umożiwia filtrację dostępnych terminów w związku z tym, że przyjęto nie więcej niż jedno zlecenie dziennie.
 
-![Krok 3](./storage/documentation-assets/step3.png)
+![Krok 3](drone-enterprise-management-app-backend/storage/documentation-assets/step3.png)
 
 _FV_
 
 Część formularza związana z danymi rozliczeniowymi do zlecenia
 
-![Krok 4](./storage/documentation-assets/step4.png)
+![Krok 4](drone-enterprise-management-app-backend/storage/documentation-assets/step4.png)
 
 _Podsumowanie_
 
 Stawka za zlecenie obliczana jest na podstawie ilości jednostek rozliczeniowych i ceny za jednostę oraz szacowany koszt dojazdu. Koszt dojazdu obliczany jest za pomocą wspomnianej biblioteki Google Maps, która potrzebuje dwóch współrzędnych geograficznych oraz charakteru trasy (CAR).
 
-![Krok 5](./storage/documentation-assets/step5.png)
+![Krok 5](drone-enterprise-management-app-backend/storage/documentation-assets/step5.png)
 
 Pomyślne złożenie zamówienia wiąże się z wysłaniem powiadomienia mailowego do administratora
 
-![New Order Email](./storage/documentation-assets/new-order-email.png)
+![New Order Email](drone-enterprise-management-app-backend/storage/documentation-assets/new-order-email.png)
 
 Na liście zleceń pojawiła się nowa publikacja, którą można wyświetlić pod kątem większej ilości danych:
 
-![Order info](./storage/documentation-assets/order-info.png)
+![Order info](drone-enterprise-management-app-backend/storage/documentation-assets/order-info.png)
 
 Administrator również z tego poziomu ma do dyspozycji funkcjonalność, która polega na zmianie aktualnego statusu zlecenia. W ten sposób użytkownik informowany jest o postępach w realizacji zlecenia.
 
-![State Change](./storage/documentation-assets/change-status.png)
+![State Change](drone-enterprise-management-app-backend/storage/documentation-assets/change-status.png)
 
-![State Change Dialog](./storage/documentation-assets/state-change-dialog.png)
+![State Change Dialog](drone-enterprise-management-app-backend/storage/documentation-assets/state-change-dialog.png)
 
 Zmiana statusu widoczna jest z poziomu listy zleceń
 
-![New Order State](./storage/documentation-assets/new-order-state.png)
+![New Order State](drone-enterprise-management-app-backend/storage/documentation-assets/new-order-state.png)
 
 Zostaje wysłane powiadomienie do klienta składającego zamówienie.
 
-![Notification-sidebar](./storage/documentation-assets/notification.png)
+![Notification-sidebar](drone-enterprise-management-app-backend/storage/documentation-assets/notification.png)
 
 Powiadomienie zostaje odczytane w momencie rozwiniecia elementu typu accordion co powoduje zaktualizowanie badge przy ikonie powiadomienia a samo powiadomienie uzyskuje status "seen". Poniżej podgląd powiadomienia tym razem w wersji mobile.
 
-![Notification-mobile](./storage/documentation-assets/notification-mobile.png)
+![Notification-mobile](drone-enterprise-management-app-backend/storage/documentation-assets/notification-mobile.png)
 
 Równolegle do powiadomienia w aplikacji wysyłane jest powiadomienie mailowe:
 
-![New State Email](./storage/documentation-assets/new-order-state-email.png)
+![New State Email](drone-enterprise-management-app-backend/storage/documentation-assets/new-order-state-email.png)
 
 ### Formularz kontaktowy
 
 Aplikacja umożliwia skontaktowanie się z administratorem przez niezarejestrowanego użytkownika za pomoca formularza kontaktowego. Otrzymanie wiadomości jest równoznaczne z wysłaniem przez serwer do administratora wiadomości mailowej zawierającej dane pozostawione przez nadawcę.
 
-![Contact](./storage/documentation-assets/contact.png)
+![Contact](drone-enterprise-management-app-backend/storage/documentation-assets/contact.png)
 
 ## Konfiguracja
 
