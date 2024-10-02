@@ -22,7 +22,7 @@ Aplikacja obejmuje warstwę prezentacji usług i aspektów współpracy, prezent
 -   DB: PostgreSQL
 -   Style: Tailwind, CSS3
 -   Komponenty: Angular Materials, PrimeNG
--   Testy: PHPUint (Backend), Cypress (Frontend)
+-   Testy: PHPUnit (Backend), Cypress (Frontend)
 
 Frontend został stworzony z wykorzystaniem frameworku Angular w wyniku czego powstała aplikacja jednostronicowa (SPA). Przy zastosowaniu framework'u Laravel stworzono REST API z warstwą autoryzacyjną (biblioteka Sanctum). Zastosowano wydajny silnik relacyjnej bazy danych - PostgreSQL.
 
