@@ -4,7 +4,7 @@
 
 Aplikacja stworzona z myślą o własnej działalności związanej z usługami z wykorzystaniem Bezzałogowych Statków Powietrznych. Niniejszy projekt stanowi jednocześnie moją pracą inżynierską pod tytułem "Aplikacja Internetowa wspomagająca działanie i promocję przedsiębiorstwa na przykładzie firmy świadczącej usługi z wykorzystaniem dronów" .
 
-Aplikacja obejmuje warstwę prezentacji usług i aspektów współpracy, prezentację wybranych usług w formie portfolio stworzonego na wzór poplarnego serwisu mediów społecznościowych oraz warstwę autoryzacji gdzie zalogowany użytkownik ma dostęp do panelu użytkownika oraz formularza składania zamówienia na zlecenie. Administrator ma dostęp do modyfikowania zawartości portfolio jak również zarządzania stanem zlecenia na usługę.
+Aplikacja obejmuje warstwę prezentacji usług i aspektów współpracy, prezentację wybranych usług w formie portfolio stworzonego na wzór popularnego serwisu mediów społecznościowych oraz warstwę autoryzacji gdzie zalogowany użytkownik ma dostęp do panelu użytkownika oraz formularza składania zamówienia na zlecenie. Administrator ma dostęp do modyfikowania zawartości portfolio jak również zarządzania stanem zlecenia na usługę.
 
 ## Najważniejsze aspekty aplikacji
 
@@ -167,7 +167,7 @@ Aplikacja umożliwia założenie konta użytkownika poprzez podanie adresu mailo
 
 ![Rejestracja](./storage/documentation-assets/register.png)
 
-Aplikacja dynamicznie kontroluje walidację pół formularza jak również informuje o wystąpieniu błędu w postaci powiadmienia w formularzu lub w postaci dynamiczych komponentów _Toasts_.
+Aplikacja dynamicznie kontroluje walidację pól formularza jak również informuje o wystąpieniu błędu w postaci powiadmienia w formularzu lub w postaci dynamiczych komponentów _Toasts_.
 
 Kolejnym etapem po pomyślnym wysłaniu formularza jest weryfikacja konta. W tym celu na podany adres mailowy wysyłany jest 6-cyfrowy kod, który należy wpisać w odpowiednie miejsce na stronie weryfikacyjnej. Kod ma ważność 24h a po upływie tego czasu jest usuwany razem z niezweryfikowanym kontem.
 
@@ -317,13 +317,13 @@ _FV_
 
 Część formularza związana z danymi rozliczeniowymi do zlecenia
 
-![Krok 3](./storage/documentation-assets/step4.png)
+![Krok 4](./storage/documentation-assets/step4.png)
 
 _Podsumowanie_
 
-Stawka za zlecenie obliczana jest na podstawie ilości jednostek rozliczeniowych i ceny za jednostę oraz szacowany koszt dojazdu. Koszt dojazdu obliczany jest za pomocą wspomnianej biblioteki Google Maps, która potrzebuje dwóch współrzędnych geograficznych,
+Stawka za zlecenie obliczana jest na podstawie ilości jednostek rozliczeniowych i ceny za jednostę oraz szacowany koszt dojazdu. Koszt dojazdu obliczany jest za pomocą wspomnianej biblioteki Google Maps, która potrzebuje dwóch współrzędnych geograficznych oraz charakteru trasy (CAR).
 
-![Krok 4](./storage/documentation-assets/step5.png)
+![Krok 5](./storage/documentation-assets/step5.png)
 
 Pomyślne złożenie zamówienia wiąże się z wysłaniem powiadomienia mailowego do administratora
 
@@ -446,10 +446,18 @@ npx cypress open
 Aplikacja ma charakter rozwojowy. Wymagane jest jeszcze kilka kroków zanim aplikacja osiągnie status _użyta komeryjnie_
 
 -   Wdrożenie
--   Implementacja systemu płatności mobilnych
+-   Implementacja systemu płatności internetowych
 -   Integracja z Google Ads, Google Analytics oraz Google Push Notifications
 -   Implementacja checklisty przed zleceniem, generowanie raportu z inspekcji, generowanie INOP (Instrukcja Operacyjna)
--   poprawa efektywności i pozycjonowania
+-   Poprawa efektywności i pozycjonowania
+
+## Licencja
+
+Wszystkie prawa są zastrzeżone. Dozwolone jest uruchamianie projektu w celach rekrutacyjnych oraz weryfikacyjnych.
+
+## Autor
+
+Szymon Słomiński [@5l0m1n5ky](https://github.com/5l0m1n5ky)
 
 ## Przypisy
 

@@ -257,5 +257,29 @@ class DatabaseSeeder extends Seeder
             'state_type' => 'Odrzucone',
             'color' => 'state-cancelled'
         ]);
+
+        // Checlist
+
+        \App\Models\Checklist::create([
+            'type' => 'Zezwolenie na lot'
+        ]);
+        \App\Models\Checklist::create([
+            'type' => 'Korzystne warunki atmosferyczne'
+        ]);
+        \App\Models\Checklist::create([
+            'type' => 'Akceptowalny stan techniczny SBSP'
+        ]);
+        \App\Models\Checklist::create([
+            'type' => 'Naładowanie akumulatorów'
+        ]);
+        \App\Models\Checklist::create([
+            'type' => 'Odpowidnia ilość miejsca na nośniku pamięci'
+        ]);
+        \App\Models\Checklist::create([
+            'type' => 'Przeszkolenie pilota SBSP'
+        ]);
+        \App\Models\Checklist::create([
+            'type' => 'Opracowanie planu realizacji zlecenia'
+        ]);
     }
 }

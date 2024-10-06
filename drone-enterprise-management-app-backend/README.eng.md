@@ -40,35 +40,35 @@ Styles were mainly defined using the Tailwind library with slight modifications 
 
 ## Features overview
 
-### Landing Page
+### Home Page
 
-![Strona główna](./storage/documentation-assets/menu.png)
+![Home Page](./storage/documentation-assets/menu.png)
 
-Strona główna składa się z powyższego banneru, prezentacji mocnych stron wspołpracy, skrótu oferowanych usług, skrótu do portolio oraz skrótu do formularza kontaktowego - oczywiście w pełnej responsywności na innych urządzeniach w myśl zasady mobile-first. Podobnie pasek nawigacji - dla odpowiedniej szerokości menu przechodzi w tryb "hamburger". Zawartość paska nawigacji jest ściśle związana ze stanem autoryzacji użytkownika.
+The Home Page consists of the above banner, a presentation of the strengths of the providied services, a shortcut to the services offer, a shortcut to the portfolio and a shortcut to the contact form - fully responsive across variety of devices with crucial moblie-first rule. Similarly, the navigation bar - for a suitable menu width, it goes into ‘hamburger’ mode. The content of the navigation bar is closely related to the user's authorisation state.
 
-### Prezentacja usługi
+### Service Overview
 
-Aplikacja posiada dedykowaną zakładkę zawierającą skrót to wszystkich dostępnych usług. Przejście do szczegółów usługi następuje po wybraniu odpowiedniej karty z usługą.
+The app has a dedicated tab containing a shortcut to all available services. You navigate to the service details by selecting the relevant service tab.
 
-![Karty usług](./storage/documentation-assets/services-menu.png)
+![Services Overview](./storage/documentation-assets/services-menu.png)
 
 Po wybraniu usługi przechodzimy do szczegółow z nią związanych. Z tego poziomu można przejść do informacji związanych z procedurą realizacji zamówienia, formularza składania zamówienia, formularza kontaktowego lub portfolio.
 
-![Szczegóły usługi](./storage/documentation-assets/service-info.png)
+![Service detalis](./storage/documentation-assets/service-info.png)
 
 ### Autoryzacja
 
-Autoryzacja zrealizowana w ramach REST API funkcjonuje z wykorzystaniem biblioteki Sanctum. Jak już wspomniano, autoryzacja użytkownika polega na wygenerowaniu unikatowej sesji opartej na przegldarkowych plikach cookie.
+The authentication implemented within the REST API works using the Sanctum library. As already mentioned, user authentication involves the generation of a unique session based on browser cookies.
 
-Co więcej, implementacja REST API w projekcie wykorzystuje mechanizmy zabezpieczeń CSRF. Poniżej zaprezentowano uprawnienia do działań związanych z aplikacją z podziałem na role.
+Furthermore, the project's REST API implementation uses CSRF security mechanisms. The permissions for application-related activities by role are presented below.
 
-| Rola       | Uprawnienia                                               |
-| ---------- | --------------------------------------------------------- |
-| Gość       | Rejestracja, przeglądanie portoflio, formularz kontatkowy |
-| Użytkownik | Logowanie, panel użytkownika, składanie zamówienia        |
-| Admin      | Zarządzanie portfolio i zleceniami                        |
+| Role  | Privileges                                     |
+| ----- | ---------------------------------------------- |
+| Guest | Registration, Portfolio showcase, Contact form |
+| User  | Sign in form, User panel, Order create form    |
+| Admin | Portfolio and orders management                |
 
-Endpointy zawierające restrykcje co do roli użytkownika korzystają z middleware API CheckRole.
+Endpoints containing restrictions on the user role use the CheckRole API middleware.
 
 _Middleware/CheckRole.php:_
 
@@ -93,17 +93,17 @@ public function handle(Request $request, Closure $next, ...$roles): Response
     Route::post('/posts/create', [PostController::class, 'store'])->middleware('restrictRole:admin');
 ```
 
-Wszystkie requesty z wyjątkiem requestu typu _GET_ muszą zostać autoryzowane pod kątem zabezpieczeń CSRF.
+All requests with the exception of request type _GET_ must be authorised for CSRF security.
 
-Aby żądanie nie zostało odrzucone, przed dokonaniem właściwego requestu należy odpytać endpoint przeznaczony do autoryzowania CSRF.
+To ensure that the request is not rejected, the endpoint intended for CSRF authorisation must be queried before the actual request is made.
 
 ```http
   GET /sanctum/csrf-cookie
 ```
 
-Zwrotnie, API przydziela odpowiedni klucz CSRF, który powinien być dołączony do właściwego requestu w postaci headera **Set-Cookie**.
+In return, the API assigns the corresponding CSRF key, which should be included in the actual request in the form of a **Set-Cookie** header.
 
-Po stronie klienta Angular dba o to aby każdy request niebędący requestem typu _GET_ był poprzedzony odpytaniem endpointa CSRF dzięki zastosowaniu **http interceptors**:
+On the client side, Angular ensures that any request that is not of type _GET_ is preceded by a CSRF endpoint query with usege of **http interceptors**:
 
 _csrf.interceptor.ts_
 
@@ -159,37 +159,37 @@ private csrfToken: string = this.cookieService.get('XSRF-TOKEN');
 
 #### Rejestracja
 
-Aplikacja umożliwia założenie konta użytkownika poprzez podanie adresu mailowego, hasła, akceptację regulaminu i dobrowolną akceptację przypisania do newslettera.
+The app allows guests to create a user account by entering their email address, password, accepting the terms and conditions and optionally accepting assignment to the newsletter.
 
 ```http
   POST /register
 ```
 
-![Rejestracja](./storage/documentation-assets/register.png)
+![Registration](./storage/documentation-assets/register.png)
 
-Aplikacja dynamicznie kontroluje walidację pół formularza jak również informuje o wystąpieniu błędu w postaci powiadmienia w formularzu lub w postaci dynamiczych komponentów _Toasts_.
+The application dynamically checks the validation of the form fields and also informs the user of the occurrence of an error in the form of a notification in the form or in the form of dynamic _Toasts_ components.
 
-Kolejnym etapem po pomyślnym wysłaniu formularza jest weryfikacja konta. W tym celu na podany adres mailowy wysyłany jest 6-cyfrowy kod, który należy wpisać w odpowiednie miejsce na stronie weryfikacyjnej. Kod ma ważność 24h a po upływie tego czasu jest usuwany razem z niezweryfikowanym kontem.
+The next step after successful submission of the form is account verification. For this purpose, a 6-digit code is sent to the provided e-mail address, which must be entered in the appropriate place on the verification page. The code is valid for 24 hours and after this time it is deleted together with the unverified account.
 
-![Mail weryfikacyjny](./storage/documentation-assets/verification-email.png)
+![Verification Email](./storage/documentation-assets/verification-email.png)
 
-![Strona weryfikacyjna](./storage/documentation-assets/verification.png)
+![Verification Page](./storage/documentation-assets/verification.png)
 
-#### Logowanie
+#### Signing In
 
 ```http
   POST /login
 ```
 
-![Logowanie](./storage/documentation-assets/login.png)
+![Signing In](./storage/documentation-assets/login.png)
 
-Proces logowania zakończony sukcesem niesie za sobą utworzenia pliku cookie sesji oraz pliku cookie z danymi użytkownika
+A successful login process results in the creation of a session cookie and a user data cookie.
 
-#### Autologin i Login Check
+#### Autologin and Login Check
 
-Autologin bazuje na zasadzie odtworzenia stanu zalogowania odpowiedniego użytkownika na podstawie pliku cookie z jego danymi w przypadku odświeżenia przeglądarki. Taki plik tworzony jest w momencie zalogowania i usuwany w momencie wylogowania. Aplikacja po stronie klienta dba o to aby odtworzyć globalny stan zalogowania kiedy flagi logiczne, z których korzystają komponenty są zresetowane.
+Autologin is based on the principle of recreating the login status of the respective user on the basis of a cookie with their data when the browser is refreshed. Such a cookie is created when the user logs in and is deleted when the user logs out. The client-side application takes care to recreate the global login state when the flags used by the components are reset.
 
-Login Check służy do usprawnienia działania aplikacji. W momencie wykonywania requestu wrażliwego na stan autoryzacji, najpierw odpytywany jest endpoint, który zwraca informację o stanie zalogowania. Pliki sesyjne nie określają jednoznacznie daty ważności sesji gdyż jest ona przedłużana i zarządzana przez serwer.
+Login Check is used to improve the performance of the application. When a request sensitive to the authorisation status is made, the endpoint is queried first, which returns information about the login status. Session files do not explicitly specify the expiry date of the session as this is extended and managed by the server.
 
 ```http
   POST /user/check
@@ -197,19 +197,19 @@ Login Check służy do usprawnienia działania aplikacji. W momencie wykonywania
 
 ### Portfolio
 
-Istotnym aspektem aplikacji jest prezentacja wybranych realizacji. Założeniem dotyczącym formy portfolio było to aby przypominało użytkownikowi odczucia związane z ergonomicznymi rozwiązanami oferowanymi przez popularne media społecznościowe.
+An important aspect of the application is the presentation of selected orders. The idea behind the form of the portfolio was that it should resemble the user experience of the ergonomic solutions offered by popular social media platforms.
 
 ![Portoflio](./storage/documentation-assets/portfolio.png)
 
-Dla urządzeń o większym rozmiarze ekranu przewidziany jest podgląd posta w postaci slider/carousel.
+For devices with larger screen sizes, a slider/carousel preview of the post is provided.
 
 ![Post](./storage/documentation-assets/post.png)
 
-Dla urządzeń o mniejszym rozmiarze ekranu uznawany za urządzenie mobilne przewidziany jest podgląd postów w formie poziomej, przewijanej galerii.
+For devices with a smaller screen size considered a mobile device, a preview of posts in the form of a horizontal, scrolling gallery is provided.
 
 ![Post mobile](./storage/documentation-assets/post-mobile.png)
 
-W tym przypadku, wymagane jest aby post, który został wybrany w podglądzie znajdował się na początku Viewport. W tym celu zastosowano poniższą funkcję, która scrolluje do odpowiedniego elementu w galerii:
+In this case, it is required that the post that is selected in the preview is at the beginning of the Viewport. To do this, the following function is used, which scrolls to the relevant item in the gallery:
 
 _preview-mobile.component.ts_:
 
@@ -233,7 +233,7 @@ ngAfterViewInit(): void {
   }
 ```
 
-Posty będące krótkimi filmami powinny odtwarzać się i zatrzymywać automatycznie, tylko wtedy kiedy są w zasięgu viewport.
+Posts that are short films should play and stop automatically, only when they are in viewport range.
 
 _onscroll-autoplay.directive.ts_:
 
@@ -280,92 +280,93 @@ private observer: IntersectionObserver;
 ></video>
 ```
 
-Administrator jako uprawniony użytkownik ma wyłączne prawo do modyfikowania zawartości portfolio. Ma do dyspozycji utworzenie nowego posta, jego modyfikację lub usunięcie. Siłą rzeczy ma również dostęp do postów oznaczonych jako ukryte. W przypadku dodawania/edytowania posta w charakterze materiału video, responsywny formularz zadba o dodanie okładki do video.
+The administrator, as the authorised user, has the exclusive right to modify the content of the portfolio. Admin has granted privilege to create a new post, modify it or delete it. By default, admin also has access to posts marked as hidden. If a post is added/edited as a video, a responsive form will take care of adding cover to the video.
 
-![Dodawanie posta](./storage/documentation-assets/create.png)
+![Post creating](./storage/documentation-assets/create.png)
 
-![Edycja posta](./storage/documentation-assets/update.png)
+![Post editing](./storage/documentation-assets/update.png)
 
-### Panel użytkownika
+### User Panel
 
-Panel użytkownika skupia w sobie kluczowe funkcjonalności bezpośrednio związane ze zleceniami na wykonanie usługi.
+The user panel brings together key functionalities directly related to service requests.
 
-Zakładka _Zlecenia_ umożliwia podgląd zleconych zamówień lub utworzenie nowego.
+The _Orders_ tab allows you to view orders that have been ordered or to create a new one.
 
-![Zakładka zlecenia](./storage/documentation-assets/orders.png)
+![Orders Tab](./storage/documentation-assets/orders.png)
 
-Tworzenie nowego zlecenia powoduje otwarcie nowego okna. Formularz podzielony jest na kroki podawania odpowiednich danych, skupionych w _stepperze_.
+Creating a new order opens a new window. The form is divided into steps for entering the relevant data, centred on the _stepper_.
 
-_Szczegóły zlecenia_
+_Order Details_
 
-Po kliknięciu przycisku DODAJ należy wybrać odpowiedni typ usługi. Następnie przechodzimy do pierwszego etapu formularza podając w nim rodzaj usługi. Responsywny formularz dba o to aby opcje dodatkowe takie jak podkład muzyczny czy generowanie dokumentacji z inspekcji pojawiły sie adekwatnie do wybranego typu usługi.
-![Krok 1](./storage/documentation-assets/step1.png)
+After hitting the ADD button, select the appropriate type of service. Then proceed to the first step of the form, where you enter the type of service. The responsive form ensures that additional options such as background music or the generation of inspection documentation appear according to the selected service type.
 
-_Lokalizacja_
+![Step 1](./storage/documentation-assets/step1.png)
 
-Lokalizacja wybierana jest na podstawie dodania markera do mapy, w tym wypadku komponentu Google Maps. Event związany z dodaniem markera odczytuje współrzędne geograficzne dodając je do danych formularza.
+_Location_
 
-![Krok 2](./storage/documentation-assets/step2.png)
+The location is selected based on the placing a marker to the map, in this case the Google Maps component. The marker addition event reads the geographical coordinates adding them to the form data.
 
-_Termin_
+![Step 2](./storage/documentation-assets/step2.png)
 
-Istotnym parametrem zlecenia jest data realizacji. Spodziewaną datę można wybrać za pomocą komponentu Angulr Materials o nazwie _datepicker_. Co więcej, datepicker umożiwia filtrację dostępnych terminów w związku z tym, że przyjęto nie więcej niż jedno zlecenie dziennie.
+_Date of Order_
 
-![Krok 3](./storage/documentation-assets/step3.png)
+An important parameter of the order is the date of realistion. The expected date can be selected using the Angulr Materials component called _datepicker_. Furthermore, the datepicker allows filtering of the available dates as no more than one order per day is accepted.
 
-_FV_
+![Step 3](./storage/documentation-assets/step3.png)
 
-Część formularza związana z danymi rozliczeniowymi do zlecenia
+_VAT invoice_
 
-![Krok 3](./storage/documentation-assets/step4.png)
+The part of the form relating to the billing data for the order
 
-_Podsumowanie_
+![Step 4](./storage/documentation-assets/step4.png)
 
-Stawka za zlecenie obliczana jest na podstawie ilości jednostek rozliczeniowych i ceny za jednostę oraz szacowany koszt dojazdu. Koszt dojazdu obliczany jest za pomocą wspomnianej biblioteki Google Maps, która potrzebuje dwóch współrzędnych geograficznych,
+_Summary_
 
-![Krok 4](./storage/documentation-assets/step5.png)
+The summary price is calculated based on the number of billing units and the price per unit, as well as the estimated cost of the arrival on site. The cost of the arrival is calculated using the mentioned Google Maps library, which needs two geographical coordinates and also navigating specificity (CAR).
 
-Pomyślne złożenie zamówienia wiąże się z wysłaniem powiadomienia mailowego do administratora
+![Step 5](./storage/documentation-assets/step5.png)
+
+Successful placement of an order entails sending an email notification to the administrator of the
 
 ![New Order Email](./storage/documentation-assets/new-order-email.png)
 
-Na liście zleceń pojawiła się nowa publikacja, którą można wyświetlić pod kątem większej ilości danych:
+A new publication has appeared in the order list, which can be displayed for more data:
 
 ![Order info](./storage/documentation-assets/order-info.png)
 
-Administrator również z tego poziomu ma do dyspozycji funkcjonalność, która polega na zmianie aktualnego statusu zlecenia. W ten sposób użytkownik informowany jest o postępach w realizacji zlecenia.
+The administrator also has the functionality to change the current status of the order. In this way, the user is informed of the progress of the order.
 
 ![State Change](./storage/documentation-assets/change-status.png)
 
 ![State Change Dialog](./storage/documentation-assets/state-change-dialog.png)
 
-Zmiana statusu widoczna jest z poziomu listy zleceń
+A change of status is now visible from the list of orders
 
 ![New Order State](./storage/documentation-assets/new-order-state.png)
 
-Zostaje wysłane powiadomienie do klienta składającego zamówienie.
+A notification is sent to the customer placing the order.
 
 ![Notification-sidebar](./storage/documentation-assets/notification.png)
 
-Powiadomienie zostaje odczytane w momencie rozwiniecia elementu typu accordion co powoduje zaktualizowanie badge przy ikonie powiadomienia a samo powiadomienie uzyskuje status "seen". Poniżej podgląd powiadomienia tym razem w wersji mobile.
+The notification gets 'seen' state when the accordion element is expanded, which causes the badge next to the notification icon to be updated. Below is a preview of the notification, this time in the mobile version.
 
 ![Notification-mobile](./storage/documentation-assets/notification-mobile.png)
 
-Równolegle do powiadomienia w aplikacji wysyłane jest powiadomienie mailowe:
+An email notification is sent in parallel to the in-app notification:
 
 ![New State Email](./storage/documentation-assets/new-order-state-email.png)
 
-### Formularz kontaktowy
+### Contact form
 
-Aplikacja umożliwia skontaktowanie się z administratorem przez niezarejestrowanego użytkownika za pomoca formularza kontaktowego. Otrzymanie wiadomości jest równoznaczne z wysłaniem przez serwer do administratora wiadomości mailowej zawierającej dane pozostawione przez nadawcę.
+The application makes it possible for a non-registered user to contact the administrator using the contact form. Receipt of a message is equivalent to the server sending an email to the administrator containing the data left by the sender.
 
 ![Contact](./storage/documentation-assets/contact.png)
 
-## Konfiguracja
+## Config
 
 ### Frontend
 
-SPA powinna zawierać plik environment.ts zlokalizowany w folderze src/environments
+SPA should contain an environment.ts file located in the src/environments folder
 
 _src/environents/environment.ts_
 
@@ -381,12 +382,12 @@ export const environment = {
 };
 ```
 
-| Zmienna          | Opis                                              |
-| ---------------- | ------------------------------------------------- |
-| googleMapsApiKey | Twój indywidualny Google Maps API_KEY             |
-| origin (lat)     | Szerokość geograficzna Twojego miejsca startowego |
-| origin (lng)     | Długość geograficzna Twojego miejsca startowego   |
-| kilometrage      | Cena przejazdu w odnieseniu do kilometra          |
+| Variable         | Description                       |
+| ---------------- | --------------------------------- |
+| googleMapsApiKey | Your personal Google Maps API_KEY |
+| origin (lat)     | Latitude of your starting point   |
+| origin (lng)     | Longitude of your starting point  |
+| kilometrage      | Price per kilometre               |
 
 ### Backend
 
@@ -419,15 +420,15 @@ MAIL_FROM_NAME= *YOUR_MAIL_SERVICE_NAME*
 
 _php.ini_
 
-W przypadku pliku _php.ini_ należy pamiętać o odpowiednich sterownikach baz danych, czyli pgssql oraz sqlite(testy) jak również maksymalny rozmiar przesyłanych plików przez request (zalecane 10MB) oraz bibliotekę _gd_ niezbędną do generowania przykładowych obrazów wykorzystywanych w testach.
+In the _php.ini_ file case, note the relevant database drivers, i.e. pgssql and sqlite(tests) as well as the maximum size of the files transferred via the request (10MB recommended) and the _gd_ library necessary to generate the sample images used in the tests.
 
-## Testy
+## Tests
 
-Aplikacja pokryta jest testami funkcjonalnymi w zakresie endpointów REST API oraz testem komponentu w zakresie komponentu logowania jako przykładowy test.
+The application is covered with functional tests for the REST API endpoints and a component test for the login component as a sample test.
 
-Aplikacja korzysta z technologii **_PHPUnit_** po stronie backendu oraz biblioteki **_Cypress_** w zakresie frontendu.
+The application makes use of technology **_PHPUnit_** about the backend and library side **_Cypress_** on the front end.
 
-Uruchamianie testów po stronie backendu
+Running backend tests
 
 ```
 php artisan config:clear (jeżeli istnieje plik konfiguracyjny cache)
@@ -435,7 +436,7 @@ php artisan config:clear (jeżeli istnieje plik konfiguracyjny cache)
 php artisan test
 ```
 
-Uruchamianie testów po stronie frontendu
+Running frontend tests
 
 ```
 npx cypress open
@@ -443,15 +444,23 @@ npx cypress open
 
 ## Roadmap
 
-Aplikacja ma charakter rozwojowy. Wymagane jest jeszcze kilka kroków zanim aplikacja osiągnie status _użyta komeryjnie_
+The application has _in development_ specificity. A few more steps are required before the application reaches _commercially used_ status.
 
--   Wdrożenie
--   Implementacja systemu płatności mobilnych
--   Integracja z Google Ads, Google Analytics oraz Google Push Notifications
--   Implementacja checklisty przed zleceniem, generowanie raportu z inspekcji, generowanie INOP (Instrukcja Operacyjna)
--   poprawa efektywności i pozycjonowania
+-   Deployment
+-   Implementation of an online payment system
+-   Implementation of Google Ads, Google Analytics and Google Push Notifications
+-   Implementation of checklist before realisation, generation of inspection report, generation of INOP (Operational Instruction)
+-   Improving efficiency and positioning
 
-## Przypisy
+## License
+
+All rights reserved. It is permitted to run the project for recruitment and verification purposes.
+
+## Author
+
+Szymon Słomiński [@5l0m1n5ky](https://github.com/5l0m1n5ky)
+
+## Attribution
 
 Część użytych multimediów pochodzi z:
 
