@@ -431,7 +431,7 @@ The application makes use of technology **_PHPUnit_** about the backend and libr
 Running backend tests
 
 ```
-php artisan config:clear (jeżeli istnieje plik konfiguracyjny cache)
+php artisan config:clear (if config cache file exists)
 
 php artisan test
 ```
@@ -461,8 +461,6 @@ All rights reserved. It is permitted to run the project for recruitment and veri
 Szymon Słomiński [@5l0m1n5ky](https://github.com/5l0m1n5ky)
 
 ## Attribution
-
-Część użytych multimediów pochodzi z:
 
 -   https://www.pexels.com/pl-pl/zdjecie/aparat-dslr-martwa-natura-gimbal-7443438/
 -   https://www.pexels.com/pl-pl/zdjecie/zblizenie-zdjecia-migawki-aparatu-414781/
