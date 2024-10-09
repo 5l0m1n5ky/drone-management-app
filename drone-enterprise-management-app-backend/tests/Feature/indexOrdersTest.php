@@ -131,6 +131,8 @@ class IndexOrdersTest extends TestCase
 
         $user = User::factory()->create(['role' => 'user']);
 
+        $existingOrdersCount = count(DB::table('orders')->get());
+
         $ordersAmountToCreate = 5;
 
         $orderDetailsArray = OrderDetails::factory()->count($ordersAmountToCreate)->create([
@@ -161,7 +163,7 @@ class IndexOrdersTest extends TestCase
 
         $response->assertStatus(200);
 
-        $response->assertJsonCount($ordersAmountToCreate + $anotherUserOrdersToCreate);
+        $response->assertJsonCount($ordersAmountToCreate + $anotherUserOrdersToCreate + $existingOrdersCount);
 
         DB::table('orders')->where('user_id', $user->id)->orWhere('user_id', $anotherUser->id)->delete();
 

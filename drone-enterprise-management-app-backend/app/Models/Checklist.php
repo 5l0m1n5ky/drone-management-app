@@ -17,7 +17,7 @@ class Checklist extends Model
 
     public $timestamps = false;
 
-    public function subject()
+    public function order()
     {
         return $this->belongsToMany(Order::class, 'order_checklist');
     }

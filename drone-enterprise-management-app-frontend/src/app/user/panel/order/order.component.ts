@@ -8,12 +8,13 @@ import { PanelService } from '../panel.service';
 import { OrderItem } from '../models/order-item.model';
 import { RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ChecklistComponent } from '../checklist/checklist.component';
 
 @Component({
   standalone: true,
   selector: 'app-order',
   templateUrl: './order.component.html',
-  imports: [CommonModule, LoadingSpinnerComponent, RouterLink],
+  imports: [CommonModule, LoadingSpinnerComponent, RouterLink, ChecklistComponent],
 })
 export class OrderComponent implements OnInit, OnDestroy {
 

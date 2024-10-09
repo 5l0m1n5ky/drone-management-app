@@ -132,15 +132,15 @@ class OrderController extends Controller
     public function indexOrderDates()
     {
         // if (Auth::user()) {
-            $orderDates = Order::select('date')->orderBy('id')->get();
+        $orderDates = Order::select('date')->orderBy('id')->get();
 
-            return response()->json($orderDates);
+        return response()->json($orderDates);
         // } else {
-            // return $this->error(
-            //     'You have no previleges to make this request',
-            //     'ACCESS_DENIED',
-            //     500
-            // );
+        // return $this->error(
+        //     'You have no previleges to make this request',
+        //     'ACCESS_DENIED',
+        //     500
+        // );
         // }
     }
 
@@ -189,6 +189,15 @@ class OrderController extends Controller
             $link = env('FRONTEND_URL') . '/user/panel/orders/' . $order->id;
 
             $this->emailController->notifyAdminNewOrder($admin->email, $link);
+
+            $checklist_types = DB::table(table: 'checklist')->orderBy('id')->get('id');
+
+            foreach ($checklist_types as $checklist_type) {
+                $order->checklist()->attach($checklist_type->id, [
+                    'order_id' => $order->id,
+                    'checklist_id' => $checklist_type->id,
+                ]);
+            }
 
             return $this->success(
                 'Zamówienie zostało złożone',

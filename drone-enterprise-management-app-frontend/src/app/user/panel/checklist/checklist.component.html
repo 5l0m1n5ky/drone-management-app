@@ -1,0 +1,27 @@
+<div class="w-full h-full flex flex-col justify-center items-center bg-black/50 fixed top-0 left-0 z-50">
+    <div
+        class="relative flex flex-col justify-between items-start w-[90%] sm:w-[75%] h-[85%] rounded-xl bg-stone-800/85 border-2 border-stone-700">
+        <h3 class="font-montserrat font-light text-stone-300 text-[40px] sm:text-4xl mt-2 ml-4 sm:mt-5 sm:ml-7">
+            Checklist</h3>
+        <img src="./assets/icons/cancel-icon.png" alt="cancel-icon" (click)="closeChecklist()"
+            class="absolute right-4 top-6 sm:top-4 w-6 h-6 cursor-pointer brightness-75 hover:brightness-125 active:scale-90 ease-in-out duration-200">
+        <section class="w-full h-auto px-4 sm:pl-7 py-10">
+            <form #checklistForm="ngForm" (ngSubmit)="onChecklistUpdate(checklistForm)">
+                <div *ngFor="let checklistItem of checklist" class="w-full py-4 flex items-center justify-start">
+                    <mat-checkbox class="example-margin" [ngModel]="checklistItem.checked" ngModel
+                        [name]="checklistItem.checklist_id.toString()">
+                        <span class="font-montserrat text-base text-stone-700'">{{ checklistItem.type }}</span>
+                    </mat-checkbox>
+                </div>
+                <div class="w-full h-auto py-5 flex flex-row items-center justify-center">
+                    <button type="submit">
+                        <p
+                            class="font-montserrat rounded-full text-stone-500 w-auto px-6 py-2 ring-stone-500 ring-1 cursor-pointer hover:bg-stone-500 hover:text-stone-900 active:scale-95 ease-in-out duration-200">
+                            AKTUALIZUJ
+                        </p>
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>

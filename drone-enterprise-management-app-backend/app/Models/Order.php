@@ -32,7 +32,7 @@ class Order extends Model
         'customer_comment'
     ];
 
-    public function subject(){
+    public function checklist(){
         return $this->belongsToMany(Checklist::class, 'order_checklist');
     }
 }

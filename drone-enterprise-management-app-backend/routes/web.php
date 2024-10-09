@@ -10,6 +10,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SubserviceController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\BackgroundMusicController;
+use App\Http\Controllers\ChecklistController;
 
 
 Route::get('/', function () {
@@ -33,6 +34,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/notifications/seen', [NotificationController::class, 'update']);
+
+    Route::get('orders/checklist/{orderId}', action: [ChecklistController::class, 'index'])->middleware('restrictRole:admin');
+    Route::put('orders/checklist/update/{orderId}', action: [ChecklistController::class, 'update'])->middleware('restrictRole:admin');
 });
 
 Route::post('/verify-account', [AuthController::class, 'verifyAccount']);
@@ -45,6 +49,8 @@ Route::get('/background-music', [BackgroundMusicController::class, 'index']);
 Route::get('/states', [StateController::class, 'index']);
 Route::get('/dates', [OrderController::class, 'indexOrderDates']);
 Route::get('/orders', [OrderController::class, 'index']);
+
+
 
 
 

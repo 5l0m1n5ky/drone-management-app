@@ -273,7 +273,7 @@ class DatabaseSeeder extends Seeder
             'type' => 'Naładowanie akumulatorów'
         ]);
         \App\Models\Checklist::create([
-            'type' => 'Odpowidnia ilość miejsca na nośniku pamięci'
+            'type' => 'Odpowiednia ilość miejsca na nośniku pamięci'
         ]);
         \App\Models\Checklist::create([
             'type' => 'Przeszkolenie pilota SBSP'
@@ -281,5 +281,78 @@ class DatabaseSeeder extends Seeder
         \App\Models\Checklist::create([
             'type' => 'Opracowanie planu realizacji zlecenia'
         ]);
+
+        // Sample order details
+        \App\Models\OrderDetails::create([
+            'subservice_id' => 1,
+            'amount' => 10,
+            'background_music_id' => 1,
+            'format' => '16:9',
+        ]);
+
+        // Sample order
+        \App\Models\Order::create([
+            'service_id' => 1,
+            'user_id' => 1,
+            'state_id' => 1,
+            'order_details_id' => 1,
+            'price_brutto' => 1550,
+            'date' => '25-09-2024',
+            'order_latitude' => 53.272582,
+            'order_longitude' => 18.112636,
+            'customer_name' => 'Sample User',
+            'customer_surname' => 'Sample User Surname',
+            'nip' => 1234567890,
+            'street_name' => 'Sample Street',
+            'street_number' => 12,
+            'apartment_number' => 24,
+            'zip' => 12345,
+            'city' => 'Sample City',
+            'customer_comment' => 'golden hour photo please',
+            'email' => 'sample@email.com',
+            'tel' => '111222333',
+            'order_alias' => 'Old town Bydgoszcz',
+            // 'created_at' => Carbon::now(),
+            // 'updated_at' => Carbon::now(),
+        ]);
+
+        // Order Checklist pivot fill
+
+        \App\Models\OrderChecklist::create([
+            'order_id' => 1,
+            'checklist_id' => 1,
+            'checked' => true
+        ]);
+        \App\Models\OrderChecklist::create([
+            'order_id' => 1,
+            'checklist_id' => 2,
+            'checked' => false
+        ]);
+        \App\Models\OrderChecklist::create([
+            'order_id' => 1,
+            'checklist_id' => 3,
+            'checked' => true
+        ]);
+        \App\Models\OrderChecklist::create([
+            'order_id' => 1,
+            'checklist_id' => 4,
+            'checked' => false
+        ]);
+        \App\Models\OrderChecklist::create([
+            'order_id' => 1,
+            'checklist_id' => 5,
+            'checked' => true
+        ]);
+        \App\Models\OrderChecklist::create([
+            'order_id' => 1,
+            'checklist_id' => 6,
+            'checked' => false
+        ]);
+        \App\Models\OrderChecklist::create([
+            'order_id' => 1,
+            'checklist_id' => 7,
+            'checked' => true
+        ]);
+
     }
 }

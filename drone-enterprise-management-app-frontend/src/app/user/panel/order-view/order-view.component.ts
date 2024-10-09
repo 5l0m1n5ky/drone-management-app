@@ -16,11 +16,14 @@ import { BottomPanelComponent } from './bottom-panel/bottom-panel.component';
 import { State } from '../models/state.model';
 import { LoadingSpinnerComponent } from 'src/app/shared/loading-spinner/loading-spinner.component';
 import { ToastService } from 'src/app/shared/toast/toast.service';
+import { ChecklistComponent } from '../checklist/checklist.component';
+import { Checklist } from '../models/checklist.model';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-order-view',
   standalone: true,
-  imports: [CommonModule, RouterLink, GoogleMapsModule, GoogleMap, MapAdvancedMarker, MatBottomSheetModule, LoadingSpinnerComponent],
+  imports: [CommonModule, RouterLink, GoogleMapsModule, GoogleMap, MapAdvancedMarker, MatBottomSheetModule, LoadingSpinnerComponent, ChecklistComponent],
   templateUrl: './order-view.component.html'
 })
 export class OrderViewComponent implements OnInit, OnDestroy {
@@ -47,6 +50,11 @@ export class OrderViewComponent implements OnInit, OnDestroy {
   mapInit: boolean = false;
   statesSubscription: Subscription;
   updateStateSubscription: Subscription;
+
+  checklist: Checklist[] = [];
+  checklistView: boolean = false;
+  checklistSubscription: Subscription;
+  checklistUpdateSubscription: Subscription;
 
   constructor(private panelComponent: PanelComponent, private panelService: PanelService, private router: Router, private location: Location, private loginService: LoginService, private bottomSheet: MatBottomSheet, private toastService: ToastService) { }
 
@@ -106,8 +114,47 @@ export class OrderViewComponent implements OnInit, OnDestroy {
     });
   }
 
+  openCheclist() {
+    this.isProcessing = true;
+    if (this.order) {
+      this.checklistSubscription = this.panelService.fetchChecklist(this.order[0].id).subscribe(response => {
+        this.checklist = response;
+        this.checklistView = true;
+        this.isProcessing = false;
+      }, errorMessage => {
+        this.toastService.generateToast('error', 'Wystąpił błąd podczas wczytywania Checklisty', errorMessage);
+        this.isProcessing = false;
+      });
+    } else {
+      this.toastService.generateToast('error', 'Wystąpił błąd podczas wczytywania Checklisty', 'Informacje o zamówieniu są niedostępne');
+      this.isProcessing = false;
+    }
+  }
+
+  closeCheclist() {
+    this.checklistView = false;
+  }
+
+  onChecklistUpdate(checklist: NgForm) {
+
+    this.isProcessing = true;
+    this.closeCheclist();
+
+    if (this.order) {
+      this.checklistUpdateSubscription = this.panelService.updateChecklist(checklist, this.order[0].id).subscribe(response => {
+        this.toastService.generateToast('success', 'Aktualizacja checklisty', response.data.toString());
+        this.isProcessing = false;
+      }, errorMessage => {
+        this.toastService.generateToast('error', 'Aktualizacja checklisty', errorMessage);
+        this.isProcessing = false;
+      });
+    }
+  }
+
   ngOnDestroy(): void {
     this.statesSubscription?.unsubscribe();
     this.updateStateSubscription?.unsubscribe();
+    this.checklistSubscription?.unsubscribe();
+    this.checklistUpdateSubscription?.unsubscribe();
   }
 }

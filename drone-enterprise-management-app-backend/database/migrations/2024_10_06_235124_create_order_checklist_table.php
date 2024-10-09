@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->foreignId('checklist_id')->constrained('checklist')->onDelete('cascade');
+            $table->boolean('checked')->default(false);
         });
     }
 

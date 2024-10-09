@@ -7,6 +7,9 @@ import { BgMusic } from "./models/bg-music.model";
 import { State } from "./models/state.model";
 import { OrderItem } from "./models/order-item.model";
 import { Notification } from "./models/notification.model";
+import { Checklist } from "./models/checklist.model";
+import { NgForm } from "@angular/forms";
+import { forEach } from "cypress/types/lodash";
 
 interface OrderResponseData {
   order: OrderItem[],
@@ -112,6 +115,48 @@ export class PanelService {
       return statesArray;
     })
     );
+  }
+
+  fetchChecklist(orderId: Number) {
+    return this.http.get<{ [checklistItem: string]: Checklist }>('http://localhost:8000/orders/checklist/' + orderId, {
+      headers: new HttpHeaders({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }),
+      withCredentials: true
+    }).pipe(map(responseData => {
+      const checklistArray: Checklist[] = [];
+      for (const checklistItem in responseData) {
+        if (responseData.hasOwnProperty(checklistItem)) {
+          checklistArray.push({ ...responseData[checklistItem] });
+        }
+      }
+      return checklistArray;
+    })
+    );
+  }
+
+  updateChecklist(checklist: NgForm, orderId: Number) {
+    console.log(checklist.value);
+
+    const updatedChecklist = Object.fromEntries(
+      Object.entries(checklist.value).map(([key, value]) => {
+        return [key, value === "" ? false : value];
+      })
+    );
+
+    return this.http.put<ResponseData>('http://localhost:8000/orders/checklist/update/' + orderId, updatedChecklist,
+      {
+        headers: new HttpHeaders({
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }),
+        withCredentials: true
+      }).pipe(catchError(this.handleError),
+        tap(response => {
+          return response;
+        }
+        ));
   }
 
   fetchNotifications() {
