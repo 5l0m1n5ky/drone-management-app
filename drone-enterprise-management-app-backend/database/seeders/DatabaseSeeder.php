@@ -258,7 +258,7 @@ class DatabaseSeeder extends Seeder
             'color' => 'state-cancelled'
         ]);
 
-        // Checlist
+        // Checklist
 
         \App\Models\Checklist::create([
             'type' => 'Zezwolenie na lot'
@@ -282,7 +282,7 @@ class DatabaseSeeder extends Seeder
             'type' => 'Opracowanie planu realizacji zlecenia'
         ]);
 
-        // Sample order details
+        // Sample foto/video order details
         \App\Models\OrderDetails::create([
             'subservice_id' => 1,
             'amount' => 10,
@@ -290,7 +290,7 @@ class DatabaseSeeder extends Seeder
             'format' => '16:9',
         ]);
 
-        // Sample order
+        // Sample foto/video order
         \App\Models\Order::create([
             'service_id' => 1,
             'user_id' => 1,
@@ -316,7 +316,38 @@ class DatabaseSeeder extends Seeder
             // 'updated_at' => Carbon::now(),
         ]);
 
-        // Order Checklist pivot fill
+        // Sample pv inspection order details
+        \App\Models\OrderDetails::create([
+            'subservice_id' => 5,
+            'amount' => 5,
+            'report' => true,
+        ]);
+
+        // Sample pv inspection order
+        \App\Models\Order::create([
+            'service_id' => 2,
+            'user_id' => 1,
+            'state_id' => 1,
+            'order_details_id' => 2,
+            'price_brutto' => 2300,
+            'date' => '30-09-2024',
+            'order_latitude' => 54.272582,
+            'order_longitude' => 19.112636,
+            'customer_name' => 'Solar Systems',
+            'customer_surname' => null,
+            'nip' => 1924758375,
+            'street_name' => 'Sample Street 2',
+            'street_number' => 45,
+            'apartment_number' => 12,
+            'zip' => 87548,
+            'city' => 'Sample City 2',
+            'customer_comment' => 'Inspekcja termograficzna',
+            'email' => 'sample@email.com',
+            'tel' => '47664321',
+            'order_alias' => 'Inspekcja PV',
+        ]);
+
+        // Order Checklist pivot fill for sample order 1
 
         \App\Models\OrderChecklist::create([
             'order_id' => 1,
@@ -354,5 +385,42 @@ class DatabaseSeeder extends Seeder
             'checked' => true
         ]);
 
+        // Order Checklist pivot fill for sample order 2
+
+        \App\Models\OrderChecklist::create([
+            'order_id' => 2,
+            'checklist_id' => 1,
+            'checked' => true
+        ]);
+        \App\Models\OrderChecklist::create([
+            'order_id' => 2,
+            'checklist_id' => 2,
+            'checked' => false
+        ]);
+        \App\Models\OrderChecklist::create([
+            'order_id' => 2,
+            'checklist_id' => 3,
+            'checked' => true
+        ]);
+        \App\Models\OrderChecklist::create([
+            'order_id' => 2,
+            'checklist_id' => 4,
+            'checked' => false
+        ]);
+        \App\Models\OrderChecklist::create([
+            'order_id' => 2,
+            'checklist_id' => 5,
+            'checked' => true
+        ]);
+        \App\Models\OrderChecklist::create([
+            'order_id' => 2,
+            'checklist_id' => 6,
+            'checked' => false
+        ]);
+        \App\Models\OrderChecklist::create([
+            'order_id' => 2,
+            'checklist_id' => 7,
+            'checked' => true
+        ]);
     }
 }

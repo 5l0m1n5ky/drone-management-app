@@ -10,6 +10,7 @@ import { Notification } from "./models/notification.model";
 import { Checklist } from "./models/checklist.model";
 import { NgForm } from "@angular/forms";
 import { forEach } from "cypress/types/lodash";
+import { NodeCompatibleEventEmitter } from "rxjs/internal/observable/fromEvent";
 
 interface OrderResponseData {
   order: OrderItem[],
@@ -233,6 +234,24 @@ export class PanelService {
       ));
   }
 
+  uploadInspectionReport(orderId: Number, reportFile: Blob, fileName: string) {
+    const formData = new FormData;
+    formData.append('orderId', orderId.toString());
+    formData.append('reportFile', reportFile, fileName);
+
+    return this.http.post<ResponseData>('http://localhost:8000/orders/upload-inspection-file',
+      formData,
+      {
+        withCredentials: true,
+        reportProgress: true
+      }
+    ).pipe(catchError(this.handleError),
+      tap(response => {
+        return response;
+      }
+      ));
+  }
+
   private handleError(errorResponse: HttpErrorResponse) {
 
     let errorMessage = 'Wystapił błąd';
@@ -243,4 +262,6 @@ export class PanelService {
 
     return throwError(errorMessage);
   }
+
+
 }

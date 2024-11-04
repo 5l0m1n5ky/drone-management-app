@@ -5,6 +5,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { OrderItem } from '../models/order-item.model';
 import { GetBase64FontService } from './get-base64-font.service';
+import { PanelService } from '../panel.service';
 
 @Component({
   selector: 'app-report-generator',
@@ -16,8 +17,11 @@ export class ReportGeneratorComponent implements OnInit {
 
   files: { file: File, fileUrl: string }[] = [];
   order: OrderItem[] | null;
+  inspectionReport: Blob;
+  inspectionReportFileName: string;
+  uploadReportSubscription: any;
 
-  constructor(private orderViewComponent: OrderViewComponent, private getBase6FontService: GetBase64FontService) { }
+  constructor(private orderViewComponent: OrderViewComponent, private getBase6FontService: GetBase64FontService, private panelService: PanelService) { }
 
   ngOnInit(): void {
     if (this.orderViewComponent.order && this.orderViewComponent.order?.length > 0) {
@@ -57,6 +61,8 @@ export class ReportGeneratorComponent implements OnInit {
 
   generatePdf() {
 
+    console.log(this.order);
+
     const doc = new jsPDF();
     // doc.setFont("helvetica", "normal");
     doc.addFileToVFS("RobotoRegular.ttf", this.getBase6FontService.getFontData());
@@ -80,14 +86,14 @@ export class ReportGeneratorComponent implements OnInit {
           ['Długość geograficzna miejsca zlecenia', this.order[0].longitude.toString()],
           ['Szerokość geograficzna miejsca zlecenia', this.order[0].latitude.toString()],
           ['Data zlecenia', this.order[0].date.toString()],
-          ['Klient', this.order[0].customerName.toString() + (this.order[0].customerSurname.toString() ? this.order[0].customerSurname.toString() : '')],
+          ['Klient', this.order[0].customerName.toString() + (this.order[0].customerSurname ? this.order[0].customerSurname.toString() : '')],
           ['Koszt [PLN]', this.order[0].price.toString()],
         ],
         margin: { top: 30, left: 15, right: 15 },
         styles: {
           font: 'RobotoRegular',
           fontStyle: 'normal'
-      }
+        }
       });
     }
 
@@ -103,7 +109,23 @@ export class ReportGeneratorComponent implements OnInit {
       }
     }
 
-    doc.save('dataurlnewwindow.pdf');
+    if (this.order) {
+      this.inspectionReportFileName = 'Report' + this.order[0].alias.toString() + '_' + this.order[0].id.toString();
+      this.inspectionReport = doc.output('blob');
+
+      this.orderViewComponent.isProcessing = true;
+
+      this.uploadReportSubscription = this.panelService.uploadInspectionReport(this.order[0].id, this.inspectionReport, this.inspectionReportFileName).subscribe(response => {
+        this.orderViewComponent.toastService.generateToast('success', 'Modyfikacja statusu', response.data.toString());
+        this.orderViewComponent.isProcessing = false;
+      }, errorMessage => {
+        this.orderViewComponent.toastService.generateToast('error', 'Modyfikacja statusu', errorMessage);
+        this.orderViewComponent.isProcessing = false;
+      });
+
+    } else {
+      console.error('Inspection report donwloading failed');
+    }
   }
 
   onGenerate() {

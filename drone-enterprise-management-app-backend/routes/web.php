@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InspectionReportController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
@@ -37,6 +38,12 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::get('orders/checklist/{orderId}', action: [ChecklistController::class, 'index'])->middleware('restrictRole:admin');
     Route::put('orders/checklist/update/{orderId}', action: [ChecklistController::class, 'update'])->middleware('restrictRole:admin');
+
+    Route::post('orders/upload-inspection-file', action: [InspectionReportController::class, 'store'])->middleware('restrictRole:admin');
+
+    Route::get('orders/index-inspection-file', action: [InspectionReportController::class, 'index']);
+
+    Route::get('orders/get-inspection-file', action: [InspectionReportController::class, 'download']);
 });
 
 Route::post('/verify-account', [AuthController::class, 'verifyAccount']);
