@@ -57,7 +57,7 @@ export class OrderViewComponent implements OnInit, OnDestroy {
   checklistSubscription: Subscription;
   checklistUpdateSubscription: Subscription;
   isReportReady: boolean = true;
-  reportCreateMode: boolean = true;
+  reportCreateMode: boolean = false;
 
   constructor(private panelComponent: PanelComponent, private panelService: PanelService, private router: Router, private location: Location, private loginService: LoginService, private bottomSheet: MatBottomSheet, private toastService: ToastService) { }
 
