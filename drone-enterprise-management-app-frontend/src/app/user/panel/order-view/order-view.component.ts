@@ -18,12 +18,13 @@ import { LoadingSpinnerComponent } from 'src/app/shared/loading-spinner/loading-
 import { ToastService } from 'src/app/shared/toast/toast.service';
 import { ChecklistComponent } from '../checklist/checklist.component';
 import { Checklist } from '../models/checklist.model';
+import { ReportGeneratorComponent } from '../report-generator/report-generator.component';
 import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-order-view',
   standalone: true,
-  imports: [CommonModule, RouterLink, GoogleMapsModule, GoogleMap, MapAdvancedMarker, MatBottomSheetModule, LoadingSpinnerComponent, ChecklistComponent],
+  imports: [CommonModule, RouterLink, GoogleMapsModule, GoogleMap, MapAdvancedMarker, MatBottomSheetModule, LoadingSpinnerComponent, ChecklistComponent, ReportGeneratorComponent],
   templateUrl: './order-view.component.html'
 })
 export class OrderViewComponent implements OnInit, OnDestroy {
@@ -55,6 +56,8 @@ export class OrderViewComponent implements OnInit, OnDestroy {
   checklistView: boolean = false;
   checklistSubscription: Subscription;
   checklistUpdateSubscription: Subscription;
+  isReportReady: boolean = true;
+  reportCreateMode: boolean = true;
 
   constructor(private panelComponent: PanelComponent, private panelService: PanelService, private router: Router, private location: Location, private loginService: LoginService, private bottomSheet: MatBottomSheet, private toastService: ToastService) { }
 
@@ -135,6 +138,10 @@ export class OrderViewComponent implements OnInit, OnDestroy {
     this.checklistView = false;
   }
 
+  enableReportCreateMode() {
+    this.reportCreateMode = true;
+  }
+
   onChecklistUpdate(checklist: NgForm) {
 
     this.isProcessing = true;
@@ -149,6 +156,10 @@ export class OrderViewComponent implements OnInit, OnDestroy {
         this.isProcessing = false;
       });
     }
+  }
+
+  downloadReport() {
+    throw new Error('Method not implemented.');
   }
 
   ngOnDestroy(): void {

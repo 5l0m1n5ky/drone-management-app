@@ -36,22 +36,12 @@
 
 .no-scrollbar {
   scrollbar-width: none;
-  /* Firefox */
   -ms-overflow-style: none;
-  /* IE and Edge */
 }
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
-  /* Safari and Chrome */
 }
-
-/*
-.button-highlight {
-  background: rgb(5, 5, 5);
-  background: linear-gradient(0deg, rgba(5, 5, 5, 1) 0%, rgba(64, 64, 64, 1) 100%);
-} */
-
 
 html,
 body {
@@ -196,7 +186,7 @@ body {
   border-right: none;
 }
 
-.full-width{
+.full-width {
   width: 100%;
 }
 
@@ -204,9 +194,7 @@ body {
   resize: none;
 }
 
-.auth-inputs{
+.auth-inputs {
   width: 100%;
-  padding: 5px; /* Adjust padding */
+  padding: 5px;
 }
-
-

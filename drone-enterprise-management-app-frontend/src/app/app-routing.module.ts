@@ -21,6 +21,7 @@ import { ChooseServiceComponent } from './services/choose-service/choose-service
 import { OrderViewComponent } from './user/panel/order-view/order-view.component';
 import { ContactComponent } from './contact/contact.component';
 import { AboutComponent } from './about/about.component';
+import { PdfComponent } from './pdf/pdf.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -38,6 +39,7 @@ const routes: Routes = [
   { path: 'photogrammetry-service', component: PhotogrammetryServiceComponent },
   { path: 'contact', component: ContactComponent },
   { path: 'about', component: AboutComponent },
+  { path: 'pdf', component: PdfComponent },
   {
     path: 'user/panel', component: PanelComponent,
     children: [
@@ -48,7 +50,7 @@ const routes: Routes = [
       { path: 'order-view', component: OrderViewComponent },
     ]
   },
-  { path: '**', redirectTo: '', pathMatch: 'full'},
+  { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
 @NgModule({
