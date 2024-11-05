@@ -21,6 +21,7 @@ export class PanelComponent implements OnInit, OnDestroy {
   constructor(private panelService: PanelService) { }
 
   orderSubscription: Subscription;
+  isReportReadySubscription: Subscription;
 
   order: OrderItem[] | null;
 
@@ -37,5 +38,6 @@ export class PanelComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.orderSubscription?.unsubscribe();
+    this.isReportReadySubscription?.unsubscribe();
   }
 }

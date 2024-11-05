@@ -28,8 +28,6 @@ export class OrderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    console.log('orders: ', this.orders);
-
     this.isProcessing = true;
     this.onCheckSubscription = this.loginService.checkSession().subscribe(responseData => {
       if (responseData && responseData.message && responseData.message.toString() === 'ACTIVE_SESSION') {

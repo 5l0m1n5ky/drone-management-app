@@ -9,8 +9,7 @@ import { OrderItem } from "./models/order-item.model";
 import { Notification } from "./models/notification.model";
 import { Checklist } from "./models/checklist.model";
 import { NgForm } from "@angular/forms";
-import { forEach } from "cypress/types/lodash";
-import { NodeCompatibleEventEmitter } from "rxjs/internal/observable/fromEvent";
+import { ReportItem } from "./models/report.model";
 
 interface OrderResponseData {
   order: OrderItem[],

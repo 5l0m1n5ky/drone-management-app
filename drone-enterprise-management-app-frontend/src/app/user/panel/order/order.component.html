@@ -18,7 +18,7 @@
       <div class="w-full">
         <section *ngFor="let order of orders" class="w-full h-[60px]">
           <div
-            class="my-5 flex flex-row justify-between px-5 items-center w-full h-full rounded-2xl bg-[#101010] hover:bg-[#121212] font-montserrat text-neutral-500 font-semibold text-sm ease-in-out duration-150 cursor-pointer">
+            class="my-5 grid grid-cols-6 px-5 items-center w-full h-full rounded-2xl bg-[#101010] hover:bg-[#121212] font-montserrat text-neutral-500 font-semibold text-sm ease-in-out duration-150 cursor-pointer">
             <div class="text-left">
               <h4 class="text-[10px] text-neutral-700">
                 Nazwa zlecenia
@@ -51,13 +51,17 @@
                 {{ order.date }}
               </p>
             </div>
-            <h4 class="rounded-full py-1 px-3" [ngClass]="order.stateColor">
-              {{ order.state }}
-            </h4>
-            <h4 (click)="onOrderDetails(order.id)"
-              class="ring-1 rounded-full py-1 px-3 ring-neutral-600 text-neutral-600 cursor-pointer hover:brightness-125 ease-in-out duration-200">
-              Szczegóły
-            </h4>
+            <div class="flex flex-col items-start justify-center">
+              <h4 class="rounded-full py-1 px-3" [ngClass]="order.stateColor">
+                {{ order.state }}
+              </h4>
+            </div>
+            <div class="flex flex-col items-start justify-center">
+              <h4 (click)="onOrderDetails(order.id)"
+                class="ring-1 rounded-full py-1 px-3 ring-neutral-600 text-neutral-600 cursor-pointer hover:brightness-125 ease-in-out duration-200">
+                Szczegóły
+              </h4>
+            </div>
           </div>
         </section>
       </div>
@@ -83,7 +87,9 @@
     <div class="w-full">
       <section *ngFor="let order of orders" class="w-full h-[60px]">
         <div
-          class="my-5 flex flex-row justify-between px-5 items-center w-full h-full rounded-xl bg-[#101010] hover:bg-[#121212] font-montserrat text-neutral-500 font-semibold text-sm ease-in-out duration-150 cursor-pointer">
+          class="my-5 grid grid-cols-4 px-5 w-full h-full rounded-xl bg-[#101010] hover:bg-[#121212] font-montserrat text-neutral-500 font-semibold text-sm ease-in-out duration-150 cursor-pointer">
+          <!-- <div
+          class="my-5 flex flex-row justify-between px-5 items-center w-full h-full rounded-xl bg-[#101010] hover:bg-[#121212] font-montserrat text-neutral-500 font-semibold text-sm ease-in-out duration-150 cursor-pointer"> -->
           <div class="text-left">
             <h4 class="text-[8px] text-neutral-700">
               Nazwa zlecenia
@@ -100,13 +106,17 @@
               {{ order.date }}
             </p>
           </div>
-          <h4 class="rounded-full py-1 px-2 text-[10px]" [ngClass]="order.stateColor">
-            {{ order.state }}
-          </h4>
-          <h4 (click)="onOrderDetails(order.id)"
-            class="ring-1 rounded-full py-1 px-2 text-[10px] ring-neutral-600 text-neutral-600 cursor-pointer hover:brightness-125 ease-in-out duration-200">
-            Szczegóły
-          </h4>
+          <div class="flex flex-col items-start justify-center">
+            <h4 class="rounded-full py-1 px-2 text-[10px]" [ngClass]="order.stateColor">
+              {{ order.state }}
+            </h4>
+          </div>
+          <div class="flex flex-col items-start justify-center">
+            <h4 (click)="onOrderDetails(order.id)"
+              class="ring-1 rounded-full py-1 px-2 text-[10px] ring-neutral-600 text-neutral-600 cursor-pointer hover:brightness-125 ease-in-out duration-200">
+              Szczegóły
+            </h4>
+          </div>
         </div>
       </section>
     </div>

@@ -39,6 +39,8 @@ class OrderController extends Controller
 
                 foreach ($orders as $order) {
 
+                    $isReportExists = DB::table('inspection_reports')->where('order_id', $order->id)->exists();
+
                     $orderDetailsId = $order->order_details_id;
                     $orderDetails = DB::table('order_details')->where('id', $orderDetailsId)->orderBy('id')->first();
                     $orderItem = [
@@ -68,6 +70,7 @@ class OrderController extends Controller
                         'customerComment' => $order->customer_comment,
                         'email' => $order->email,
                         'tel' => $order->tel,
+                        'isReportReady' => $isReportExists
                     ];
 
                     $orderData[] = $orderItem;

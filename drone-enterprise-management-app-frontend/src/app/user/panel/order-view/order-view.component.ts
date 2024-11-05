@@ -60,6 +60,7 @@ export class OrderViewComponent implements OnInit, OnDestroy {
   checklistUpdateSubscription: Subscription;
   isReportReady: boolean = true;
   reportCreateMode: boolean = false;
+  isInspection: boolean = false;
 
   constructor(private panelComponent: PanelComponent, private panelService: PanelService, private router: Router, private location: Location, private loginService: LoginService, private bottomSheet: MatBottomSheet, public toastService: ToastService, private fileSaver: NgxFileSaverService) { }
 
@@ -83,6 +84,12 @@ export class OrderViewComponent implements OnInit, OnDestroy {
     this.markerPositions.push({ lat: latitude, lng: longitude });
 
     this.center = { lat: latitude, lng: longitude };
+
+    this.isReportReady = this.orderItem.isReportReady;
+
+    if (this.orderItem.service !== 'foto/video') {
+      this.isInspection = true;
+    }
   }
 
   openBottomSheet() {

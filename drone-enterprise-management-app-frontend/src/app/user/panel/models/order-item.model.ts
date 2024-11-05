@@ -24,4 +24,5 @@ export interface OrderItem {
   customerComment: String,
   email: Number,
   tel: Number,
+  isReportReady: boolean
 }

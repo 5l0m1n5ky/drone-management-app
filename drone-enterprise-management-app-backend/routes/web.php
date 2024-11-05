@@ -41,8 +41,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::post('orders/upload-inspection-file', action: [InspectionReportController::class, 'store'])->middleware('restrictRole:admin');
 
-    Route::get('orders/index-inspection-file', action: [InspectionReportController::class, 'index']);
-
     Route::get('orders/get-inspection-file/{orderId}', action: [InspectionReportController::class, 'download']);
 });
 
