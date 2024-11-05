@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderViewComponent } from '../order-view/order-view.component';
 import jsPDF from 'jspdf';
@@ -6,6 +6,7 @@ import autoTable from 'jspdf-autotable';
 import { OrderItem } from '../models/order-item.model';
 import { GetBase64FontService } from './get-base64-font.service';
 import { PanelService } from '../panel.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-report-generator',
@@ -13,13 +14,13 @@ import { PanelService } from '../panel.service';
   imports: [CommonModule, OrderViewComponent],
   templateUrl: './report-generator.component.html'
 })
-export class ReportGeneratorComponent implements OnInit {
+export class ReportGeneratorComponent implements OnInit, OnDestroy {
 
   files: { file: File, fileUrl: string }[] = [];
   order: OrderItem[] | null;
   inspectionReport: Blob;
   inspectionReportFileName: string;
-  uploadReportSubscription: any;
+  uploadReportSubscription: Subscription;
 
   constructor(private orderViewComponent: OrderViewComponent, private getBase6FontService: GetBase64FontService, private panelService: PanelService) { }
 
@@ -29,6 +30,10 @@ export class ReportGeneratorComponent implements OnInit {
     } else {
       this.disableReportCreateMode();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.uploadReportSubscription?.unsubscribe();
   }
 
   convertToBase64(file: File): string {
@@ -61,10 +66,7 @@ export class ReportGeneratorComponent implements OnInit {
 
   generatePdf() {
 
-    console.log(this.order);
-
     const doc = new jsPDF();
-    // doc.setFont("helvetica", "normal");
     doc.addFileToVFS("RobotoRegular.ttf", this.getBase6FontService.getFontData());
     doc.addFont("RobotoRegular.ttf", "RobotoRegular", "normal");
     doc.setFont("RobotoRegular");
@@ -116,15 +118,20 @@ export class ReportGeneratorComponent implements OnInit {
       this.orderViewComponent.isProcessing = true;
 
       this.uploadReportSubscription = this.panelService.uploadInspectionReport(this.order[0].id, this.inspectionReport, this.inspectionReportFileName).subscribe(response => {
-        this.orderViewComponent.toastService.generateToast('success', 'Modyfikacja statusu', response.data.toString());
+        this.files = [];
+        this.orderViewComponent.toastService.generateToast('success', 'Generowanie raportu inspekcji', response.data.toString());
+        this.orderViewComponent.reportCreateMode = false;
         this.orderViewComponent.isProcessing = false;
       }, errorMessage => {
-        this.orderViewComponent.toastService.generateToast('error', 'Modyfikacja statusu', errorMessage);
+        this.files = [];
+        this.orderViewComponent.toastService.generateToast('error', 'Generowanie raportu inspekcji', errorMessage);
+        this.orderViewComponent.reportCreateMode = false;
         this.orderViewComponent.isProcessing = false;
       });
 
     } else {
       console.error('Inspection report donwloading failed');
+      this.orderViewComponent.toastService.generateToast('error', 'Generowanie raportu inspekcji', 'Błąd przetwarzania danych');
     }
   }
 

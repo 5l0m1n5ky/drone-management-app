@@ -43,7 +43,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::get('orders/index-inspection-file', action: [InspectionReportController::class, 'index']);
 
-    Route::get('orders/get-inspection-file', action: [InspectionReportController::class, 'download']);
+    Route::get('orders/get-inspection-file/{orderId}', action: [InspectionReportController::class, 'download']);
 });
 
 Route::post('/verify-account', [AuthController::class, 'verifyAccount']);

@@ -5,16 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Traits\HttpResponses;
 use App\Http\Requests\StoreInspectionReportRequest;
-use App\Http\Requests\IndexNGetInspectionReportRequest;
+use App\Http\Requests\IndexInspectionReportRequest;
 use App\Models\InspectionReport;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class InspectionReportController extends Controller
 {
 
     use HttpResponses;
 
-    public function index(IndexNGetInspectionReportRequest $request)
+    public function index(IndexInspectionReportRequest $request)
     {
 
         // $request->validated($request->all());
@@ -57,12 +58,27 @@ class InspectionReportController extends Controller
         }
     }
 
-    public function download(IndexNGetInspectionReportRequest $request)
+    public function download($orderId)
     {
 
-        $request->validated($request->all());
+        $inspectionReport = DB::table('inspection_reports')->where('order_id', $orderId)->first();
 
+        $reportFilePath = $inspectionReport->report_file_path;
 
-
+        if (Storage::exists($reportFilePath)) {
+            // return Storage::download($reportFilePath);
+            // return $this->success(
+            //     'Powinno pobrać',
+            //     'INSPECTION_REPORT_GENERATED',
+            //     200
+            // );
+            return Storage::download($reportFilePath);
+        } else {
+            return $this->error(
+                'Błąd pobierania raportu',
+                'REPORT_GENERATE_ERROR',
+                500
+            );
+        }
     }
 }

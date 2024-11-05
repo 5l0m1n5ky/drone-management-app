@@ -20,6 +20,7 @@ import { ChecklistComponent } from '../checklist/checklist.component';
 import { Checklist } from '../models/checklist.model';
 import { ReportGeneratorComponent } from '../report-generator/report-generator.component';
 import { NgForm } from '@angular/forms';
+import { NgxFileSaverService } from '@clemox/ngx-file-saver';
 
 @Component({
   selector: 'app-order-view',
@@ -51,6 +52,7 @@ export class OrderViewComponent implements OnInit, OnDestroy {
   mapInit: boolean = false;
   statesSubscription: Subscription;
   updateStateSubscription: Subscription;
+  DownloadingReportSubscription: Subscription;
 
   checklist: Checklist[] = [];
   checklistView: boolean = false;
@@ -59,7 +61,7 @@ export class OrderViewComponent implements OnInit, OnDestroy {
   isReportReady: boolean = true;
   reportCreateMode: boolean = false;
 
-  constructor(private panelComponent: PanelComponent, private panelService: PanelService, private router: Router, private location: Location, private loginService: LoginService, private bottomSheet: MatBottomSheet, public toastService: ToastService) { }
+  constructor(private panelComponent: PanelComponent, private panelService: PanelService, private router: Router, private location: Location, private loginService: LoginService, private bottomSheet: MatBottomSheet, public toastService: ToastService, private fileSaver: NgxFileSaverService) { }
 
   ngOnInit(): void {
 
@@ -158,8 +160,21 @@ export class OrderViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  downloadReport() {
-    throw new Error('Method not implemented.');
+  onDownloadReport() {
+
+    if (this.order) {
+      this.isProcessing = true;
+
+      this.checklistUpdateSubscription = this.panelService.downloadInspectionReport(this.order[0].id).subscribe((response: Blob) => {
+        this.fileSaver.saveBlob(response, 'Raport z inspekcji');
+        this.toastService.generateToast('success', 'Pobieranie raportu', 'Raport pobrany pomyślnie');
+        this.isProcessing = false;
+      }, errorMessage => {
+        this.toastService.generateToast('error', 'Pobieranie raportu', errorMessage);
+        this.isProcessing = false;
+      });
+
+    }
   }
 
   ngOnDestroy(): void {
@@ -167,5 +182,6 @@ export class OrderViewComponent implements OnInit, OnDestroy {
     this.updateStateSubscription?.unsubscribe();
     this.checklistSubscription?.unsubscribe();
     this.checklistUpdateSubscription?.unsubscribe();
+    this.DownloadingReportSubscription?.unsubscribe();
   }
 }

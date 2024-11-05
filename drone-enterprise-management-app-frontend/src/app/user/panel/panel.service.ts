@@ -252,6 +252,19 @@ export class PanelService {
       ));
   }
 
+  downloadInspectionReport(orderId: Number) {
+    return this.http.get('http://localhost:8000/orders/get-inspection-file/' + orderId,
+      {
+        responseType: 'blob',
+        withCredentials: true
+      }
+    ).pipe(catchError(this.handleError),
+      tap(response => {
+        return response;
+      }
+      ));
+  }
+
   private handleError(errorResponse: HttpErrorResponse) {
 
     let errorMessage = 'Wystapił błąd';
