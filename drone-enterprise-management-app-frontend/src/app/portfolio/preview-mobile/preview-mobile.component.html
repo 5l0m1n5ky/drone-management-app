@@ -80,11 +80,11 @@
             <ng-template matStepLabel>PLIK</ng-template>
             <div class="font-montserrat flex flex-col justify-start items-start">
               <p class="text-2xl font-normal text-neutral-600">Wybierz plik foto/video</p>
-              <div (click)="inputFile.click()"
-                class="flex flex-col justify-center items-center h-[100px] mt-5 w-full border-dashed border-2 rounded-xl border-neutral-600 cursor-pointer">
-                <input type="file" #inputFile (change)="onFileSelected($event)" id="file" class="hidden">
+              <div
+                class="relative flex flex-col justify-center items-center h-[100px] mt-5 w-full border-dashed border-2 rounded-xl border-neutral-600 cursor-pointer">
+                <input type="file" #inputFile (change)="onFileSelected($event)" id="file" class="absolute opacity-0 top-0 left-0 w-full h-full">
                 <p class="p-5 font-semibold text-base font-montserrat text-neutral-600">
-                  WYBIERZ PLIK
+                  DODAJ PLIK
                 </p>
               </div>
               <div
@@ -116,9 +116,9 @@
             <ng-template matStepLabel>OKŁADKA</ng-template>
             <div class="font-montserrat flex flex-col justify-start items-start">
               <p class="text-2xl font-normal text-neutral-600">Wybierz okładkę materiału video</p>
-              <div (click)="inputCover.click()"
-                class="flex flex-col justify-center items-center h-[100px] mt-2 w-full border-dashed border-2 rounded-xl border-neutral-600 cursor-pointer">
-                <input type="file" #inputCover (change)="onCoverSelected($event)" id="cover" class="hidden">
+              <div
+                class="relative flex flex-col justify-center items-center h-[100px] mt-2 w-full border-dashed border-2 rounded-xl border-neutral-600 cursor-pointer">
+                <input type="file" #inputCover (change)="onCoverSelected($event)" id="cover" class="absolute opacity-0 left-0 top-0 w-full h-full">
                 <p class="p-5 font-semibold text-base font-montserrat text-neutral-600">
                   WYBIERZ OKŁADKĘ
                 </p>

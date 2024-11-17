@@ -338,11 +338,11 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
       this.openDialog(30, 30, 'Anulować?', 'Wszystkie zmiany zostaną utracone', 'WRÓĆ', 'ANULUJ');
       this.dialogActionSubscription = this.action$.subscribe(action => {
         if (action === 'confirm') {
-          this.router.navigate(['/user/panel/orders'])
+          this.placeOrderForm.reset();
+          this.router.navigate(['/user/panel/orders']);
         }
         this.dialogActionSubscription.unsubscribe();
 
-        this.placeOrderForm.reset();
       });
     }
   }

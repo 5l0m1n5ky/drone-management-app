@@ -56,7 +56,7 @@ export class PreviewMobileComponent implements OnInit, AfterViewInit, OnDestroy 
   onDeleteSubscription: Subscription;
   onCheckSubscription: Subscription;
   postsSubsription: Subscription;
-  file: File | null;
+  file: File | null = null;
   cover: File | null;
 
   @ViewChild('fileInput') fileInput: HTMLElement;
@@ -187,7 +187,7 @@ export class PreviewMobileComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   onCancelEditMode() {
-    if (!this.editPostForm.touched) {
+    if (!this.editPostForm.touched && this.file === null) {
       this.isEditMode = false;
     } else {
       this.openDialog(90, 30, 'Anulować?', 'Wszystkie zmiany zostaną utracone', 'WRÓĆ', 'ANULUJ');
