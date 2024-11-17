@@ -57,7 +57,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
   screenWidth: number;
   isMobile: boolean = false;
   isEditMode: boolean = false;
-  isCreateMode: boolean = false;
+  isCreateMode: boolean = true;
   createPostForm: FormGroup;
   editPostForm: FormGroup;
   isUploading: boolean = false;

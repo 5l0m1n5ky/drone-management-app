@@ -53,6 +53,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'slomin.sky.drone@gmail.com',
             'password' => Hash::make('P455w0rd!'),
             'role' => 'admin',
+            'terms' => true,
             'newsletter' => false,
             'email_verified_at' => Carbon::now('Europe/Warsaw')
         ]);

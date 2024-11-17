@@ -25,7 +25,7 @@
               <div class="text-xs text-stone-300 flex flex-row items-center mb-4">
                 <img src="./assets/icons/info_icon.png" alt="info-icon" class="w-8 m-2">
                 <p>
-                  Stwórz hasło o długości nie mniejszej niż 6 znaków zawierające <br>
+                  Stwórz hasło o długości nie mniejszej niż 8 znaków zawierające <br>
                   co najmniej jedną duża literę, cyfrę oraz znak
                   specjalny
                 </p>
@@ -34,7 +34,7 @@
               <mat-form-field appearance="outline" class="auth-inputs">
                 <mat-label>Hasło</mat-label>
                 <input matInput [type]="hide ? 'password' : 'text'" id="password" ngModel name="password" required
-                  password minlength="6" #password="ngModel" autocomplete="password"
+                  password minlength="8" #password="ngModel" autocomplete="password"
                   pattern="(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
                 <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Ukryj hasło'"
                   [attr.aria-pressed]="hide">
@@ -48,7 +48,7 @@
               <mat-form-field appearance="outline" class="auth-inputs">
                 <mat-label>Powtórz hasło</mat-label>
                 <input matInput [type]="hide ? 'password' : 'text'" id="password_confirmation" ngModel
-                  name="password_confirmation" required password minlength="6" #passwordConfirmation="ngModel"
+                  name="password_confirmation" required password minlength="8" #passwordConfirmation="ngModel"
                   autocomplete="password_confirmation"
                   pattern="(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
                 <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Ukryj hasło'"

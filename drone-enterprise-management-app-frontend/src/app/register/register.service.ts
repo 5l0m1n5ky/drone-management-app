@@ -22,11 +22,12 @@ interface RegisterResponseData {
 export class RegisterService {
   constructor(private http: HttpClient) { }
 
-  register(email: string, password: string, password_confirmation: string, newsletter: boolean) {
+  register(email: string, password: string, passwordConfirmation: string, terms: boolean, newsletter: boolean) {
     return this.http.post<RegisterResponseData>('http://localhost:8000/register', {
       email: email,
       password: password,
-      password_confirmation: password_confirmation,
+      password_confirmation: passwordConfirmation,
+      terms: terms,
       newsletter: newsletter
     }, {
       headers: new HttpHeaders({

@@ -12,6 +12,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ToastModule } from 'primeng/toast';
 import { ToastService } from '../shared/toast/toast.service';
 import { Subscription } from 'rxjs';
+import { StringNullableChain } from 'cypress/types/lodash';
 
 @Component({
   standalone: true,
@@ -31,6 +32,11 @@ export class RegisterComponent implements OnDestroy {
   areTermsAccepted: boolean = false;
   termsToggleMessage: boolean = false;
   registerSubscription: Subscription;
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+  terms: boolean;
+  newsletter: boolean;
 
   constructor(private registerService: RegisterService, private router: Router, private toastService: ToastService) { }
 
@@ -51,13 +57,14 @@ export class RegisterComponent implements OnDestroy {
       return;
     }
 
-    const email = registerForm.value.email;
-    const password = registerForm.value.password;
-    const password_confirmation = registerForm.value.password_confirmation;
-    var newsletter = registerForm.value.newsletter;
+    this.email = registerForm.value.email;
+    this.password = registerForm.value.password;
+    this.passwordConfirmation = registerForm.value.password_confirmation;
+    this.terms = registerForm.value.terms;
+    this.newsletter = registerForm.value.newsletter;
 
-    if (newsletter === null) {
-      newsletter = false;
+    if (this.newsletter === null) {
+      this.newsletter = false;
     }
 
     if (registerForm.value.password !== registerForm.value.password_confirmation) {
@@ -68,7 +75,7 @@ export class RegisterComponent implements OnDestroy {
 
     this.isProcessing = true;
 
-    this.registerSubscription = this.registerService.register(email, password, password_confirmation, newsletter).subscribe(responseData => {
+    this.registerSubscription = this.registerService.register(this.email, this.password, this.passwordConfirmation, this.terms, this.newsletter).subscribe(responseData => {
       console.log(responseData);
       this.isProcessing = false;
       this.user_id = +responseData.data!.user.id;

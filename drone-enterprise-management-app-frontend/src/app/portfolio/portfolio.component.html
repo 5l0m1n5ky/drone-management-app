@@ -24,12 +24,12 @@
                 <div class="font-montserrat flex flex-col justify-start items-start max-[1400px]:h-[250px]">
                   <p class="text-2xl mb-2 min-[1400px]:text-3xl font-normal text-neutral-600">Wybierz plik foto/video
                   </p>
-                  <div (click)="inputFile.click()"
-                    class="flex flex-col justify-center items-center h-[100px] min-[1400px]:h-[300px] mt-2 w-full border-dashed border-2 rounded-xl border-neutral-600 cursor-pointer">
-                    <input type="file" #inputFile (change)="onFileSelected($event)" id="file" class="hidden">
+                  <div
+                    class="relative flex flex-col justify-center items-center h-[100px] min-[1400px]:h-[300px] mt-2 w-full border-dashed border-2 rounded-xl border-neutral-600 cursor-pointer">
+                    <input type="file" #inputFile (change)="onFileSelected($event)" id="file" class="absolute left-0 top-0 opacity-0 w-[100%] h-[100%]">
                     <p
                       class="p-3 min-[1400px]:p-5 font-semibold text-sm min-[1400px]:text-base font-montserrat text-neutral-600">
-                      WYBIERZ PLIK
+                      UPUŚĆ PLIK
                     </p>
                   </div>
                   <div
@@ -363,9 +363,9 @@
         <div class="flex flex-row justify-center items-center bg-neutral-900 h-full  rounded-l-xl">
           <img *ngIf="isImage(currentPost.path)" [src]="currentPost.path" alt="gallery-item"
             class="w-full h-full object-contain rounded-l-xl">
-          <video *ngIf="!isImage(currentPost.path)" [src]="currentPost.path"
-            [poster]="currentPost.cover" alt="gallery-item"
-            class="w-full h-full object-contain rounded-l-xl" controls autoplay loop disablepictureinpicture>
+          <video *ngIf="!isImage(currentPost.path)" [src]="currentPost.path" [poster]="currentPost.cover"
+            alt="gallery-item" class="w-full h-full object-contain rounded-l-xl" controls autoplay loop
+            disablepictureinpicture>
           </video>
         </div>
         <div class="bg-neutral-900 h-full max-w-[25%] flex-grow rounded-r-xl flex-col items-start justify-start">
