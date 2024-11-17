@@ -33,7 +33,7 @@ class CreatePostTest extends TestCase
 
         $cover = UploadedFile::fake()->image('post-cover.jpg');
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->post('/posts/create', [
+        $response = $this->actingAs($admin)->withSession(['banned' => false])->post('/posts', [
             'file' => $file->size(1000),
             'cover' => $cover->size(1000),
             'location' => fake()->city(),
@@ -69,7 +69,7 @@ class CreatePostTest extends TestCase
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->post('/posts/create', [
+        $response = $this->actingAs($admin)->withSession(['banned' => false])->post('/posts', [
             'file' => $file->size(15000),
             'cover' => $cover->size(15000),
             'location' => null,
@@ -110,7 +110,7 @@ class CreatePostTest extends TestCase
 
         $cover = UploadedFile::fake()->image('post-cover.jpg');
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/posts/create', [
+        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/posts', [
             'file' => $file->size(1000),
             'cover' => $cover->size(1000),
             'location' => fake()->city(),
@@ -133,7 +133,7 @@ class CreatePostTest extends TestCase
 
         $cover = UploadedFile::fake()->image('post-cover.jpg');
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/posts/create', [
+        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/posts', [
             'file' => $file->size(1000),
             'cover' => $cover->size(1000),
             'location' => fake()->city(),

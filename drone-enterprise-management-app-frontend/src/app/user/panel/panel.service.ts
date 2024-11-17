@@ -145,7 +145,7 @@ export class PanelService {
       })
     );
 
-    return this.http.put<ResponseData>('http://localhost:8000/orders/checklist/update/' + orderId, updatedChecklist,
+    return this.http.put<ResponseData>('http://localhost:8000/orders/checklist/' + orderId, updatedChecklist,
       {
         headers: new HttpHeaders({
           'Accept': 'application/json',
@@ -179,7 +179,7 @@ export class PanelService {
   }
 
   updateNotificationSeenStatus(notificationId: Number) {
-    return this.http.post<ResponseData>('http://localhost:8000/notifications/seen', { notificationId: notificationId },
+    return this.http.put<ResponseData>('http://localhost:8000/notifications', { notificationId: notificationId },
       {
         headers: new HttpHeaders({
           'Accept': 'application/json',
@@ -220,7 +220,7 @@ export class PanelService {
     formData.append('stateId', stateId.toString());
     formData.append('comment', comment);
 
-    return this.http.post<ResponseData>('http://localhost:8000/orders/state-update',
+    return this.http.put<ResponseData>('http://localhost:8000/orders',
       formData,
       {
         withCredentials: true,
@@ -238,7 +238,7 @@ export class PanelService {
     formData.append('orderId', orderId.toString());
     formData.append('reportFile', reportFile, fileName);
 
-    return this.http.post<ResponseData>('http://localhost:8000/orders/upload-inspection-file',
+    return this.http.post<ResponseData>('http://localhost:8000/orders/inspection-file',
       formData,
       {
         withCredentials: true,
@@ -252,7 +252,7 @@ export class PanelService {
   }
 
   downloadInspectionReport(orderId: Number) {
-    return this.http.get('http://localhost:8000/orders/get-inspection-file/' + orderId,
+    return this.http.get('http://localhost:8000/orders/inspection-file/' + orderId,
       {
         responseType: 'blob',
         withCredentials: true

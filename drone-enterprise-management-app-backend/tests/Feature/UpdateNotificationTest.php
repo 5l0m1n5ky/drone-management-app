@@ -40,7 +40,7 @@ class UpdateNotificationTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/notifications/seen', [
+        $response = $this->actingAs($user)->withSession(['banned' => false])->put('/notifications', [
             'notificationId' => $notification->id
         ]);
 
@@ -73,7 +73,7 @@ class UpdateNotificationTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/notifications/seen', [
+        $response = $this->actingAs($user)->withSession(['banned' => false])->put('/notifications', [
             'notificationId' => $this->generateUniqueId()
         ]);
 
@@ -100,7 +100,7 @@ class UpdateNotificationTest extends TestCase
     {
         $this->assertGuest('web');
 
-        $response = $this->post('/notifications/seen', [
+        $response = $this->put('/notifications', [
             'notificationId' => $this->generateUniqueId()
         ]);
 

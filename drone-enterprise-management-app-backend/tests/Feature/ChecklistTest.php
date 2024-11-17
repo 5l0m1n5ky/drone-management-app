@@ -44,7 +44,7 @@ class ChecklistTest extends TestCase
 
         $admin = User::factory()->make(['role' => 'admin']);
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->get('orders/checklist/2');
+        $response = $this->actingAs($admin)->withSession(['banned' => false])->get('orders/checklist/3');
 
         $response->assertStatus(status: 200)->assertJsonCount(0);
     }
@@ -73,7 +73,7 @@ class ChecklistTest extends TestCase
 
         $admin = User::factory()->make(['role' => 'admin']);
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->put('orders/checklist/update/1', [
+        $response = $this->actingAs($admin)->withSession(['banned' => false])->put('orders/checklist/1', [
             "1" => true,
             "2" => false,
             "3" => false,
@@ -97,7 +97,7 @@ class ChecklistTest extends TestCase
 
         $admin = User::factory()->make(['role' => 'admin']);
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->put('orders/checklist/update/2', [
+        $response = $this->actingAs($admin)->withSession(['banned' => false])->put('orders/checklist/3', [
             "1" => true,
             "2" => false,
             "3" => false,
@@ -121,7 +121,7 @@ class ChecklistTest extends TestCase
 
         $user = User::factory()->make(['role' => 'user']);
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->put('orders/checklist/update/2', [
+        $response = $this->actingAs($user)->withSession(['banned' => false])->put('orders/checklist/2', [
             "1" => true,
             "2" => false,
             "3" => false,

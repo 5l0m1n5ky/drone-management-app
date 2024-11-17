@@ -52,7 +52,7 @@ class DeletePostTest extends TestCase
 
         $admin = User::factory()->make(['role' => 'admin']);
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->delete('/posts/delete/' . $post->id);
+        $response = $this->actingAs($admin)->withSession(['banned' => false])->delete('/posts/' . $post->id);
 
         $response->assertStatus(200)->assertJsonStructure([
             'data',
@@ -70,7 +70,7 @@ class DeletePostTest extends TestCase
 
         $admin = User::factory()->make(['role' => 'admin']);
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->delete('/posts/delete/' . $this->generateUniqueId());
+        $response = $this->actingAs($admin)->withSession(['banned' => false])->delete('/posts/' . $this->generateUniqueId());
 
         $response->assertStatus(500)->assertJsonStructure([
             'data',
@@ -85,7 +85,7 @@ class DeletePostTest extends TestCase
 
         $user = User::factory()->make(['role' => 'user']);
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->delete('/posts/delete/' . $this->generateUniqueId());
+        $response = $this->actingAs($user)->withSession(['banned' => false])->delete('/posts/' . $this->generateUniqueId());
 
         $response->assertStatus(401)->assertJsonStructure([
             'data',
@@ -98,7 +98,7 @@ class DeletePostTest extends TestCase
     {
         $this->assertGuest('web');
 
-        $response = $this->delete('/posts/delete/' . $this->generateUniqueId());
+        $response = $this->delete('/posts/' . $this->generateUniqueId());
 
         $response->assertStatus(500)->assertJsonStructure([
             'message'

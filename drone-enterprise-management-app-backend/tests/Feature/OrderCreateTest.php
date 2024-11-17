@@ -27,7 +27,7 @@ class OrderCreateTest extends TestCase
 
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/orders/create', [
+        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/orders', [
             'service_id' => 1,
             'subservice_id' => 1,
             'amount' => 10,
@@ -70,7 +70,7 @@ class OrderCreateTest extends TestCase
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/orders/create', [
+        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/orders', [
             'service_id' => null,
             'subservice_id' => null,
             'amount' => null,
@@ -142,7 +142,7 @@ class OrderCreateTest extends TestCase
     {
         $this->assertGuest('web');
 
-        $response = $this->post('/orders/create', [
+        $response = $this->post('/orders', [
             'service_id' => 1,
             'subservice_id' => 1,
             'amount' => 10,

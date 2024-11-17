@@ -48,7 +48,7 @@ export class OrderCreateService {
   }
 
   placeOrder(orderData: OrderData) {
-    return this.http.post<PlaceOrderResponse>('http://localhost:8000/orders/create',
+    return this.http.post<PlaceOrderResponse>('http://localhost:8000/orders',
       // formData,
       orderData,
       {

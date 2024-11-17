@@ -48,7 +48,7 @@ export class PortfolioService {
     formData.append('location', location);
     formData.append('visibility', visibility);
 
-    return this.http.post<PostHandleResponseData>('http://localhost:8000/posts/create',
+    return this.http.post<PostHandleResponseData>('http://localhost:8000/posts',
       formData,
       {
         withCredentials: true,
@@ -103,7 +103,7 @@ export class PortfolioService {
   }
 
   deletePost(id: number) {
-    const endpointUrl = 'http://localhost:8000/posts/delete/' + id.toString();
+    const endpointUrl = 'http://localhost:8000/posts/' + id.toString();
     return this.http.delete<PostManagementResponse>(endpointUrl,
       {
         withCredentials: true,
