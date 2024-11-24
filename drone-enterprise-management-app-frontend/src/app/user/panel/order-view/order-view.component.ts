@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { OrderItem } from '../models/order-item.model';
 import { PanelComponent } from '../panel.component';
@@ -7,9 +7,6 @@ import { PanelService } from '../panel.service';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { environment } from 'src/environments/environment';
-import { GoogleMapsModule } from '@angular/google-maps';
-import { GoogleMap } from '@angular/google-maps';
-import { MapAdvancedMarker } from '@angular/google-maps';
 import { LoginService } from 'src/app/login/login.service';
 import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { BottomPanelComponent } from './bottom-panel/bottom-panel.component';
@@ -21,14 +18,15 @@ import { Checklist } from '../models/checklist.model';
 import { ReportGeneratorComponent } from '../report-generator/report-generator.component';
 import { NgForm } from '@angular/forms';
 import { NgxFileSaverService } from '@clemox/ngx-file-saver';
+import * as Leaflet from 'leaflet';
 
 @Component({
   selector: 'app-order-view',
   standalone: true,
-  imports: [CommonModule, RouterLink, GoogleMapsModule, GoogleMap, MapAdvancedMarker, MatBottomSheetModule, LoadingSpinnerComponent, ChecklistComponent, ReportGeneratorComponent],
+  imports: [CommonModule, RouterLink, MatBottomSheetModule, LoadingSpinnerComponent, ChecklistComponent, ReportGeneratorComponent],
   templateUrl: './order-view.component.html'
 })
-export class OrderViewComponent implements OnInit, OnDestroy {
+export class OrderViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   order: OrderItem[] | null;
   orderItem: OrderItem;
@@ -37,18 +35,6 @@ export class OrderViewComponent implements OnInit, OnDestroy {
   isAdmin: boolean = false;
   latitude: number = environment.origin.lat;
   longitude: number = environment.origin.lng;
-  center: google.maps.LatLngLiteral;
-
-  options: google.maps.MapOptions = {
-    mapId: "DEMO_MAP_ID",
-    zoom: 17,
-    maxZoom: 20,
-    minZoom: 5,
-  };
-  googleMapsApiKey = environment.googleMapsApiKey;
-
-  markerOptions: google.maps.MarkerOptions = { draggable: false };
-  markerPositions: google.maps.LatLngLiteral[] = [];
   mapInit: boolean = false;
   statesSubscription: Subscription;
   updateStateSubscription: Subscription;
@@ -61,6 +47,9 @@ export class OrderViewComponent implements OnInit, OnDestroy {
   isReportReady: boolean = true;
   reportCreateMode: boolean = false;
   isInspection: boolean = false;
+
+  marker: Leaflet.Marker;
+  map: Leaflet.Map;
 
   constructor(private panelComponent: PanelComponent, private panelService: PanelService, private router: Router, private location: Location, private loginService: LoginService, private bottomSheet: MatBottomSheet, public toastService: ToastService, private fileSaver: NgxFileSaverService) { }
 
@@ -77,19 +66,45 @@ export class OrderViewComponent implements OnInit, OnDestroy {
     if (!this.order) {
       this.location.back();
     }
-
-    const latitude = parseFloat(this.orderItem.latitude.toString());
-    const longitude = parseFloat(this.orderItem.longitude.toString());
-
-    this.markerPositions.push({ lat: latitude, lng: longitude });
-
-    this.center = { lat: latitude, lng: longitude };
-
+    
     this.isReportReady = this.orderItem.isReportReady;
 
     if (this.orderItem.service !== 'foto/video') {
       this.isInspection = true;
     }
+  }
+
+  ngAfterViewInit(): void {
+
+    this.mapConfig();
+
+    const customIcon = Leaflet.icon({
+      iconUrl: 'assets/icons/map-marker.png',
+      iconSize: [40, 40],
+      iconAnchor: [20, 40],
+    });
+
+    this.marker = Leaflet.marker([
+      parseFloat(this.orderItem.latitude.toString()),
+      parseFloat(this.orderItem.longitude.toString())
+    ],
+      { icon: customIcon })
+      .addTo(this.map);
+
+      console.log(this.orderItem.latitude.toString(), this.orderItem.longitude.toString());
+  }
+
+  mapConfig() {
+    this.map = Leaflet.map('map', {
+      center: Leaflet.latLng(parseFloat(this.orderItem.latitude.toString()), parseFloat(this.orderItem.longitude.toString())),
+      zoom: 19,
+    });
+
+    Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      minZoom: 1,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(this.map);
   }
 
   openBottomSheet() {

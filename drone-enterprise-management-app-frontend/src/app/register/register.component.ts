@@ -76,10 +76,8 @@ export class RegisterComponent implements OnDestroy {
     this.isProcessing = true;
 
     this.registerSubscription = this.registerService.register(this.email, this.password, this.passwordConfirmation, this.terms, this.newsletter).subscribe(responseData => {
-      console.log(responseData);
       this.isProcessing = false;
       this.user_id = +responseData.data!.user.id;
-      console.log('user id:', this.user_id);
       this.router.navigate(['account-verification', this.user_id]);
       registerForm.reset();
 

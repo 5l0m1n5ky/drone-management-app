@@ -13,7 +13,6 @@ export class CsrfService {
 
   async fetchCsrfToken(): Promise<void> {
     try {
-      console.log('inside fetch csrf method');
       await this.http.get('http://localhost:8000/sanctum/csrf-cookie', {
         headers: new HttpHeaders({
           'Accept': 'application/json',

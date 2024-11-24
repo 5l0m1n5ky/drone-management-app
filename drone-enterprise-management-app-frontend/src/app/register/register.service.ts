@@ -36,15 +36,11 @@ export class RegisterService {
       }),
       withCredentials: true
     }).pipe(catchError(errorResponse => {
-      let errorMessage = 'Wystapił błąd';
-
-      if (!errorResponse.error) {
-        return throwError(errorMessage);
-      }
+      let errorMessage = 'Wystapił błąd. Spróbuj ponownie';
       switch (errorResponse.error.message) {
-        case "The email has already been taken.":
-          errorMessage = "Użytkownik o podanym adresie e-mail już istnieje";
-      }
+        case 'Unable to process data':
+          errorMessage = 'Podane dane nie mogą być przetworzone. Spróbuj ponownie'
+      };
       return throwError(errorMessage);
     }));
   }

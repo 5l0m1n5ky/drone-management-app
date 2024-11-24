@@ -149,11 +149,8 @@
             LOKALIZACJA
           </ng-template>
           <div matStepContent class="flex flex-col justify-center items-center">
-            <section class="w-full border-2">
-              <google-map width="100p" height="500px" [options]="options" (mapClick)="addMarker($event)">
-                <map-advanced-marker *ngFor="let position of markerPositions" [position]="position" />
-              </google-map>
-            </section>
+            <div id="map" class="w-[100%] h-[500px] rounded-md border-2">
+            </div>
             <div class="w-full flex justify-end gap-2 mt-5">
               <button matStepperPrevious type="button">
                 <p

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NgModel, Validators } from '@angular/forms';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -10,9 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { environment } from 'src/environments/environment';
-import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
 import { CommonModule } from '@angular/common';
-import { GoogleMapsModule } from "@angular/google-maps";
 import { OrderCreateService } from './order-create.service';
 import { LoadingSpinnerComponent } from 'src/app/shared/loading-spinner/loading-spinner.component';
 import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from 'rxjs';
@@ -32,18 +30,19 @@ import { Service } from '../models/service.model';
 import { Subservice } from '../models/subservice.model';
 import { State } from '../models/state.model';
 import { BgMusic } from '../models/bg-music.model';
+import * as Leaflet from 'leaflet';
 
 @Component({
   standalone: true,
   selector: 'app-order-create',
   templateUrl: './order-create.component.html',
-  imports: [MatStepperModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatSliderModule, MatDatepickerModule, MatCardModule, MatNativeDateModule, MatInputModule, GoogleMap, CommonModule, MapAdvancedMarker, GoogleMapsModule, LoadingSpinnerComponent, MatSlideToggleModule, RouterLink],
-  providers: [DatePipe]
+  imports: [MatStepperModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatSliderModule, MatDatepickerModule, MatCardModule, MatNativeDateModule, MatInputModule, CommonModule, LoadingSpinnerComponent, MatSlideToggleModule, RouterLink],
+  providers: [DatePipe],
+
 })
-export class OrderCreateComponent implements OnInit, OnDestroy {
+export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
 
   placeOrderForm: FormGroup
-
   order: OrderData;
 
   services: Service[] = [];
@@ -54,17 +53,8 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
   states: State[] = [];
   bgMusic: BgMusic[] = [];
 
-  options: google.maps.MapOptions = {
-    mapId: "DEMO_MAP_ID",
-    center: { lat: 53.122028, lng: 18.000292 },
-    zoom: 15,
-  };
-
   selected: Date | null;
-  googleMapsApiKey = environment.googleMapsApiKey;
 
-  markerOptions: google.maps.MarkerOptions = { draggable: false };
-  markerPositions: google.maps.LatLngLiteral[] = [];
   isLocationSelected: boolean = false;
   selectedLocation: string = "";
   orderFromOriginToDestinationDistance: number;
@@ -88,7 +78,6 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
   isEnterpriseSubsription: Subscription;
   dialogActionSubscription: Subscription;
   dialogSubscription: Subscription;
-
 
   private actionSubject = new Subject<any>();
   action$: Observable<any> = this.actionSubject.asObservable();
@@ -117,6 +106,10 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
   disabledOrderDates: Date[] = [];
   isFilterProcessed: boolean = false;
 
+  marker: Leaflet.Marker;
+  map: Leaflet.Map;
+  center: Leaflet.LatLngExpression = [53.122028, 18.000292];
+  originLatLng = new Leaflet.LatLng(environment.origin.lat, environment.origin.lng);
 
   orderDatesFilter = (date: Date): boolean => {
     const dateToFilter = (date || new Date());
@@ -225,6 +218,57 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
         price: new FormControl(null, Validators.required),
       })
     });
+
+  }
+
+  ngAfterViewInit(): void {
+    this.mapConfig();
+
+    const customIcon = Leaflet.icon({
+      iconUrl: 'assets/icons/map-marker.png',
+      iconSize: [40, 40],
+      iconAnchor: [20, 40],
+    });
+
+    this.map.on('click', (event: Leaflet.LeafletMouseEvent) => {
+      const lat = event.latlng.lat;
+      const lng = event.latlng.lng;
+      const marker = Leaflet.marker([lat, lng],)
+
+      if (this.marker != undefined) {
+        this.map.removeLayer(this.marker);
+      }
+
+      this.marker = Leaflet.marker([lat, lng], { icon: customIcon })
+        .addTo(this.map)
+        .bindPopup(`Zlecenie o współrzędnych:<br>Latitude: ${lat}<br>Longitude: ${lng}`, {
+          offset: Leaflet.point(0, -40)
+        })
+        .openPopup();
+
+      this.isLocationSelected = true;
+
+      this.placeOrderForm.get('OrderLocationForm.latitude')?.patchValue(lat);
+      this.placeOrderForm.get('OrderLocationForm.longitude')?.patchValue(lng);
+
+      const distance = Number((this.originLatLng.distanceTo(Leaflet.latLng(lat, lng)) / 1000).toFixed(1));
+
+      this.orderFromOriginToDestinationDistance = distance;
+
+    });
+  }
+
+  mapConfig() {
+    this.map = Leaflet.map('map', {
+      center: this.center,
+      zoom: 19,
+    });
+
+    Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      minZoom: 1,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(this.map);
   }
 
   @HostListener('window:resize')
@@ -278,7 +322,8 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
         this.setValidatorsForVideo();
         break;
 
-      case "inspekcja RGB" || "inspekcja IR" || "inspekcja RGB+IR" || "ortofotomapa" || "ortomozaika" || "model 3D":
+      // case "inspekcja RGB" || "inspekcja IR" || "inspekcja RGB+IR" || "ortofotomapa" || "ortomozaika" || "model 3D":
+      default:
         this.setValidatorsForInspection()
         break;
     }
@@ -322,11 +367,9 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
       this.isProcessing = false;
       this.router.navigate(['/user/panel/orders'])
       this.toastService.generateToast('success', 'Składanie zamówienia', responseData.message.toString());
-
     }, errorMessage => {
       this.toastService.generateToast('error', 'Składanie zamówienia', errorMessage);
       this.isProcessing = false;
-
     });
     this.placeOrderForm.reset();
   }
@@ -368,22 +411,6 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
     });
   }
 
-  addMarker(event: google.maps.MapMouseEvent) {
-    if (event.latLng) {
-      this.markerPositions = [];
-      this.markerPositions.push(event.latLng.toJSON());
-      // this.orderCreateService.reverseGeocoding(this.markerPositions.toString());
-      const latitude = event.latLng.lat();
-      const longitude = event.latLng.lng();
-
-      this.isLocationSelected = true;
-
-      this.placeOrderForm.get('OrderLocationForm.latitude')?.patchValue(latitude);
-      this.placeOrderForm.get('OrderLocationForm.longitude')?.patchValue(longitude);
-
-      this.calculateDistance()
-    }
-  }
 
   onDateSelect(date: Date | null) {
     this.orderDate = this.datePipe.transform(date, 'dd-MM-yyyy')?.toString();
@@ -448,31 +475,6 @@ export class OrderCreateComponent implements OnInit, OnDestroy {
 
   calculateDistance() {
 
-    const distanceService = new google.maps.DistanceMatrixService();
-
-    const origin = environment.origin;
-    const destination = this.markerPositions;
-
-    distanceService.getDistanceMatrix(
-      {
-        origins: [origin],
-        destinations: destination,
-        travelMode: google.maps.TravelMode.DRIVING,
-        unitSystem: google.maps.UnitSystem.METRIC,
-      },
-      (response, status) => {
-        if (status === 'OK') {
-          const results = response?.rows[0].elements[0];
-          const distanceText = results?.distance.text;
-          const distanceValue = results?.distance.value;
-          const durationText = results?.duration.text;
-
-          if (distanceValue) {
-            this.orderFromOriginToDestinationDistance = distanceValue / 1000;
-          }
-        }
-      }
-    );
 
   }
 }

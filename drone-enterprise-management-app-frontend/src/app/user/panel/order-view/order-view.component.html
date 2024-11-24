@@ -171,9 +171,8 @@
       </section>
       <section class="flex flex-col items-center justify-start p-5 w-full">
         <div class="w-[600px] h-[600px] bg-black">
-          <google-map height="100%" width="100%" [options]="options" [center]="center">
-            <map-advanced-marker *ngFor="let position of markerPositions" [position]="position" />
-          </google-map>
+          <div id="map" class="w-full h-full rounded-md">
+          </div>
         </div>
       </section>
     </div>
@@ -209,10 +208,7 @@
         </p>
       </div>
       <section class="flex flex-col items-center justify-start p-5 w-full">
-        <div class="w-[100%] h-[300px] bg-black">
-          <google-map height="100%" width="100%" [options]="options" [center]="center">
-            <map-advanced-marker *ngFor="let position of markerPositions" [position]="position" />
-          </google-map>
+        <div class="w-[100%] h-[300px] rounded-md">
         </div>
       </section>
       <section class="p-5 flex flex-col items-start justify-start gap-10 h-auto w-full">

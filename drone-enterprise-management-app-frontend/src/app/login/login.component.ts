@@ -78,6 +78,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.loginError = errorMessage;
         this.isProcessing = false;
         form.reset();
+        this.toastService.generateToast('error', 'Logowanie', 'Wystąpił błąd logowania')
       }
     );
   }

@@ -19,21 +19,6 @@ export class OrderCreateService {
 
   constructor(private http: HttpClient) { }
 
-  // future feature
-  reverseGeocoding(latLng: string) {
-    const apiKey = environment.googleMapsApiKey;
-    const url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + latLng + '&key=' + apiKey + '&language=pl&result_type=street_address'
-    return this.http.get<any>(url, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-    }).pipe(catchError(this.handleError),
-      tap(responseData => {
-        this.handleRevesrseGeocodingResponse(responseData);
-      }
-      ));
-  }
-
   fetchOrderDates() {
     return this.http.get<{ [date: string]: OrderDates }>('http://localhost:8000/dates').pipe(map(responseData => {
       const datesArray: OrderDates[] = [];

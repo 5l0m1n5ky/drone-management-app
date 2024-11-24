@@ -24,7 +24,7 @@ class ValidatePostRequest extends FormRequest
     {
         return [
             'file' => 'file|required|mimes:png,jpg,jpeg,mp4,mov|max:10000',
-            'cover' => 'file|mimes:png,jpg,jpeg,mp4,mov|max:10000',
+            'cover' => 'file|mimes:png,jpg,jpeg|max:10000',
             'location' => ['required', 'string', 'max:50'],
             'description' => ['required', 'string', 'max:500'],
             'visibility' => ['required', 'boolean']

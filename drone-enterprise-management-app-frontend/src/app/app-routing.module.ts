@@ -21,9 +21,11 @@ import { ChooseServiceComponent } from './services/choose-service/choose-service
 import { OrderViewComponent } from './user/panel/order-view/order-view.component';
 import { ContactComponent } from './contact/contact.component';
 import { AboutComponent } from './about/about.component';
+import { MapComponent } from './map/map.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'map', component: MapComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'services', component: ServicesComponent },

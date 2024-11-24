@@ -29,7 +29,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isProcessing: boolean = false;
   logoutSubscription: Subscription;
 
-  constructor(private appComponent: AppComponent, private logoutService: LogoutService, private toastService: ToastService, private router: Router) { }
+  constructor(private appComponent: AppComponent, private logoutService: LogoutService, private router: Router) { }
 
   ngOnInit(): void {
     this.isAuthenticated = this.appComponent.getLoginState();
@@ -55,7 +55,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.router.navigate(['/login'], { queryParams: { action: 'logout' } });
       }
       this.isProcessing = false;
-    }, errorMessage => {
+    }, () => {
       this.router.navigate(['/login']);
       this.isProcessing = false;
     });

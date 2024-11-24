@@ -47,7 +47,6 @@ export class AccountVerificationComponent implements OnInit {
   }
 
   onCodeChanged(code: string) {
-    console.log('code changed: ', code);
 
     if (this.isTokenMismatch) {
       this.isTokenMismatch = false;
@@ -55,7 +54,6 @@ export class AccountVerificationComponent implements OnInit {
   }
 
   onCodeCompleted(code: string) {
-    console.log('code completed: ', code);
 
     this.verifyButtonDisable = false;
     this.verificationToken = code;
