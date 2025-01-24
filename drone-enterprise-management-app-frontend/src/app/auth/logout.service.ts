@@ -4,6 +4,7 @@ import { LoginService } from "../login/login.service";
 import { Router } from "@angular/router";
 import { catchError, tap, throwError } from "rxjs";
 import { CookieService } from "ngx-cookie-service";
+import { environment } from "src/environments/environment";
 
 interface LogoutResponse {
   data: string,
@@ -15,10 +16,14 @@ interface LogoutResponse {
 
 export class LogoutService {
 
-  constructor(private http: HttpClient, private loginService: LoginService, private router: Router, private cookieService: CookieService) { }
+  private domain: string | undefined;
+
+  constructor(private http: HttpClient, private loginService: LoginService, private router: Router, private cookieService: CookieService) {
+    this.domain = environment.ApiDomain;
+  }
 
   logoutHandle() {
-    return this.http.post<LogoutResponse>('http://localhost:8000/logout', null, {
+    return this.http.post<LogoutResponse>(`${this.domain}/logout`, null, {
       headers: new HttpHeaders({
         'Accept': 'application/json',
         'Content-Type': 'application/json',

@@ -4,7 +4,7 @@ export interface Post {
   path: string,
   cover: string,
   description: string,
-  visibility: boolean
+  visibility: boolean | number
   created_at: string,
   updated_at: string
 }

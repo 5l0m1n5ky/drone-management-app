@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, map, tap, throwError } from 'rxjs';
 import { Post } from './portfolio.model';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 interface PostHandleResponseData {
   data: PostData,
@@ -21,10 +22,14 @@ interface PostManagementResponse {
 @Injectable()
 export class PortfolioService {
 
-  constructor(private http: HttpClient, private router: Router) { }
+  private domain: string | undefined;
+
+  constructor(private http: HttpClient, private router: Router) {
+    this.domain = environment.ApiDomain;
+  }
 
   fetchPosts() {
-    return this.http.get<{ [post: string]: Post }>('http://localhost:8000/posts').pipe(map(responseData => {
+    return this.http.get<{ [post: string]: Post }>(`${this.domain}/api/posts`).pipe(map(responseData => {
       const postsArray: Post[] = [];
       for (const post in responseData) {
         if (responseData.hasOwnProperty(post)) {
@@ -48,7 +53,7 @@ export class PortfolioService {
     formData.append('location', location);
     formData.append('visibility', visibility);
 
-    return this.http.post<PostHandleResponseData>('http://localhost:8000/posts',
+    return this.http.post<PostHandleResponseData>(`${this.domain}/api/posts`,
       formData,
       {
         withCredentials: true,
@@ -75,7 +80,7 @@ export class PortfolioService {
 
 
   updatePost(id: number, file: File | null, cover: File | null, location: string, description: string, visibility: string) {
-    const endpointUrl = 'http://localhost:8000/posts/update/' + id.toString()
+    const endpointUrl = `${this.domain}/api/posts/update/${id.toString()}`
     const formData: FormData = new FormData();
 
     if (file) {
@@ -92,8 +97,7 @@ export class PortfolioService {
     return this.http.post<PostHandleResponseData>(endpointUrl,
       formData,
       {
-        withCredentials: true,
-        reportProgress: true
+        withCredentials: true
       }
     ).pipe(catchError(this.handleError),
       tap(response => {
@@ -103,7 +107,7 @@ export class PortfolioService {
   }
 
   deletePost(id: number) {
-    const endpointUrl = 'http://localhost:8000/posts/' + id.toString();
+    const endpointUrl = `${this.domain}/api/posts/${id.toString()}`;
     return this.http.delete<PostManagementResponse>(endpointUrl,
       {
         withCredentials: true,

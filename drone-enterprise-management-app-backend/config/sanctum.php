@@ -15,19 +15,19 @@ return [
     |
     */
 
-    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
-        '%s%s',
-        'localhost,localhost:4200,127.0.0.1,::1',
-        Sanctum::currentApplicationUrlWithPort()
-    )
-    )),
-
     // 'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
     //     '%s%s',
-    //     'localhost,localhost:4200,127.0.0.1,127.0.0.1:8000,::1',
+    //     'localhost,localhost:4200,127.0.0.1,::1',
     //     Sanctum::currentApplicationUrlWithPort()
     // )
     // )),
+
+    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
+        '%s%s',
+        'localhost:4200,127.0.0.1:4200',
+        Sanctum::currentApplicationUrlWithPort()
+    )
+    )),
 
     /*
     |--------------------------------------------------------------------------
@@ -41,8 +41,8 @@ return [
     |
     */
 
-    // 'guard' => ['api'],
-    'guard' => ['web'],
+    'guard' => ['api'],
+    // 'guard' => ['web'],
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'expiration' => 120,
+    'expiration' => env('SESSION_LIFETIME', 65),
 
     /*
     |--------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, NgModel, Validators } from '@angular/forms';
+import { FormControl, FormGroup, NgModel, Validators, NgForm, FormsModule } from '@angular/forms';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,7 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
-import { MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { environment } from 'src/environments/environment';
 import { CommonModule } from '@angular/common';
@@ -31,14 +31,17 @@ import { Subservice } from '../models/subservice.model';
 import { State } from '../models/state.model';
 import { BgMusic } from '../models/bg-music.model';
 import * as Leaflet from 'leaflet';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 @Component({
   standalone: true,
   selector: 'app-order-create',
   templateUrl: './order-create.component.html',
-  imports: [MatStepperModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatSliderModule, MatDatepickerModule, MatCardModule, MatNativeDateModule, MatInputModule, CommonModule, LoadingSpinnerComponent, MatSlideToggleModule, RouterLink],
-  providers: [DatePipe],
-
+  imports: [MatStepperModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatSliderModule, MatDatepickerModule, MatCardModule, MatNativeDateModule, MatInputModule, CommonModule, LoadingSpinnerComponent, MatSlideToggleModule, RouterLink, FormsModule, NgxMaskDirective],
+  providers: [
+    DatePipe,
+    provideNgxMask()
+  ],
 })
 export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -59,7 +62,8 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedLocation: string = "";
   orderFromOriginToDestinationDistance: number;
 
-  minDate: Date = new Date();
+  // minDate: Date = new Date();
+  minDate: Date;
   maxDate: Date = new Date();
   orderDate: String | undefined;
 
@@ -78,6 +82,7 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
   isEnterpriseSubsription: Subscription;
   dialogActionSubscription: Subscription;
   dialogSubscription: Subscription;
+  geocodingSubscription: Subscription;
 
   private actionSubject = new Subject<any>();
   action$: Observable<any> = this.actionSubject.asObservable();
@@ -122,8 +127,18 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   isMobile: boolean;
 
+  customIcon = Leaflet.icon({
+    iconUrl: 'assets/icons/map-marker.png',
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+  });
 
-  constructor(private orderCreateService: OrderCreateService, private route: ActivatedRoute, private datePipe: DatePipe, private dialog: MatDialog, private router: Router, private toastService: ToastService, private loginService: LoginService, private appComponent: AppComponent, private panelService: PanelService) { }
+
+  constructor(private orderCreateService: OrderCreateService, private route: ActivatedRoute, private datePipe: DatePipe, private dialog: MatDialog, private router: Router, private toastService: ToastService, private loginService: LoginService, private appComponent: AppComponent, private panelService: PanelService, private dateAdapter: DateAdapter<any>) {
+
+    this.minDate = new Date();
+    this.minDate.setDate(this.minDate.getDate() + 2);
+  }
 
   ngOnInit(): void {
 
@@ -135,7 +150,7 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
       if (responseData && responseData.message && responseData.message.toString() === 'ACTIVE_SESSION') {
         this.isProcessing = false;
       }
-    }, () => {
+    }, errorMessage => {
       this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
       this.appComponent.changeLoginState();
       this.isProcessing = false;
@@ -205,11 +220,13 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
         surname: new FormControl(null),
         nip: new FormControl(null, [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^[0-9]*$/)]),
         streetName: new FormControl(null, Validators.required),
-        streetNumber: new FormControl(null, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-        apartmentNumber: new FormControl(null, Validators.pattern(/^[0-9]*$/)),
+        streetNumber: new FormControl(null, [Validators.required]),
+        // streetNumber: new FormControl(null, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+        apartmentNumber: new FormControl(null),
+        // apartmentNumber: new FormControl(null, Validators.pattern(/^[0-9]*$/)),
         city: new FormControl(null, Validators.required),
-        zip: new FormControl(null, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-        tel: new FormControl(null, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+        zip: new FormControl(null, [Validators.required, Validators.minLength(5)]),
+        tel: new FormControl(null, [Validators.required, Validators.minLength(9)]),
         email: new FormControl(null, [Validators.required, Validators.email])
       }),
       OrderDetailForm: new FormGroup({
@@ -219,16 +236,17 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     });
 
+    this.dateAdapter.setLocale('pl');
   }
 
   ngAfterViewInit(): void {
     this.mapConfig();
 
-    const customIcon = Leaflet.icon({
-      iconUrl: 'assets/icons/map-marker.png',
-      iconSize: [40, 40],
-      iconAnchor: [20, 40],
-    });
+    // const customIcon = Leaflet.icon({
+    //   iconUrl: 'assets/icons/map-marker.png',
+    //   iconSize: [40, 40],
+    //   iconAnchor: [20, 40],
+    // });
 
     this.map.on('click', (event: Leaflet.LeafletMouseEvent) => {
       const lat = event.latlng.lat;
@@ -239,7 +257,7 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
         this.map.removeLayer(this.marker);
       }
 
-      this.marker = Leaflet.marker([lat, lng], { icon: customIcon })
+      this.marker = Leaflet.marker([lat, lng], { icon: this.customIcon })
         .addTo(this.map)
         .bindPopup(`Zlecenie o współrzędnych:<br>Latitude: ${lat}<br>Longitude: ${lng}`, {
           offset: Leaflet.point(0, -40)
@@ -322,7 +340,6 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
         this.setValidatorsForVideo();
         break;
 
-      // case "inspekcja RGB" || "inspekcja IR" || "inspekcja RGB+IR" || "ortofotomapa" || "ortomozaika" || "model 3D":
       default:
         this.setValidatorsForInspection()
         break;
@@ -458,10 +475,11 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.fetchFlagsSubscription.unsubscribe();
-    this.orderSubscription.unsubscribe();
-    this.ServiceSubscription.unsubscribe();
-    this.musicSubscription.unsubscribe();
+    this.fetchFlagsSubscription?.unsubscribe();
+    this.orderSubscription?.unsubscribe();
+    this.ServiceSubscription?.unsubscribe();
+    this.musicSubscription?.unsubscribe();
+    this.geocodingSubscription?.unsubscribe();
   }
 
   makeSummary() {
@@ -473,9 +491,58 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
     this.placeOrderForm.get("OrderDetailForm.price")?.patchValue(this.priceBrutto);
   }
 
-  calculateDistance() {
+  // calculateDistance() {}
 
+  onGeocodingSubmit(geocodingForm: NgForm) {
 
+    let geocodingAddressRaw: string = geocodingForm.value.geocodingAddress;
+
+    let geocodingAddress = geocodingAddressRaw.replace(' ', '+').replace(',', '');
+
+    this.isProcessing = true;
+
+    this.geocodingSubscription = this.orderCreateService.geocoding(geocodingAddress).subscribe(response => {
+
+      if (response && response[0] !== undefined) {
+
+        let geocodingResponse = response[0];
+
+        let lat = geocodingResponse.lat;
+        let lng = geocodingResponse.lon;
+
+        if (this.marker != undefined) {
+          this.map.removeLayer(this.marker);
+        }
+
+        this.marker = Leaflet.marker([lat, lng], { icon: this.customIcon })
+          .addTo(this.map)
+          .bindPopup(`Zlecenie o współrzędnych:<br>Latitude: ${lat}<br>Longitude: ${lng}`, {
+            offset: Leaflet.point(0, -40)
+          })
+          .openPopup();
+
+        this.isLocationSelected = true;
+
+        this.placeOrderForm.get('OrderLocationForm.latitude')?.patchValue(lat);
+        this.placeOrderForm.get('OrderLocationForm.longitude')?.patchValue(lng);
+
+        const distance = Number((this.originLatLng.distanceTo(Leaflet.latLng(lat, lng)) / 1000).toFixed(1));
+
+        this.orderFromOriginToDestinationDistance = distance;
+
+      } else {
+
+        this.toastService.generateToast("warn", "Adres zlecenia", "Podany adres nie jest dostępny. Spróbuj ponownie lub wybierz lokalizację na mapie")
+      }
+
+      this.isProcessing = false;
+
+    }, errorMessage => {
+
+      this.toastService.generateToast("warn", "Adres zlecenia", "Wystapił błąd w przetwarzaniu podanego adresu. Spróbuj ponownie lub wybierz lokalizację na mapie");
+
+      this.isProcessing = false;
+    })
   }
 }
 

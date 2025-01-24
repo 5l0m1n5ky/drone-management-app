@@ -6,6 +6,7 @@ import { IntersectionObserverDirective } from '../intersection-observer.directiv
 import { TimelineModule } from 'primeng/timeline';
 import { RouterLink } from '@angular/router';
 import { HomePortfolioComponent } from 'src/app/home/home-portfolio/home-portfolio.component';
+import { environment } from 'src/environments/environment';
 
 interface StepsData {
   icon: string,
@@ -25,6 +26,8 @@ interface StepsData {
 export class FotoVideoServiceComponent implements OnDestroy {
 
   @ViewChild(IntersectionObserverDirective) intersectionObserverDirective: IntersectionObserverDirective;
+
+  protected domain: string | undefined;
 
   services: string[] = [
     "Spotu reklamowego",
@@ -68,6 +71,10 @@ export class FotoVideoServiceComponent implements OnDestroy {
 
   currentService: string = this.services[0];
   subscription: Subscription;
+
+  constructor() {
+    this.domain = environment.ApiDomain;
+  }
 
   onServicesInView(): void {
     this.subscription = interval(1250).subscribe({

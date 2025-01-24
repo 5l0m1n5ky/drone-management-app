@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, map, tap, throwError } from "rxjs";
+import { environment } from "src/environments/environment";
 
 interface ResponseData {
   data: string,
@@ -11,10 +12,14 @@ interface ResponseData {
 
 export class ContactService {
 
-  constructor(private http: HttpClient) { }
+  private domain: string | undefined;
+
+  constructor(private http: HttpClient) {
+    this.domain = environment.ApiDomain;
+  }
 
   sendMessage(email: string, subject: string, content: string) {
-    return this.http.post<ResponseData>('http://localhost:8000/contact',
+    return this.http.post<ResponseData>(`${this.domain}/contact`,
       {
         email: email,
         subject: subject,

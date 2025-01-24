@@ -33,11 +33,11 @@ class NotificationController extends Controller
             if ($user->role === 'admin') {
 
                 $notificationsData = [];
-                $notifications = DB::table('notifications')->orderBy('created_at')->get();
+                $notifications = Notification::orderBy('created_at')->get();
 
                 foreach ($notifications as $notification) {
 
-                    $state = DB::table('states')->where('id', $notification->state_id)->pluck('state_type')->first();
+                    $state = State::where('id', $notification->state_id)->pluck('state_type')->first();
 
                     $notificationData = [
                         'id' => $notification->id,
@@ -58,11 +58,11 @@ class NotificationController extends Controller
             } else if ($user->role === 'user') {
 
                 $notificationsData = [];
-                $notifications = DB::table('notifications')->where('user_id', $user_id)->orderBy('created_at')->get();
+                $notifications = Notification::where('user_id', $user_id)->orderBy('created_at')->get();
 
                 foreach ($notifications as $notification) {
 
-                    $state = DB::table('states')->where('id', $notification->state_id)->pluck('state_type')->first();
+                    $state = State::where('id', $notification->state_id)->pluck('state_type')->first();
 
                     $notificationData = [
                         'id' => $notification->id,

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TimelineModule } from 'primeng/timeline';
 import { RouterLink } from '@angular/router';
 import { CarouselModule } from 'primeng/carousel';
+import { environment } from 'src/environments/environment';
 
 interface StepsData {
   icon: string,
@@ -25,6 +26,8 @@ interface InspectionFeaturesData {
   imports: [NavbarComponent, NavbarComponent, CommonModule, TimelineModule, RouterLink, CarouselModule]
 })
 export class WindmillServiceComponent {
+
+  protected domain: string | undefined
 
   steps: StepsData[] = [
     {
@@ -75,7 +78,11 @@ export class WindmillServiceComponent {
       description: "wedle indywidualnych potrzeb",
       image: "https://www.iwrpressedienst.de/bild/deutsche-windtechnik/d5cfd_Drohneninspektion_Enercon_DW.jpg"
     },
-  ]
+  ];
+
+  constructor() {
+    this.domain = environment.ApiDomain;
+  }
 
   onShowProcess(): void {
     document.getElementById("order-steps")?.scrollIntoView({

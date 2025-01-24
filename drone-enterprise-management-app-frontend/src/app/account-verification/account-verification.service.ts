@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 interface RequestData {
   user_id: string;
@@ -26,12 +27,17 @@ interface ResponseData {
   providedIn: 'root',
 })
 export class AccountVerificationService {
-  constructor(private http: HttpClient) {}
+
+  private domain: string | undefined;
+
+  constructor(private http: HttpClient) {
+    this.domain = environment.ApiDomain
+  }
 
   verify(userId: number, code: string) {
     return this.http
       .post<AccountVerificationResponseData>(
-        'http://localhost:8000/verify-account',
+        `${this.domain}/verify-account`,
         {},
         {
           headers: new HttpHeaders({
@@ -51,7 +57,7 @@ export class AccountVerificationService {
   tokenResend(userId: number) {
     return this.http
       .post<ResponseData>(
-        'http://localhost:8000/regenerate-token',
+        `${this.domain}/regenerate-token`,
         {
           user_id: userId,
         },

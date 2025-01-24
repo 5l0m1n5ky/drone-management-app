@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 use App\Http\Requests\StateRequest;
+use App\Models\Order;
+use App\Models\State;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
@@ -19,7 +22,7 @@ class StateController extends Controller
     }
     public function index()
     {
-        $services = DB::table('states')->orderBy('id')->get();
+        $services = State::orderBy('id')->get();
 
         return response()->json($services);
     }
@@ -33,9 +36,9 @@ class StateController extends Controller
             $state_id = $stateRequest->stateId;
             $comment = $stateRequest->comment;
 
-            $result = DB::table('orders')->where('id', $order_id)->update(['state_id' => $state_id]);
-            $userId = DB::table('orders')->where('id', $order_id)->pluck('user_id')->first();
-            $user = DB::table('users')->where('id', $userId)->first();
+            $result = Order::where('id', $order_id)->update(['state_id' => $state_id]);
+            $userId = Order::where('id', $order_id)->pluck('user_id')->first();
+            $user = User::where('id', $userId)->first();
             $email = $user->email;
 
             $title = "Zmiana statusu Twojego zlecenia";

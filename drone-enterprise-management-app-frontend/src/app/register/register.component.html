@@ -35,7 +35,7 @@
                 <mat-label>Hasło</mat-label>
                 <input matInput [type]="hide ? 'password' : 'text'" id="password" ngModel name="password" required
                   password minlength="8" #password="ngModel" autocomplete="password"
-                  pattern="(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
+                  pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])(?=.*[a-z]).{8,}$">
                 <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Ukryj hasło'"
                   [attr.aria-pressed]="hide">
                   <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -44,22 +44,23 @@
                   Hasło jest wymagane
                 </mat-error>
               </mat-form-field>
-
               <mat-form-field appearance="outline" class="auth-inputs">
                 <mat-label>Powtórz hasło</mat-label>
                 <input matInput [type]="hide ? 'password' : 'text'" id="password_confirmation" ngModel
                   name="password_confirmation" required password minlength="8" #passwordConfirmation="ngModel"
-                  autocomplete="password_confirmation"
-                  pattern="(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
+                  autocomplete="password_confirmation" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])(?=.*[a-z]).{8,}$">
                 <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Ukryj hasło'"
                   [attr.aria-pressed]="hide">
                   <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
-                <mat-error *ngIf="password.hasError('required')">
+                <mat-error *ngIf="passwordConfirmation.hasError('required')">
                   Hasło jest wymagane
                 </mat-error>
               </mat-form-field>
-
+              <p *ngIf="(password.value !== passwordConfirmation.value) && (password.valid  && passwordConfirmation.valid)"
+                class="pt-2 text-center text-red-500">
+                Niezgodność haseł
+              </p>
               <div class="flex flex-col items-start mt-4">
                 <mat-slide-toggle color="accent" required name="terms" id="terms" class="py-1"
                   (change)="areTermsAccepted = !areTermsAccepted" #terms="ngModel" ngModel>
@@ -75,9 +76,10 @@
                 </mat-slide-toggle>
 
                 <div class="flex flex-col w-full mt-5">
-                  <button type="submit" [disabled]="!registerForm.valid">
+                  <button type="submit"
+                    [disabled]="!registerForm.valid || (password.value !== passwordConfirmation.value)">
                     <p class="bg-stone-600 text-white text-sm font-semibold py-2 px-4 rounded-2xl"
-                      [ngClass]="!registerForm.valid ? 'backdrop-blur-2xl cursor-not-allowed opacity-50' : 'backdrop-blur-2xl cursor-pointer hover:bg-stone-700 ease-in-out duration-200'">
+                      [ngClass]="!registerForm.valid || (password.value !== passwordConfirmation.value) ? 'backdrop-blur-2xl cursor-not-allowed opacity-50' : 'backdrop-blur-2xl cursor-pointer hover:bg-stone-700 ease-in-out duration-200'">
                       Zarejestruj
                     </p>
                   </button>

@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, Subject, catchError, exhaustMap, take, tap, throwError } from "rxjs";
 import { User } from "../user/user.model";
 import { CookieService } from "ngx-cookie-service";
+import { environment } from "src/environments/environment";
 
 interface LoginUserData {
   id: string,
@@ -31,7 +32,10 @@ export class LoginService {
 
   user = new BehaviorSubject<User | null>(null);
 
+  private domain: string | undefined;
+
   constructor(private http: HttpClient, private cookieService: CookieService) {
+    this.domain = environment.ApiDomain;
   }
 
   hasAdminPrivileges(): boolean {
@@ -43,7 +47,8 @@ export class LoginService {
   }
 
   login(email: string, password: string) {
-    return this.http.post<LoginResponseData>('http://localhost:8000/login', {
+    // return this.http.post<LoginResponseData>(`${this.domain}/login`, {
+    return this.http.post<LoginResponseData>(`${this.domain}/api/login`, {
       email: email,
       password: password,
     }, {
@@ -59,7 +64,7 @@ export class LoginService {
   }
 
   checkSession() {
-    return this.http.post<checkSessionResponseData>('http://localhost:8000/user/check', null,
+    return this.http.post<checkSessionResponseData>(`${this.domain}/api/user/check`, null,
       {
         headers: new HttpHeaders({
           'Accept': 'application/json',

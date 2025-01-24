@@ -2,7 +2,8 @@
 
 return [
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie', '/login', '/register', '/logout', '/posts', '/services', '/posts/*', '/user/check', '/orders/*', '/orders', '/states', '/notifications', '/background-music', '/subservices', '/dates', '/notifications/*', '/verify-account', '/regenerate-token', '/contact'],
+    // 'paths' => ['api/*', 'sanctum/csrf-cookie', '/login', '/register', '/logout', '/posts', '/services', '/posts/*', '/user/check', '/orders/*', '/orders', '/states', '/notifications', '/background-music', '/subservices', '/dates', '/notifications/*', '/verify-account', '/regenerate-token', '/contact'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 

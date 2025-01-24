@@ -9,7 +9,9 @@ import { OrderItem } from "./models/order-item.model";
 import { Notification } from "./models/notification.model";
 import { Checklist } from "./models/checklist.model";
 import { NgForm } from "@angular/forms";
-import { ReportItem } from "./models/report.model";
+import { environment } from "src/environments/environment";
+import { User } from "../user.model";
+import { UserData } from "./models/user-data.model";
 
 interface OrderResponseData {
   order: OrderItem[],
@@ -25,7 +27,11 @@ interface ResponseData {
 
 export class PanelService {
 
-  constructor(private http: HttpClient) { }
+  private domain: string | undefined;
+
+  constructor(private http: HttpClient) {
+    this.domain = environment.ApiDomain;
+  }
 
   private orderToShow = new BehaviorSubject<OrderItem[] | null>(null);
   orderToShowObservable$ = this.orderToShow.asObservable();
@@ -42,7 +48,7 @@ export class PanelService {
   }
 
   fetchServices() {
-    return this.http.get<{ [service: string]: Service }>('http://localhost:8000/services', {
+    return this.http.get<{ [service: string]: Service }>(`${this.domain}/api/services`, {
       headers: new HttpHeaders({
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -61,7 +67,7 @@ export class PanelService {
   }
 
   fetchSubervices() {
-    return this.http.get<{ [subservice: string]: Subservice }>('http://localhost:8000/subservices', {
+    return this.http.get<{ [subservice: string]: Subservice }>(`${this.domain}/api/subservices`, {
       headers: new HttpHeaders({
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -80,7 +86,7 @@ export class PanelService {
   }
 
   fetchBackgroundMusicTypes() {
-    return this.http.get<{ [bgMusc: string]: BgMusic }>('http://localhost:8000/background-music', {
+    return this.http.get<{ [bgMusc: string]: BgMusic }>(`${this.domain}/api/background-music`, {
       headers: new HttpHeaders({
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -99,7 +105,7 @@ export class PanelService {
   }
 
   fetchStates() {
-    return this.http.get<{ [state: string]: State }>('http://localhost:8000/states', {
+    return this.http.get<{ [state: string]: State }>(`${this.domain}/api/states`, {
       headers: new HttpHeaders({
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -118,7 +124,7 @@ export class PanelService {
   }
 
   fetchChecklist(orderId: Number) {
-    return this.http.get<{ [checklistItem: string]: Checklist }>('http://localhost:8000/orders/checklist/' + orderId, {
+    return this.http.get<{ [checklistItem: string]: Checklist }>(`${this.domain}/api/orders/checklist/${orderId}`, {
       headers: new HttpHeaders({
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -145,7 +151,7 @@ export class PanelService {
       })
     );
 
-    return this.http.put<ResponseData>('http://localhost:8000/orders/checklist/' + orderId, updatedChecklist,
+    return this.http.put<ResponseData>(`${this.domain}/api/orders/checklist/${orderId}`, updatedChecklist,
       {
         headers: new HttpHeaders({
           'Accept': 'application/json',
@@ -160,7 +166,7 @@ export class PanelService {
   }
 
   fetchNotifications() {
-    return this.http.get<{ [notification: string]: Notification }>('http://localhost:8000/notifications', {
+    return this.http.get<{ [notification: string]: Notification }>(`${this.domain}/api/notifications`, {
       headers: new HttpHeaders({
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -179,7 +185,7 @@ export class PanelService {
   }
 
   updateNotificationSeenStatus(notificationId: Number) {
-    return this.http.put<ResponseData>('http://localhost:8000/notifications', { notificationId: notificationId },
+    return this.http.put<ResponseData>(`${this.domain}/api/notifications`, { notificationId: notificationId },
       {
         headers: new HttpHeaders({
           'Accept': 'application/json',
@@ -194,7 +200,7 @@ export class PanelService {
   }
 
   fetchOrders() {
-    return this.http.get<{ [order: string]: OrderItem }>('http://localhost:8000/orders',
+    return this.http.get<{ [order: string]: OrderItem }>(`${this.domain}/api/orders`,
       {
         headers: new HttpHeaders({
           'Accept': 'application/json',
@@ -220,11 +226,15 @@ export class PanelService {
     formData.append('stateId', stateId.toString());
     formData.append('comment', comment);
 
-    return this.http.put<ResponseData>('http://localhost:8000/orders',
-      formData,
+    return this.http.put<ResponseData>(`${this.domain}/api/orders`,
+      // formData,
       {
-        withCredentials: true,
-        reportProgress: true
+        orderId: orderId,
+        stateId: stateId,
+        comment: comment
+      },
+      {
+        withCredentials: true
       }
     ).pipe(catchError(this.handleError),
       tap(response => {
@@ -238,11 +248,10 @@ export class PanelService {
     formData.append('orderId', orderId.toString());
     formData.append('reportFile', reportFile, fileName);
 
-    return this.http.post<ResponseData>('http://localhost:8000/orders/inspection-file',
+    return this.http.post<ResponseData>(`${this.domain}/api/orders/inspection-file`,
       formData,
       {
-        withCredentials: true,
-        reportProgress: true
+        withCredentials: true
       }
     ).pipe(catchError(this.handleError),
       tap(response => {
@@ -252,9 +261,46 @@ export class PanelService {
   }
 
   downloadInspectionReport(orderId: Number) {
-    return this.http.get('http://localhost:8000/orders/inspection-file/' + orderId,
+    return this.http.get(`${this.domain}/api/orders/inspection-file/${orderId}`,
       {
         responseType: 'blob',
+        withCredentials: true
+      }
+    ).pipe(catchError(this.handleError),
+      tap(response => {
+        return response;
+      }
+      ));
+  }
+
+  fetchUsers() {
+    return this.http.get<{ [user: string]: UserData }>(`${this.domain}/api/users`,
+      {
+        headers: new HttpHeaders({
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }),
+        withCredentials: true
+      }
+    ).pipe(catchError(this.handleError), map(responseData => {
+      const usersData: UserData[] = [];
+      for (const user in responseData) {
+        if (responseData.hasOwnProperty(user)) {
+          usersData.push({ ...responseData[user] });
+        }
+      }
+      return usersData;
+    })
+    );
+  }
+
+  updateUserSuspension(userId: number) {
+
+    return this.http.patch<ResponseData>(`${this.domain}/api/users`,
+      {
+        id: userId,
+      },
+      {
         withCredentials: true
       }
     ).pipe(catchError(this.handleError),

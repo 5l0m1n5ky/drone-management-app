@@ -43,7 +43,7 @@ class OrderStateUpdateTest extends TestCase
 
         $newState = State::find(2);
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->put('/orders', [
+        $response = $this->actingAs($admin)->withSession(['banned' => false])->put('/orders/state', [
             'orderId' => $order->id,
             'stateId' => $newState->id,
         ]);
@@ -88,7 +88,7 @@ class OrderStateUpdateTest extends TestCase
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->put('/orders', [
+        $response = $this->actingAs($admin)->withSession(['banned' => false])->put('/orders/state', [
             'orderId' => null,
             'stateId' => null,
         ]);
@@ -129,7 +129,7 @@ class OrderStateUpdateTest extends TestCase
 
         $newState = State::find(2);
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->put('/orders', [
+        $response = $this->actingAs($user)->withSession(['banned' => false])->put('/orders/state', [
             'orderId' => $order->id,
             'stateId' => $newState->id,
         ]);
@@ -169,7 +169,7 @@ class OrderStateUpdateTest extends TestCase
 
         $newState = State::find(2);
 
-        $response = $this->put('/orders', [
+        $response = $this->put('/orders/state', [
             'orderId' => $order->id,
             'stateId' => $newState->id,
         ]);

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TimelineModule } from 'primeng/timeline';
 import { RouterLink } from '@angular/router';
 import { CarouselModule } from 'primeng/carousel';
+import { environment } from 'src/environments/environment';
 
 interface StepsData {
   icon: string,
@@ -25,6 +26,8 @@ interface InspectionFeaturesData {
   imports: [NavbarComponent, NavbarComponent, CommonModule, TimelineModule, RouterLink, CarouselModule]
 })
 export class PhotogrammetryServiceComponent {
+
+  protected domain: string | undefined;
 
   steps: StepsData[] = [
     {
@@ -85,7 +88,11 @@ export class PhotogrammetryServiceComponent {
       description: "Wedle indywidalnych wymagań",
       image: "https://static1.squarespace.com/static/6141a9bd81d4225239c39cf3/616905bd82ef983a80c90169/6284c4cd97fc912b087e0952/1676347538593/DSC01355-1+%281%29.jpg?format=1500w"
     },
-  ]
+  ];
+
+  constructor() {
+    this.domain = environment.ApiDomain;
+  }
 
   onShowProcess(): void {
     document.getElementById("order-steps")?.scrollIntoView({

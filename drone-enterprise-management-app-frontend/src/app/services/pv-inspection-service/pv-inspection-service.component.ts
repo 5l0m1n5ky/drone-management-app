@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TimelineModule } from 'primeng/timeline';
 import { RouterLink } from '@angular/router';
 import { CarouselModule } from 'primeng/carousel';
+import { environment } from 'src/environments/environment';
 
 interface StepsData {
   icon: string,
@@ -25,6 +26,8 @@ interface InspectionFeaturesData {
   imports: [NavbarComponent, NavbarComponent, CommonModule, TimelineModule, RouterLink, CarouselModule]
 })
 export class PvInspectionServiceComponent {
+
+  protected domain: string | undefined;
 
   steps: StepsData[] = [
     {
@@ -110,7 +113,11 @@ export class PvInspectionServiceComponent {
       description: "wedle indywidualnych potrzeb",
       image: "https://eurosol.eu/wp-content/uploads/2023/07/DJI_0355-1024x538.jpg"
     },
-  ]
+  ];
+
+  constructor() {
+    this.domain = environment.ApiDomain;
+  }
 
   onShowProcess(): void {
     document.getElementById("order-steps")?.scrollIntoView({

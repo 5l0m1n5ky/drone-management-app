@@ -22,6 +22,9 @@ class Post extends Model
         'description'
     ];
 
+    protected $casts = [
+        'visibility' => 'boolean'
+    ];
 }
 
 

@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('app:delete-unconfirmed-users')->everyFiveMinutes()->timezone('Europe/Warsaw');
+        $schedule->command('app:delete-unconfirmed-users')->hourly()->timezone('Europe/Warsaw');
 
         $schedule->command('app:clear-inactive-sessions')->daily()->timezone('Europe/Warsaw');
     }

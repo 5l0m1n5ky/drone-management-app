@@ -24,7 +24,7 @@ class InspectionReportController extends Controller
 
         try {
 
-            $inspectionReport = DB::table('inspection_reports')->where('order_id', $orderId)->first();
+            $inspectionReport = InspectionReport::where('order_id', $orderId)->first();
             $reportFilePath = '';
 
 
@@ -35,7 +35,7 @@ class InspectionReportController extends Controller
 
                     Storage::delete($reportFilePath);
                     $reportFilePath = $reportFile->store('reports');
-                    DB::table('inspection_reports')->where('order_id', $orderId)->delete();
+                    InspectionReport::where('order_id', $orderId)->delete();
                 } else {
                     $reportFilePath = $reportFile->store('reports');
                 }
@@ -67,7 +67,7 @@ class InspectionReportController extends Controller
     public function download($orderId)
     {
 
-        $inspectionReport = DB::table('inspection_reports')->where('order_id', $orderId)->first();
+        $inspectionReport = InspectionReport::where('order_id', $orderId)->first();
 
         $reportFilePath = $inspectionReport->report_file_path;
 

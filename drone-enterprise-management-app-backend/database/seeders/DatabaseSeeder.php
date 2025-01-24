@@ -53,9 +53,35 @@ class DatabaseSeeder extends Seeder
             'email' => 'slomin.sky.drone@gmail.com',
             'password' => Hash::make('P455w0rd!'),
             'role' => 'admin',
+            'suspended' => false,
             'terms' => true,
             'newsletter' => false,
             'email_verified_at' => Carbon::now('Europe/Warsaw')
+        ]);
+
+        \App\Models\User::create([
+            'email' => 'user1@slominskydrone.com',
+            'password' => Hash::make('P455w0rd!'),
+            'terms' => true,
+            'newsletter' => false,
+            'email_verified_at' => Carbon::now('Europe/Warsaw')
+        ]);
+
+        \App\Models\User::create([
+            'email' => 'user2@slominskydrone.com',
+            'password' => Hash::make('P455w0rd!'),
+            'suspended' => true,
+            'terms' => true,
+            'newsletter' => false,
+            'email_verified_at' => Carbon::now('Europe/Warsaw')
+        ]);
+
+        \App\Models\User::create([
+            'email' => 'user3@slominskydrone.com',
+            'password' => Hash::make('P455w0rd!'),
+            'terms' => true,
+            'newsletter' => false,
+            'email_verified_at' => null
         ]);
 
         // Service
@@ -298,9 +324,9 @@ class DatabaseSeeder extends Seeder
             'state_id' => 1,
             'order_details_id' => 1,
             'price_brutto' => 1550,
-            'date' => '25-09-2024',
-            'order_latitude' => 53.272582,
-            'order_longitude' => 18.112636,
+            'date' => '2024-09-25',
+            'order_latitude' => 54.272582,
+            'order_longitude' => 19.112636,
             'customer_name' => 'Sample User',
             'customer_surname' => 'Sample User Surname',
             'nip' => 1234567890,
@@ -331,9 +357,9 @@ class DatabaseSeeder extends Seeder
             'state_id' => 1,
             'order_details_id' => 2,
             'price_brutto' => 2300,
-            'date' => '30-09-2024',
-            'order_latitude' => 54.272582,
-            'order_longitude' => 19.112636,
+            'date' => '2024-09-30',
+            'order_latitude' => 53.272582,
+            'order_longitude' => 18.112636,
             'customer_name' => 'Solar Systems',
             'customer_surname' => null,
             'nip' => 1924758375,

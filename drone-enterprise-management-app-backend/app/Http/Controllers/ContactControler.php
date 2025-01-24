@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Message;
 use App\Http\Requests\StoreMessageRequest;
+use App\Models\User;
 use Psy\Exception\ErrorException;
 use App\Traits\HttpResponses;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +26,7 @@ class ContactControler extends Controller
         $storeMessageRequest->validated($storeMessageRequest->all());
 
         try {
-            $admin_email = DB::table('users')->where('role', 'admin')->pluck('email')->first();
+            $admin_email = User::where('role', 'admin')->pluck('email')->first();
 
             $message = Message::create([
                 'email' => $storeMessageRequest->email,

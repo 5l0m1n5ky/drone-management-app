@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TimelineModule } from 'primeng/timeline';
 import { RouterLink } from '@angular/router';
 import { CarouselModule } from 'primeng/carousel';
+import { environment } from 'src/environments/environment';
 
 interface StepsData {
   icon: string,
@@ -25,6 +26,12 @@ interface InspectionFeaturesData {
   imports: [NavbarComponent, NavbarComponent, CommonModule, TimelineModule, RouterLink, CarouselModule]
 })
 export class ElectricDistributionServiceComponent {
+
+  protected domain: string | undefined;
+
+  constructor() {
+    this.domain = environment.ApiDomain;
+  }
 
   steps: StepsData[] = [
     {

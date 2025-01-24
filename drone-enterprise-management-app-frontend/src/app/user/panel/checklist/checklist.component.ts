@@ -24,8 +24,6 @@ export class ChecklistComponent implements OnInit {
     if (this.checklist.length === 0) {
       this.closeChecklist();
     }
-
-    console.log(this.checklist);
   }
 
   closeChecklist() {

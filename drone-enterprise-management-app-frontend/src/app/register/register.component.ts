@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { RegisterService } from './register.service';
 import { Router } from '@angular/router';
@@ -12,7 +12,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ToastModule } from 'primeng/toast';
 import { ToastService } from '../shared/toast/toast.service';
 import { Subscription } from 'rxjs';
-import { StringNullableChain } from 'cypress/types/lodash';
 
 @Component({
   standalone: true,
@@ -67,11 +66,11 @@ export class RegisterComponent implements OnDestroy {
       this.newsletter = false;
     }
 
-    if (registerForm.value.password !== registerForm.value.password_confirmation) {
-      this.passwordMismatch = true;
-      this.toastService.generateToast('error', 'Błąd rejestracji', 'Niezgodność haseł')
-      return;
-    }
+    // if (registerForm.value.password !== registerForm.value.password_confirmation) {
+    //   this.passwordMismatch = true;
+    //   this.toastService.generateToast('error', 'Błąd rejestracji', 'Niezgodność haseł')
+    //   return;
+    // }
 
     this.isProcessing = true;
 

@@ -17,10 +17,14 @@ interface OrderDates {
 
 export class OrderCreateService {
 
-  constructor(private http: HttpClient) { }
+  private domain: string | undefined;
+
+  constructor(private http: HttpClient) {
+    this.domain = environment.ApiDomain;
+  }
 
   fetchOrderDates() {
-    return this.http.get<{ [date: string]: OrderDates }>('http://localhost:8000/dates').pipe(map(responseData => {
+    return this.http.get<{ [date: string]: OrderDates }>(`${this.domain}/api/dates`).pipe(map(responseData => {
       const datesArray: OrderDates[] = [];
       for (const date in responseData) {
         if (responseData.hasOwnProperty(date)) {
@@ -33,7 +37,7 @@ export class OrderCreateService {
   }
 
   placeOrder(orderData: OrderData) {
-    return this.http.post<PlaceOrderResponse>('http://localhost:8000/orders',
+    return this.http.post<PlaceOrderResponse>(`${this.domain}/api/orders`,
       // formData,
       orderData,
       {
@@ -43,6 +47,16 @@ export class OrderCreateService {
     ).pipe(catchError(this.handleError),
       tap(response => {
         return response.message;
+      }
+      ));
+  }
+
+  geocoding(geocodingAddress: String) {
+    return this.http.get<any>(`https://nominatim.openstreetmap.org/search?q=${geocodingAddress}&format=json`,
+    ).pipe(
+      catchError(this.handleError),
+      tap(response => {
+        return response[0];
       }
       ));
   }

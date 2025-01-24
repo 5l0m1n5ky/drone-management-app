@@ -2,8 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BackgroundMusic;
+use App\Models\InspectionReport;
 use App\Models\Order;
 use App\Models\OrderDetails;
+use App\Models\Service;
+use App\Models\State;
+use App\Models\Subservice;
+use App\Models\User;
+use App\Models\Checklist;
 use App\Traits\HttpResponses;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OrderRequest;
@@ -25,24 +32,24 @@ class OrderController extends Controller
     {
         $user = Auth::user();
 
-        $services = collect(DB::table('services')->get());
-        $subservices = collect(DB::table('subservices')->get());
-        $states = collect(DB::table('states')->get());
-        $bgMusic = collect(DB::table('background_music')->get());
+        $services = collect(value: Service::get());
+        $subservices = collect(Subservice::get());
+        $states = collect(State::get());
+        $bgMusic = collect(BackgroundMusic::get());
 
         try {
 
             if ($user && $user->role === 'admin') {
 
                 $orderData = [];
-                $orders = DB::table('orders')->orderBy('id')->get();
+                $orders = Order::orderBy('id')->get();
 
                 foreach ($orders as $order) {
 
-                    $isReportExists = DB::table('inspection_reports')->where('order_id', $order->id)->exists();
+                    $isReportExists = InspectionReport::where('order_id', $order->id)->exists();
 
                     $orderDetailsId = $order->order_details_id;
-                    $orderDetails = DB::table('order_details')->where('id', $orderDetailsId)->orderBy('id')->first();
+                    $orderDetails = OrderDetails::where('id', $orderDetailsId)->orderBy('id')->first();
                     $orderItem = [
                         'id' => $order->id,
                         'service' => $services->where('id', $order->service_id)->pluck('service_type')->first(),
@@ -80,11 +87,13 @@ class OrderController extends Controller
             } else if ($user && $user->role === 'user') {
 
                 $orderData = [];
-                $orders = DB::table('orders')->where('user_id', $user->id)->orderBy('id')->get();
+                $orders = Order::where('user_id', $user->id)->orderBy('id')->get();
                 foreach ($orders as $order) {
 
+                    $isReportExists = InspectionReport::where('order_id', $order->id)->exists();
+
                     $orderDetailsId = $order->order_details_id;
-                    $orderDetails = DB::table('order_details')->where('id', $orderDetailsId)->orderBy('id')->first();
+                    $orderDetails = OrderDetails::where('id', $orderDetailsId)->orderBy('id')->first();
                     $orderItem = [
                         'id' => $order->id,
                         'service' => $services->where('id', $order->service_id)->pluck('service_type')->first(),
@@ -110,6 +119,7 @@ class OrderController extends Controller
                         'customerComment' => $order->customer_comment,
                         'email' => $order->email,
                         'tel' => $order->tel,
+                        'isReportReady' => $isReportExists
                     ];
 
                     $orderData[] = $orderItem;
@@ -134,24 +144,17 @@ class OrderController extends Controller
 
     public function indexOrderDates()
     {
-        // if (Auth::user()) {
         $orderDates = Order::select('date')->orderBy('id')->get();
 
         return response()->json($orderDates);
-        // } else {
-        // return $this->error(
-        //     'You have no previleges to make this request',
-        //     'ACCESS_DENIED',
-        //     500
-        // );
-        // }
+        
     }
 
     public function store(OrderRequest $orderRequest)
     {
         $orderRequest->validated($orderRequest->all());
 
-        $admin = DB::table('users')->where('role', 'admin')->first();
+        $admin = User::where('role', 'admin')->first();
 
         $user = auth()->user();
         $userId = $user->id;
@@ -193,7 +196,7 @@ class OrderController extends Controller
 
             $this->emailController->notifyAdminNewOrder($admin->email, $link);
 
-            $checklist_types = DB::table(table: 'checklist')->orderBy('id')->get('id');
+            $checklist_types = Checklist::orderBy('id')->get('id');
 
             foreach ($checklist_types as $checklist_type) {
                 $order->checklist()->attach($checklist_type->id, [

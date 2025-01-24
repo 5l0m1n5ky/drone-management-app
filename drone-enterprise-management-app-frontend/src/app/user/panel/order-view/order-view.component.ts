@@ -19,11 +19,13 @@ import { ReportGeneratorComponent } from '../report-generator/report-generator.c
 import { NgForm } from '@angular/forms';
 import { NgxFileSaverService } from '@clemox/ngx-file-saver';
 import * as Leaflet from 'leaflet';
+import { SidebarComponent } from 'src/app/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-order-view',
   standalone: true,
   imports: [CommonModule, RouterLink, MatBottomSheetModule, LoadingSpinnerComponent, ChecklistComponent, ReportGeneratorComponent],
+  providers: [SidebarComponent],
   templateUrl: './order-view.component.html'
 })
 export class OrderViewComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -51,7 +53,7 @@ export class OrderViewComponent implements OnInit, AfterViewInit, OnDestroy {
   marker: Leaflet.Marker;
   map: Leaflet.Map;
 
-  constructor(private panelComponent: PanelComponent, private panelService: PanelService, private router: Router, private location: Location, private loginService: LoginService, private bottomSheet: MatBottomSheet, public toastService: ToastService, private fileSaver: NgxFileSaverService) { }
+  constructor(private panelComponent: PanelComponent, private panelService: PanelService, private router: Router, private location: Location, private loginService: LoginService, private bottomSheet: MatBottomSheet, public toastService: ToastService, private fileSaver: NgxFileSaverService, private sidebarComponent: SidebarComponent) { }
 
   ngOnInit(): void {
 
@@ -66,7 +68,7 @@ export class OrderViewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.order) {
       this.location.back();
     }
-    
+
     this.isReportReady = this.orderItem.isReportReady;
 
     if (this.orderItem.service !== 'foto/video') {
@@ -91,7 +93,6 @@ export class OrderViewComponent implements OnInit, AfterViewInit, OnDestroy {
       { icon: customIcon })
       .addTo(this.map);
 
-      console.log(this.orderItem.latitude.toString(), this.orderItem.longitude.toString());
   }
 
   mapConfig() {
@@ -128,7 +129,7 @@ export class OrderViewComponent implements OnInit, AfterViewInit, OnDestroy {
           this.isProcessing = true;
 
           this.updateStateSubscription = this.panelService.updateOrderState(result.orderId, result.stateId, result.comment).subscribe(response => {
-            console.log(response);
+            this.sidebarComponent.checkBadgeValue();
             this.toastService.generateToast('success', 'Modyfikacja statusu', response.data.toString());
             this.isProcessing = false;
             this.router.navigate(['/user/panel/orders']);

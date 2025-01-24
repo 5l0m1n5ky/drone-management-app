@@ -21,11 +21,10 @@ import { ChooseServiceComponent } from './services/choose-service/choose-service
 import { OrderViewComponent } from './user/panel/order-view/order-view.component';
 import { ContactComponent } from './contact/contact.component';
 import { AboutComponent } from './about/about.component';
-import { MapComponent } from './map/map.component';
+import { UserManagementComponent } from './user/panel/user-management/user-management.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'map', component: MapComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'services', component: ServicesComponent },
@@ -46,7 +45,7 @@ const routes: Routes = [
       { path: 'orders', component: OrderComponent },
       { path: 'create-order/:service_id', component: OrderCreateComponent },
       { path: 'notifications', component: NotificationComponent },
-      { path: 'account', component: AccountComponent },
+      { path: 'user-management', component: UserManagementComponent },
       { path: 'order-view', component: OrderViewComponent },
     ]
   },

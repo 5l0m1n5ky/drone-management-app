@@ -17,7 +17,15 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = DB::table('posts')->orderBy('id')->get();
+        $posts = Post::orderBy('id')->get();
+
+
+        // if (env('APP_ENV') === 'local') {
+        //     $posts->transform(function ($post) {
+        //         $post->visibility = (bool) $post->visibility;
+        //         return $post;
+        //     });
+        // }
 
         return response()->json($posts);
     }
@@ -37,12 +45,18 @@ class PostController extends Controller
             $cover = Str::replace('public/', '', env('APP_ADDRESS') . '/storage' . '/' . Storage::putFile($urToStoreCover, $coverFile));
         }
 
+        $visibility = env('APP_ENV') === 'local'
+            ? ($request->visibility === 'true' ? 1 : 0)
+            : $request->visibility;
+
         $post = Post::create([
             'path' => $path,
             'cover' => $cover,
             'location' => $request->location,
             'description' => $request->description,
-            'visibility' => $request->visibility,
+            'visibility' => $visibility,
+            // 'visibility' => $request->visibility,
+            // 'visibility' => (bool) $request->visibility ? 1 : 0,
         ]);
 
         return $this->success(
@@ -95,12 +109,18 @@ class PostController extends Controller
                 $cover = Str::replace('public/', '', env('APP_ADDRESS') . '/storage' . '/' . Storage::putFile($urToStore, $coverFile));
             }
 
+            $visibility = env('APP_ENV') === 'local'
+                ? ($request->visibility === 'true' ? 1 : 0)
+                : $request->visibility;
+
             $post->update([
                 'path' => $path,
                 'cover' => $cover,
                 'location' => $request->location,
                 'description' => $request->description,
-                'visibility' => $request->visibility,
+                'visibility' => $visibility,
+                // 'visibility' => $request->visibility,
+                // 'visibility' => (bool) $request->visibility ? 1 : 0,
             ]);
 
             return $this->success(

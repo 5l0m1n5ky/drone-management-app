@@ -9,7 +9,6 @@ import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinn
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Button } from 'primeng/button';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -32,7 +31,6 @@ import { AppComponent } from '../app.component';
     MatMenuModule,
     LoadingSpinnerComponent,
     ReactiveFormsModule,
-    Button,
     MatStepperModule,
     MatSlideToggleModule,
     MatDialogModule,
@@ -97,7 +95,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
       if (this.isAdmin()) {
         this.loadedPosts = posts;
       } else {
-        this.loadedPosts = posts.filter(post => post.visibility === true);
+        this.loadedPosts = posts.filter(post => (post.visibility === true || post.visibility === 1));
       }
       this.isLoading = false;
     });

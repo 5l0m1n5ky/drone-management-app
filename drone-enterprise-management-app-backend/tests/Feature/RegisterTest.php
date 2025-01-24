@@ -33,6 +33,7 @@ class RegisterTest extends TestCase
             'email' => fake()->email(),
             'password' => $password,
             'password_confirmation' => $password,
+            'terms' => true,
             'newsletter' => true,
         ]);
 
@@ -67,6 +68,7 @@ class RegisterTest extends TestCase
             'email' => fake()->email(),
             'password' => $password,
             'password_confirmation' => $password,
+            'terms' => true,
             'newsletter' => true,
         ]);
 
@@ -87,6 +89,7 @@ class RegisterTest extends TestCase
             'email' => fake()->email(),
             'password' => fake()->password(),
             'password_confirmation' => fake()->password(),
+            'terms' => true,
             'newsletter' => true,
         ]);
 
@@ -107,6 +110,7 @@ class RegisterTest extends TestCase
         $emailVerifiedAt = now();
         $password = fake()->password();
         $role = 'user';
+        $terms = true;
         $newsletter = true;
 
         $existingUser = User::create([
@@ -121,6 +125,7 @@ class RegisterTest extends TestCase
             'email' => $email,
             'password' => $password,
             'password_confirmation' => $password,
+            'terms' => $terms,
             'newsletter' => $newsletter,
         ]);
 
@@ -143,6 +148,7 @@ class RegisterTest extends TestCase
             'email' => fake()->email(),
             'password' => $password,
             'password_confirmation' => $password,
+            'terms' => true,
             'newsletter' => true,
         ]);
 

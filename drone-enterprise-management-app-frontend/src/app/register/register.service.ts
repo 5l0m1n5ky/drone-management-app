@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, throwError } from "rxjs";
+import { environment } from "src/environments/environment";
 
 interface User {
   id: string,
@@ -20,10 +21,15 @@ interface RegisterResponseData {
 @Injectable({ providedIn: 'root' })
 
 export class RegisterService {
-  constructor(private http: HttpClient) { }
+
+  private domain: string | undefined;
+
+  constructor(private http: HttpClient) {
+    this.domain = environment.ApiDomain;
+  }
 
   register(email: string, password: string, passwordConfirmation: string, terms: boolean, newsletter: boolean) {
-    return this.http.post<RegisterResponseData>('http://localhost:8000/register', {
+    return this.http.post<RegisterResponseData>(`${this.domain}/register`, {
       email: email,
       password: password,
       password_confirmation: passwordConfirmation,

@@ -135,7 +135,7 @@ class AuthController extends Controller
         $tokenToVerify = $request->query('token');
         $user_id = $request->query('user_id');
         $user = User::find($user_id);
-        $token = DB::table('tokens')->where('user_id', $user_id)->pluck('token_value')->first();
+        $token = Token::where('user_id', $user_id)->pluck('token_value')->first();
 
         try {
             if ($user && !$user->hasVerifiedEmail()) {
@@ -198,7 +198,7 @@ class AuthController extends Controller
 
             if ($user && !$user->hasVerifiedEmail()) {
 
-                $exisitng_token = DB::table('tokens')->where('user_id', $user_id)->first();
+                $exisitng_token = Token::where('user_id', $user_id)->first();
 
                 if ($exisitng_token) {
                     Token::find($exisitng_token->id)->delete();

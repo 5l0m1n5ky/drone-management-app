@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Checklist;
+use App\Models\OrderChecklist;
 use Illuminate\Http\Request;
 use App\Traits\HttpResponses;
 use Illuminate\Support\Facades\DB;
@@ -14,8 +16,8 @@ class ChecklistController extends Controller
 
         $checklistResponse = [];
 
-        $checklist = DB::table('order_checklist')->where('order_id', $orderId)->orderBy('id')->get(['checklist_id', 'checked']);
-        $checklistTitles = DB::table('checklist')->orderBy('id')->get('type');
+        $checklist = OrderChecklist::where('order_id', $orderId)->orderBy('id')->get(['checklist_id', 'checked']);
+        $checklistTitles = Checklist::orderBy('id')->get('type');
 
         if ($checklist && $checklistTitles) {
 
@@ -40,7 +42,7 @@ class ChecklistController extends Controller
     {
         $checklistRequestData = $request->all();
 
-        $checklistRelatedToOrder = DB::table('order_checklist')->where('order_id', $orderId)->get();
+        $checklistRelatedToOrder = OrderChecklist::where('order_id', $orderId)->get();
 
         if (count($checklistRelatedToOrder) === 0) {
             return $this->error(
@@ -52,8 +54,7 @@ class ChecklistController extends Controller
 
         try {
             foreach ($checklistRequestData as $checklistId => $checkedStatus) {
-                DB::table('order_checklist')
-                    ->where('order_id', $orderId)
+                OrderChecklist::where('order_id', $orderId)
                     ->where('checklist_id', $checklistId)
                     ->update(['checked' => $checkedStatus]);
             }
