@@ -37,10 +37,6 @@ class PostController extends Controller
             $cover = Str::replace('public/', '', env('APP_ADDRESS') . '/storage' . '/' . Storage::putFile($urToStoreCover, $coverFile));
         }
 
-        // $visibility = env('APP_ENV') === 'local'
-        //     ? ($request->visibility === 'true' ? 1 : 0)
-        //     : $request->visibility;
-
         $post = Post::create([
             'path' => $path,
             'cover' => $cover,

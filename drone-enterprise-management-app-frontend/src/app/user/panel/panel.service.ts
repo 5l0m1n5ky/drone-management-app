@@ -319,11 +319,6 @@ export class PanelService {
       errorMessage = errorResponse.error.message;
     }
 
-    // if (errorResponse.error.message === "CSRF_TOKEN_MISMATCH") {
-    //   this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
-    //   this.appComponent.changeLoginState();
-    // }
-
     return throwError(errorMessage);
   }
 
@@ -334,11 +329,6 @@ export class PanelService {
     if (errorResponse.error) {
       errorData = errorResponse.error.data;
     }
-
-    // if (errorResponse.error.message === "CSRF_TOKEN_MISMATCH") {
-    //   this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
-    //   this.appComponent.changeLoginState();
-    // }
 
     return throwError(errorData);
   }

@@ -339,8 +339,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'sample@email.com',
             'tel' => '111222333',
             'order_alias' => 'Old town Bydgoszcz',
-            // 'created_at' => Carbon::now(),
-            // 'updated_at' => Carbon::now(),
         ]);
 
         // Sample pv inspection order details

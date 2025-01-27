@@ -15,13 +15,6 @@ return [
     |
     */
 
-    // 'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
-    //     '%s%s',
-    //     'localhost,localhost:4200,127.0.0.1,::1',
-    //     Sanctum::currentApplicationUrlWithPort()
-    // )
-    // )),
-
     'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
         '%s%s',
         'localhost:4200,127.0.0.1:4200',
@@ -42,7 +35,6 @@ return [
     */
 
     'guard' => ['api'],
-    // 'guard' => ['web'],
 
     /*
     |--------------------------------------------------------------------------

@@ -189,9 +189,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
   }
 
   onEditMode() {
-    // this.isLoading = true;
-    // this.onCheckSubscription = this.loginService.checkSession().subscribe(responseData => {
-    //   if (responseData && responseData.message && responseData.data === 'ACTIVE_SESSION') {
+
     this.isEditMode = true;
     this.editPostForm = new FormGroup({
       postLocationForm: new FormGroup({
@@ -204,14 +202,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
         visibility: new FormControl(this.currentPost.visibility)
       }),
     });
-    // this.isLoading = false;
   }
-  // }, errorMessage => {
-  //   this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
-  //   this.logoutService.changeLoginState();
-  //   this.isLoading = false;
-  // });
-  // }
 
   onEdit() {
     this.isUploading = true;

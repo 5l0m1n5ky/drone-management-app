@@ -21,7 +21,6 @@ Route::get('/', function () {
         : redirect(env("FRONTEND_URL"));
 });
 
-// Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 

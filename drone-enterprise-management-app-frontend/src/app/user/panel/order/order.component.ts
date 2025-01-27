@@ -43,19 +43,6 @@ export class OrderComponent implements OnInit, OnDestroy {
       }
       this.isProcessing = false;
     });
-
-    // this.onCheckSubscription = this.loginService.checkSession().subscribe(responseData => {
-    //   if (responseData && responseData.message && responseData.message.toString() === 'ACTIVE_SESSION') {
-    //     this.orderSubscription = this.panelService.fetchOrders().subscribe(orders => {
-    //       this.orders = orders;
-    //       this.isProcessing = false;
-    //     });
-    //   }
-    // }, () => {
-    //   this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
-    //   this.appComponent.changeLoginState();
-    //   this.isProcessing = false;
-    // });
   }
 
   isAdmin() {

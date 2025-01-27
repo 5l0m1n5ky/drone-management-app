@@ -46,7 +46,6 @@ return [
     |
     */
 
-    // 'encrypt' => true,
     'encrypt' => false,
 
     /*

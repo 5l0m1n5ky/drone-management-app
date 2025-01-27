@@ -238,14 +238,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-            // ne działa
-            // $accessToken = $request->bearerToken();
-            // $token = PersonalAccessToken::findToken($accessToken);
-            // $token->delete();
-
-            // nie działa
-            // Session::flush();
-
+         
             Auth::user()->tokens()->delete();
 
             return $this->success(

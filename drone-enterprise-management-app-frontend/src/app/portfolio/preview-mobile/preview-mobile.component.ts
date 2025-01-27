@@ -130,9 +130,6 @@ export class PreviewMobileComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   onEditMode(postId: number) {
-    // this.isLoading = true;
-    // this.onCheckSubscription = this.loginService.checkSession().subscribe(responseData => {
-    //   if (responseData && responseData.message && responseData.message.toString() === 'ACTIVE_SESSION') {
 
     this.postToEdit = this.loadedPosts.filter(post => post.id === postId)[0];
 
@@ -148,14 +145,7 @@ export class PreviewMobileComponent implements OnInit, AfterViewInit, OnDestroy 
       }),
     });
     this.isEditMode = true;
-    // this.isLoading = false;
   }
-  //   }, errorMessage => {
-  //     this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
-  //     this.logoutService.changeLoginState();
-  //     this.isLoading = false;
-  //   });
-  // }
 
   onEdit() {
     this.isUploading = true;

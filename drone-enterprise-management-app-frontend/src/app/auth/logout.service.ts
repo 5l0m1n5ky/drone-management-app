@@ -31,11 +31,8 @@ export class LogoutService {
       withCredentials: true
     }).pipe(catchError(this.handleError),
       tap(response => {
-        // this.loginService.user.next({ id: '', email: '', privileges: '', suspended: false});
         this.loginService.user.next(null);
-        // this.cookieService.deleteAll();
         this.changeLoginState();
-        // this.cookieService.delete('user');
         if (response) {
           return response;
         }
@@ -47,7 +44,6 @@ export class LogoutService {
   changeLoginState() {
     this.cookieService.delete('user');
     this.cookieService.delete('XSRF-TOKEN');
-    // this.cookieService.deleteAll();
   }
 
   private handleError() {
