@@ -32,7 +32,7 @@ class OrderController extends Controller
     {
         $user = Auth::user();
 
-        $services = collect(value: Service::get());
+        $services = collect( Service::get());
         $subservices = collect(Subservice::get());
         $states = collect(State::get());
         $bgMusic = collect(BackgroundMusic::get());
@@ -128,15 +128,15 @@ class OrderController extends Controller
 
             } else {
                 return $this->error(
-                    'You do not have such as previleges to make that request',
                     'DENIED',
+                    'Odrzucono żądanie',
                     500
                 );
             }
         } catch (\ErrorException $errorException) {
             return $this->error(
                 $errorException,
-                'DENIED',
+                'Błąd przetwarzania żądania',
                 500
             );
         }
@@ -147,7 +147,7 @@ class OrderController extends Controller
         $orderDates = Order::select('date')->orderBy('id')->get();
 
         return response()->json($orderDates);
-        
+
     }
 
     public function store(OrderRequest $orderRequest)
@@ -206,14 +206,14 @@ class OrderController extends Controller
             }
 
             return $this->success(
-                'Zamówienie zostało złożone',
                 'ORDER_PLACED',
+                'Zamówienie zostało złożone',
                 200
             );
         } else {
             return $this->error(
-                'Wystąpił błąd w składaniu zamówienia',
                 'ORDER_PLACING_FAILED',
+                'Wystąpił błąd w składaniu zamówienia',
                 500
             );
         }

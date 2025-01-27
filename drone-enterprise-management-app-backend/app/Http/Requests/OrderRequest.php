@@ -40,11 +40,11 @@ class OrderRequest extends FormRequest
             'streetNumber' => ['required', 'string', 'max:5'],
             'apartmentNumber' => ['nullable', 'string', 'max:5'],
             'city' => ['required', 'string', 'max:30'],
-            'zip' => ['required', 'numeric', 'digits:5'],
-            'tel' => ['required', 'numeric', 'digits:9'],
+            'zip' => ['required', 'string', 'max:6'],
+            'tel' => ['required', 'string', 'min:6'],
             'email' => ['required', 'email'],
             'alias' => ['required', 'string'],
-            'description' => ['nullable', 'string'],
+            'description' => ['nullable', 'string', 'max:450'],
             'price' => ['required', 'numeric'],
         ];
     }

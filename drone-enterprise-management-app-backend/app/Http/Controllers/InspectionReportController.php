@@ -50,15 +50,15 @@ class InspectionReportController extends Controller
             ]);
 
             return $this->success(
-                'Wygenerowano raport',
                 'INSPECTION_REPORT_GENERATED',
+                'Wygenerowano raport',
                 200
             );
 
         } catch (\Exception $exception) {
             return $this->error(
                 $exception,
-                'REPORT_GENERATE_ERROR',
+                'Bład generowania raportu',
                 500
             );
         }
@@ -75,8 +75,8 @@ class InspectionReportController extends Controller
             return Storage::download($reportFilePath);
         } else {
             return $this->error(
-                'Błąd pobierania raportu',
                 'REPORT_GENERATE_ERROR',
+                'Błąd pobierania raportu',
                 500
             );
         }

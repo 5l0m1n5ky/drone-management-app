@@ -5,6 +5,9 @@ import { PanelService } from '../panel.service';
 import { Subscription } from 'rxjs';
 import { UserData } from '../models/user-data.model';
 import { ToastService } from 'src/app/shared/toast/toast.service';
+import { AppComponent } from 'src/app/app.component';
+import { Router } from '@angular/router';
+import { LogoutService } from 'src/app/auth/logout.service';
 
 @Component({
   selector: 'app-user-management',
@@ -20,7 +23,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   usersSubscription: Subscription
   userSuspentionUpdateSubscription: any;
 
-  constructor(private panelService: PanelService, private toastService: ToastService) { }
+  constructor(private router: Router, private logoutService: LogoutService, private panelService: PanelService, private toastService: ToastService) { }
 
   ngOnInit(): void {
     this.getUsersData();
@@ -32,7 +35,9 @@ export class UserManagementComponent implements OnInit, OnDestroy {
       this.users = usersData;
       this.isProcessing = false;
     }, errorMessage => {
-      this.toastService.generateToast("error", "Pobieranie listy użytkowników", errorMessage);
+      // this.toastService.generateToast("error", "Pobieranie listy użytkowników", errorMessage);
+      this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
+      this.logoutService.changeLoginState();
       this.isProcessing = false;
     });
   }
@@ -51,9 +56,27 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
     }, errorMessage => {
 
-      this.toastService.generateToast("error", "Pobieranie listy użytkowników", errorMessage);
+      switch (errorMessage) {
+
+        case "Unauthenticated": {
+          this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
+          this.logoutService.changeLoginState();
+          break;
+        }
+
+        case "CSRF_TOKEN_MISMATCH": {
+          this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
+          this.logoutService.changeLoginState();
+          break;
+        }
+
+        default: {
+          this.toastService.generateToast("error", "Pobieranie listy użytkowników", errorMessage);
+        }
+      }
+
       this.isProcessing = false;
-    })
+    });
   }
 
   ngOnDestroy(): void {

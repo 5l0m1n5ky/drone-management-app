@@ -25,7 +25,7 @@ class IndexDatesTest extends TestCase
 
         $user = User::factory()->make(['role' => 'user']);
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/dates');
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/api/dates');
 
         $response->assertStatus(200)->assertJsonStructure([
             '*' => [

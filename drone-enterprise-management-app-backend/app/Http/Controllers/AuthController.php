@@ -10,9 +10,10 @@ use App\Models\User;
 use App\Models\Token;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Laravel\Sanctum\HasApiTokens;
 use Throwable;
-use Illuminate\Support\Facades\DB;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
@@ -54,7 +55,8 @@ class AuthController extends Controller
                     'user' => [
                         'id' => $user->id,
                         'email' => $user->email,
-                        'privileges' => $user->role
+                        'privileges' => $user->role,
+                        'suspended' => $user->suspended
                     ],
                 ],
                 'LOGGED_IN',
@@ -148,7 +150,7 @@ class AuthController extends Controller
                         [
                             'request' => [
                                 'id' => $user_id,
-                                'token' => $token
+                                'token' => $tokenToVerify
                             ],
                         ],
                         'ACCOUNT_VERIFIED'
@@ -159,7 +161,7 @@ class AuthController extends Controller
                         [
                             'request' => [
                                 'id' => $user_id,
-                                'token' => $token
+                                'token' => $tokenToVerify
                             ]
                         ],
                         'VERIFICATION_TOKEN_MISMATCH',
@@ -171,7 +173,7 @@ class AuthController extends Controller
                     [
                         'request' => [
                             'id' => $user_id,
-                            'token' => $token
+                            'token' => $tokenToVerify
                         ]
                     ],
                     'VERIFICATION_ERROR',
@@ -212,21 +214,21 @@ class AuthController extends Controller
                 $this->emailController->sendRegistrationEmail($user->email, $token->token_value);
 
                 return $this->success(
-                    'Wygenerowano nowy token',
                     'TOKEN_REGENERATED',
+                    'Wygenerowano nowy token',
                     200
                 );
             } else {
                 return $this->error(
-                    'Wygenerowanie nowego tokena nie jest dostępne',
                     'TOKEN_REGENERATION_ERROR',
+                    'Wygenerowanie nowego tokena nie jest dostępne',
                     401
                 );
             }
         } catch (\ErrorException $errorException) {
             return $this->error(
-                $errorException,
-                'TOKEN_REGENERATION_ERROR',
+                "TOKEN_REGENERATION_ERROR",
+                'Błąd przetwarzania żądania',
                 500
             );
         }
@@ -236,18 +238,26 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-            $request->session()->invalidate();
+            // ne działa
+            // $accessToken = $request->bearerToken();
+            // $token = PersonalAccessToken::findToken($accessToken);
+            // $token->delete();
+
+            // nie działa
+            // Session::flush();
+
+            Auth::user()->tokens()->delete();
 
             return $this->success(
-                'Wylogowano pomyślnie',
                 'SUCCESSFUL_LOGOUT',
+                'Wylogowano pomyślnie',
                 200
             );
 
         } catch (\ErrorException $errorException) {
             return $this->error(
-                'Bład w operaci wylogowywania',
                 'UNSUCCESSFUL_LOGOUT',
+                'Bład w operaci wylogowywania',
                 500
             );
         }
@@ -256,8 +266,8 @@ class AuthController extends Controller
     public function check(Request $request)
     {
         return $this->success(
-            'Your session is active',
             'ACTIVE_SESSION',
+            'Your session is active',
             200
         );
     }

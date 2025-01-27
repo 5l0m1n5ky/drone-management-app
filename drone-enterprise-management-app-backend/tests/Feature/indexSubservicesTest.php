@@ -21,7 +21,7 @@ class IndexSubservicesTest extends TestCase
     /** @test */
     public function checks_if_json_response_has_required_fields(): void
     {
-        $response = $this->get('/subservices');
+        $response = $this->get('/api/subservices');
 
         $response->assertStatus(200)->assertJsonStructure([
             '*' => [

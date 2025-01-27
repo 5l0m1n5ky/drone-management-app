@@ -9,6 +9,7 @@ interface LoginUserData {
   id: string,
   email: string,
   privileges: string
+  suspended: boolean
 }
 
 interface UserData {
@@ -32,6 +33,8 @@ export class LoginService {
 
   user = new BehaviorSubject<User | null>(null);
 
+  isAuthenticated = new BehaviorSubject<boolean>(false);
+
   private domain: string | undefined;
 
   constructor(private http: HttpClient, private cookieService: CookieService) {
@@ -46,8 +49,15 @@ export class LoginService {
     return false;
   }
 
+  isUserSuspended(): boolean {
+    const user = this.user.value;
+    if (user?.suspended) {
+      return true;
+    }
+    return false;
+  }
+
   login(email: string, password: string) {
-    // return this.http.post<LoginResponseData>(`${this.domain}/login`, {
     return this.http.post<LoginResponseData>(`${this.domain}/api/login`, {
       email: email,
       password: password,
@@ -58,13 +68,21 @@ export class LoginService {
       withCredentials: true
     }).pipe(catchError(this.handleError),
       tap(responseData => {
-        this.handleAuthentication(responseData.data.user.id, responseData.data.user.email, responseData.data.user.privileges);
+        this.handleAuthentication(responseData.data.user.id, responseData.data.user.email, responseData.data.user.privileges, responseData.data.user.suspended);
       }
       ));
   }
 
+  getLoginState(): boolean {
+    if (this.cookieService.check('user')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   checkSession() {
-    return this.http.post<checkSessionResponseData>(`${this.domain}/api/user/check`, null,
+    return this.http.get<checkSessionResponseData>(`${this.domain}/api/user/check`,
       {
         headers: new HttpHeaders({
           'Accept': 'application/json',
@@ -72,7 +90,9 @@ export class LoginService {
         }),
         withCredentials: true
       }
-    ).pipe(catchError(this.handleError),
+    ).pipe(catchError((error) => {
+      return throwError(error);
+    }),
       tap(response => {
         return response;
       }
@@ -80,32 +100,37 @@ export class LoginService {
   }
 
   private handleError(errorResponse: HttpErrorResponse) {
+    console.log('inside handle error');
     let errorMessage = 'Wystapił błąd. Spróbuj ponownie';
     if (!errorResponse || !errorResponse.error) {
       return throwError(errorMessage);
     }
-    switch (errorResponse.error.message) {
+    switch (errorResponse.error.data) {
       case 'CREDENTIALS_MISMATCH':
         errorMessage = 'Nieprawidłowe dane logowania'
     };
     return throwError(errorMessage);
   }
 
-  private handleAuthentication(id: string, email: string, privileges: string) {
-    const user = new User(id, email, privileges);
+  private handleAuthentication(id: string, email: string, privileges: string, suspended: boolean) {
+    const user = new User(id, email, privileges, suspended);
     this.user.next(user);
-    this.cookieService.set('user', JSON.stringify({ id: user?.id, email: user?.email, privileges: user?.privileges }));
+    if (this.cookieService.check('user')) {
+      this.cookieService.delete('user');
+    }
+    console.log('user added to cookies');
+    this.cookieService.set('user', JSON.stringify({ id: user?.id, email: user?.email, privileges: user?.privileges, suspended: user?.suspended }));
   }
 
   autoLogin() {
-    const userCookie = this.cookieService.get('user');
 
-    if (!userCookie) {
+    if (!this.cookieService.check('user')) {
       return;
     }
 
+    let userCookie = this.cookieService.get('user');
     const userData: User = JSON.parse(userCookie);
-    const loadedUser = new User(userData.id, userData.email, userData.privileges);
+    const loadedUser = new User(userData.id, userData.email, userData.privileges, userData.suspended);
     this.user.next(loadedUser);
   }
 }

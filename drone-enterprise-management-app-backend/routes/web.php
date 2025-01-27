@@ -25,13 +25,13 @@ Route::get('/', function () {
 
 // Route::group(['middleware' => 'auth:sanctum'], function () {
 //     Route::post('/logout', [AuthController::class, 'logout']);
-//     Route::post('/user/check', [AuthController::class, 'check']);
+//     Route::get('/user/check', [AuthController::class, 'check']);
 //     Route::post('/posts', [PostController::class, 'store'])->middleware('restrictRole:admin');
 //     //POST method works with usage of Angular FormData body unlike to PUT or PATCH
 //     Route::post('/posts/update/{post_id}', [PostController::class, 'update'])->middleware('restrictRole:admin');
 //     Route::delete('/posts/{post_id}', [PostController::class, 'delete'])->middleware('restrictRole:admin');
 //     Route::post('/orders', [OrderController::class, 'store']);
-//     Route::put('/orders/state', [StateController::class, 'update'])->middleware('restrictRole:admin');
+//     Route::put('/orders', [StateController::class, 'update'])->middleware('restrictRole:admin');
 //     Route::get('/notifications', [NotificationController::class, 'index']);
 //     Route::put('/notifications', [NotificationController::class, 'update']);
 //     Route::get('orders/checklist/{orderId}', action: [ChecklistController::class, 'index'])->middleware('restrictRole:admin');

@@ -19,14 +19,6 @@ class PostController extends Controller
     {
         $posts = Post::orderBy('id')->get();
 
-
-        // if (env('APP_ENV') === 'local') {
-        //     $posts->transform(function ($post) {
-        //         $post->visibility = (bool) $post->visibility;
-        //         return $post;
-        //     });
-        // }
-
         return response()->json($posts);
     }
 
@@ -45,18 +37,16 @@ class PostController extends Controller
             $cover = Str::replace('public/', '', env('APP_ADDRESS') . '/storage' . '/' . Storage::putFile($urToStoreCover, $coverFile));
         }
 
-        $visibility = env('APP_ENV') === 'local'
-            ? ($request->visibility === 'true' ? 1 : 0)
-            : $request->visibility;
+        // $visibility = env('APP_ENV') === 'local'
+        //     ? ($request->visibility === 'true' ? 1 : 0)
+        //     : $request->visibility;
 
         $post = Post::create([
             'path' => $path,
             'cover' => $cover,
             'location' => $request->location,
             'description' => $request->description,
-            'visibility' => $visibility,
-            // 'visibility' => $request->visibility,
-            // 'visibility' => (bool) $request->visibility ? 1 : 0,
+            'visibility' => $request->visibility,
         ]);
 
         return $this->success(
@@ -65,7 +55,7 @@ class PostController extends Controller
                     'post_id' => $post->id
                 ],
             ],
-            'PUBLISHED',
+            'Opublikowano post',
             200
         );
     }
@@ -119,19 +109,17 @@ class PostController extends Controller
                 'location' => $request->location,
                 'description' => $request->description,
                 'visibility' => $visibility,
-                // 'visibility' => $request->visibility,
-                // 'visibility' => (bool) $request->visibility ? 1 : 0,
             ]);
 
             return $this->success(
-                'Post is succesuffly edited',
                 'UPDATED',
+                'Post został zaktualizowany',
                 200
             );
         } else {
             return $this->error(
-                'Appointed post does not exist',
                 'NO_SUCH_POST_TO_UPATE',
+                'Post nie istnieje',
                 500
             );
         }
@@ -160,14 +148,14 @@ class PostController extends Controller
             $post->delete();
 
             return $this->success(
-                'Post is succesuffly deleted',
                 'DELETED_SUCCESFULLY',
+                'Pomyślnie usunięto post',
                 200
             );
         } else {
             return $this->error(
-                'No such post to delete or internal error',
                 'CANNOT_DELETE',
+                'Błąd przetwarzania żądania',
                 500
             );
         }

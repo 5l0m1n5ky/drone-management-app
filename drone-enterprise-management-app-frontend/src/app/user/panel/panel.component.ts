@@ -27,6 +27,7 @@ export class PanelComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    
     this.orderSubscription = this.panelService.orderToShowObservable$.subscribe(order => {
       this.order = order
     });

@@ -21,7 +21,7 @@ class IndexBgMusicTest extends TestCase
     /** @test */
     public function checks_if_json_response_has_required_fields(): void
     {
-        $response = $this->get('/background-music');
+        $response = $this->get('/api/background-music');
 
         $response->assertStatus(200)->assertJsonStructure([
             '*' => [

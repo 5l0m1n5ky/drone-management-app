@@ -12,6 +12,8 @@ import { NgForm } from "@angular/forms";
 import { environment } from "src/environments/environment";
 import { User } from "../user.model";
 import { UserData } from "./models/user-data.model";
+import { AppComponent } from "src/app/app.component";
+import { Router } from "@angular/router";
 
 interface OrderResponseData {
   order: OrderItem[],
@@ -143,7 +145,6 @@ export class PanelService {
   }
 
   updateChecklist(checklist: NgForm, orderId: Number) {
-    console.log(checklist.value);
 
     const updatedChecklist = Object.fromEntries(
       Object.entries(checklist.value).map(([key, value]) => {
@@ -208,7 +209,7 @@ export class PanelService {
         }),
         withCredentials: true
       }
-    ).pipe(catchError(this.handleError), map(responseData => {
+    ).pipe(catchError(this.handleErrorData), map(responseData => {
       const ordersArray: OrderItem[] = [];
       for (const order in responseData) {
         if (responseData.hasOwnProperty(order)) {
@@ -318,7 +319,28 @@ export class PanelService {
       errorMessage = errorResponse.error.message;
     }
 
+    // if (errorResponse.error.message === "CSRF_TOKEN_MISMATCH") {
+    //   this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
+    //   this.appComponent.changeLoginState();
+    // }
+
     return throwError(errorMessage);
+  }
+
+  private handleErrorData(errorResponse: HttpErrorResponse) {
+
+    let errorData = 'Wystapił błąd';
+
+    if (errorResponse.error) {
+      errorData = errorResponse.error.data;
+    }
+
+    // if (errorResponse.error.message === "CSRF_TOKEN_MISMATCH") {
+    //   this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
+    //   this.appComponent.changeLoginState();
+    // }
+
+    return throwError(errorData);
   }
 
 

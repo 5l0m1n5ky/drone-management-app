@@ -8,7 +8,7 @@
       <div class="flex flex-row items-start gap-2">
         <img src="./assets/icons/mail-icon.svg" alt="mail">
         <p>
-          {{ 'slominsky.drone@darmarsoft.pl' }}
+          {{ 'kontakt@slominskydrone.pl' }}
         </p>
       </div>
       <div class="flex flex-row items-start gap-2">
@@ -24,8 +24,9 @@
         Wiadomość
       </h2>
       <div class="mt-10 w-full">
-        <form class="flex flex-col items-start justify-start gap-2" [formGroup]="contactForm" style="font-size: small;"
-          (ngSubmit)="onMessageSend()">
+        <form class="flex flex-col items-start justify-start gap-2" [formGroup]="contactForm" style="font-size: small;">
+          <!-- <form class="flex flex-col items-start justify-start gap-2" [formGroup]="contactForm" style="font-size: small;"
+          (ngSubmit)="onMessageSend()"> -->
           <mat-form-field class="full-width" appearance="outline">
             <mat-label>Email</mat-label>
             <input type="email" formControlName="email" name="email" matInput required>
@@ -52,15 +53,15 @@
               Treść wiadomości jest wymagana
             </mat-error>
           </mat-form-field>
-          <div class="w-full flex flex-row justify-end">
-            <button type="submit">
-              <p [ngClass]="contactForm.get('content')?.valid ? 'cursor-pointer hover:brightness-150 ease-in-out duration-200' : 'cursor-not-allowed'"
-                class="px-4 py-2 ring-1 ring-neutral-500 text-neutral-500 font-montserrat rounded-full">
-                WYŚLIJ
-              </p>
-            </button>
-          </div>
         </form>
+        <div class="w-full flex flex-row justify-end">
+          <button type="button" (click)="onMessageSend()">
+            <p [ngClass]="contactForm.get('content')?.valid ? 'cursor-pointer hover:brightness-150 ease-in-out duration-200' : 'cursor-not-allowed'"
+              class="px-4 py-2 ring-1 ring-neutral-500 text-neutral-500 font-montserrat rounded-full">
+              WYŚLIJ
+            </p>
+          </button>
+        </div>
       </div>
     </section>
   </div>

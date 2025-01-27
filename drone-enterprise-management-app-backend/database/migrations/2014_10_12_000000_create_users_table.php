@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['admin', 'user'])->default('user');
-            $table->boolean('suspended')->default(0);
+            $table->boolean('suspended')->default(false);
             $table->boolean('terms')->nullable();
             $table->boolean('newsletter');
             $table->timestampsTz();

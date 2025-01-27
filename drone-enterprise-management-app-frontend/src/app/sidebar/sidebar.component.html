@@ -38,7 +38,7 @@
           <h3 class="mx-2 hidden group-hover:block group-hover:animate-sidebar_expand">MOJE ZLECENIA</h3>
         </div>
       </section>
-      <section routerLink="/user/panel/user-management" routerLinkActive="routing-highlight"
+      <section *ngIf="isAdmin" routerLink="/user/panel/user-management" routerLinkActive="routing-highlight"
         class="font-montserrat text-[14px] font-semibold text-neutral-600">
         <div
           class="flex flex-row items-center mx-2 cursor-pointer hover:brightness-125 transition-all duration-300 ease-in-out">
@@ -87,6 +87,18 @@
         <img src="./assets/icons/list-icon.svg" alt="list" class="w-8 h-8">
         <h3 class="mx-2 text-xs">
           ZLECENIA
+        </h3>
+        <div class="w-10 mt-2 h-[5px] rounded-full" routerLinkActive="routing-indicator">
+        </div>
+      </div>
+    </li>
+
+    <li *ngIf="isAdmin" class="my-2">
+      <div routerLink="/user/panel/user-management" routerLinkActive="routing-highlight"
+        class="flex flex-col justify-center items-center">
+        <img src="./assets/icons/user-icon.svg" alt="list" class="w-8 h-8">
+        <h3 class="mx-2 text-xs">
+          UŻYTKOWNICY
         </h3>
         <div class="w-10 mt-2 h-[5px] rounded-full" routerLinkActive="routing-indicator">
         </div>

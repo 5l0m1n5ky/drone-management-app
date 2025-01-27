@@ -16,4 +16,8 @@ class OrderDetails extends Model
         'format',
         'report',
     ];
+
+    protected $casts = [
+        'report' => 'boolean'
+    ];
 }

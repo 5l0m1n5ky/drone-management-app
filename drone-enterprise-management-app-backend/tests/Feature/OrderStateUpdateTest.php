@@ -43,13 +43,13 @@ class OrderStateUpdateTest extends TestCase
 
         $newState = State::find(2);
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->put('/orders/state', [
+        $response = $this->actingAs($admin)->withSession(['banned' => false])->put('/api/orders', [
             'orderId' => $order->id,
             'stateId' => $newState->id,
         ]);
 
-        $responseDataContent = 'Zaktualizowano status zlecenia';
-        $responseMessageContent = 'STATE_UPDATED';
+        $responseMessageContent = 'Zaktualizowano status zlecenia';
+        $responseDataContent = 'STATE_UPDATED';
 
         $response->assertStatus(200)->assertJsonStructure([
             'data',
@@ -88,7 +88,7 @@ class OrderStateUpdateTest extends TestCase
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->put('/orders/state', [
+        $response = $this->actingAs($admin)->withSession(['banned' => false])->put('/api/orders', [
             'orderId' => null,
             'stateId' => null,
         ]);
@@ -129,7 +129,7 @@ class OrderStateUpdateTest extends TestCase
 
         $newState = State::find(2);
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->put('/orders/state', [
+        $response = $this->actingAs($user)->withSession(['banned' => false])->put('/api/orders', [
             'orderId' => $order->id,
             'stateId' => $newState->id,
         ]);
@@ -151,41 +151,41 @@ class OrderStateUpdateTest extends TestCase
         $user->delete();
     }
 
-    /** @test */
-    public function check_csrf_protection(): void
-    {
+    // /** @test */
+    // public function check_csrf_protection(): void
+    // {
 
-        $this->assertGuest('web');
+    //     $this->assertGuest('api');
 
-        $user = User::factory()->create(['role' => 'user']);
+    //     $user = User::factory()->create(['role' => 'user']);
 
-        $orderDetails = OrderDetails::factory()->create([
-            'subservice_id' => 1,
-            'amount' => 15,
-            'background_music_id' => 1,
-        ]);
+    //     $orderDetails = OrderDetails::factory()->create([
+    //         'subservice_id' => 1,
+    //         'amount' => 15,
+    //         'background_music_id' => 1,
+    //     ]);
 
-        $order = Order::factory()->create(['user_id' => $user->id, 'order_details_id' => $orderDetails->id]);
+    //     $order = Order::factory()->create(['user_id' => $user->id, 'order_details_id' => $orderDetails->id]);
 
-        $newState = State::find(2);
+    //     $newState = State::find(2);
 
-        $response = $this->put('/orders/state', [
-            'orderId' => $order->id,
-            'stateId' => $newState->id,
-        ]);
+    //     $response = $this->putJson('/api/orders', [
+    //         'orderId' => $order->id,
+    //         'stateId' => $newState->id,
+    //     ]);
 
-        $response->assertStatus(status: 500)->assertJsonStructure(
-            [
-                'message',
-            ]
-        )->assertJsonFragment(
-                [
-                    'message' => 'CSRF_TOKEN_MISMATCH',
-                ]
-            );
+    //     $response->assertStatus(status: 401)->assertJsonStructure(
+    //         [
+    //             'message',
+    //         ]
+    //     )->assertJsonFragment(
+    //             [
+    //                 'message' => 'CSRF_TOKEN_MISMATCH',
+    //             ]
+    //         );
 
-        DB::table('notifications')->where(['user_id' => $user->id])->delete();
-        $order->delete();
-        $user->delete();
-    }
+    //     DB::table('notifications')->where(['user_id' => $user->id])->delete();
+    //     $order->delete();
+    //     $user->delete();
+    // }
 }

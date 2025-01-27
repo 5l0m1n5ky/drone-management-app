@@ -62,15 +62,11 @@ export class RegisterComponent implements OnDestroy {
     this.terms = registerForm.value.terms;
     this.newsletter = registerForm.value.newsletter;
 
-    if (this.newsletter === null) {
+    if (registerForm.value.newsletter === '') {
       this.newsletter = false;
+    }else{
+      this.newsletter = true;
     }
-
-    // if (registerForm.value.password !== registerForm.value.password_confirmation) {
-    //   this.passwordMismatch = true;
-    //   this.toastService.generateToast('error', 'Błąd rejestracji', 'Niezgodność haseł')
-    //   return;
-    // }
 
     this.isProcessing = true;
 

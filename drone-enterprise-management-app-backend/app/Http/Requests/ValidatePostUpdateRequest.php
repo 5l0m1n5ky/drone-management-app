@@ -28,7 +28,7 @@ class ValidatePostUpdateRequest extends FormRequest
             'cover' => 'file|mimes:png,jpg,jpeg,mp4,mov|max:10000',
             'location' => ['required', 'string', 'max:50'],
             'description' => ['required', 'string', 'max:500'],
-            'visibility' => ['required', 'in:true,false']
+            'visibility' => ['required']
         ];
     }
 }

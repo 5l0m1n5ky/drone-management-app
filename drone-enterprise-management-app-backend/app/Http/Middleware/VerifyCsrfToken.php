@@ -12,5 +12,8 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
+        'api/contact',
+        'api/verify-account',
+        'api/regenerate-token'
     ];
 }

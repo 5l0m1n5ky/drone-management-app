@@ -11,6 +11,7 @@ class ChecklistController extends Controller
 {
 
     use HttpResponses;
+    
     public function index($orderId)
     {
 
@@ -32,7 +33,7 @@ class ChecklistController extends Controller
         } else {
             return $this->error(
                 'Provided order ID does not exist',
-                'ORDER ID ERROR',
+                'Błąd ID zamówienia',
                 500
             );
         }
@@ -46,8 +47,8 @@ class ChecklistController extends Controller
 
         if (count($checklistRelatedToOrder) === 0) {
             return $this->error(
-                'No such order',
                 'ORDER_UPDATE_ERROR',
+                'Błąd aktualizacji zamówienia',
                 500
             );
         }
@@ -67,8 +68,8 @@ class ChecklistController extends Controller
         }
 
         return $this->success(
-            'update succesfull',
             'SUCCESSFUL_CHECKLIST_UPDATE',
+            'Pomyślna aktualizacja listy zadań',
             200
         );
     }

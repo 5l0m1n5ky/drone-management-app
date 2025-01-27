@@ -41,6 +41,7 @@ import { NotificationComponent } from './user/panel/notification/notification.co
 import { AccountComponent } from './user/panel/account/account.component';
 import { OrderCreateComponent } from './user/panel/order-create/order-create.component';
 import { OrderViewComponent } from './user/panel/order-view/order-view.component';
+import { SessionInterceptor } from './auth/session.interceptor';
 
 @NgModule({
   declarations: [
@@ -86,11 +87,17 @@ import { OrderViewComponent } from './user/panel/order-view/order-view.component
     OrderViewComponent,
     AccountVerificationComponent,
   ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS,
-    useClass: CsrfInterceptor,
-    multi: true
-  },
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SessionInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CsrfInterceptor,
+      multi: true
+    },
     CookieService,
     ToastService,
     MessageService

@@ -19,6 +19,7 @@ import { MessageService } from 'primeng/api';
 import { ToastService } from '../shared/toast/toast.service';
 import { LoginService } from '../login/login.service';
 import { AppComponent } from '../app.component';
+import { LogoutService } from '../auth/logout.service';
 
 @Component({
   standalone: true,
@@ -86,7 +87,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
   dialogSubscription = new Subscription;
   dialogActionSubscription = new Subscription;
 
-  constructor(private portfolioService: PortfolioService, private router: Router, private dialog: MatDialog, private toastService: ToastService, private loginService: LoginService, private appComponent: AppComponent) { }
+  constructor(private portfolioService: PortfolioService, private router: Router, private dialog: MatDialog, private toastService: ToastService, private loginService: LoginService, private logoutService: LogoutService) { }
 
   ngOnInit() {
     this.updateScreenSize();
@@ -95,7 +96,7 @@ export class PortfolioComponent implements OnInit, OnDestroy {
       if (this.isAdmin()) {
         this.loadedPosts = posts;
       } else {
-        this.loadedPosts = posts.filter(post => (post.visibility === true || post.visibility === 1));
+        this.loadedPosts = posts.filter(post => (post.visibility === true));
       }
       this.isLoading = false;
     });
@@ -188,29 +189,29 @@ export class PortfolioComponent implements OnInit, OnDestroy {
   }
 
   onEditMode() {
-    this.isLoading = true;
-    this.onCheckSubscription = this.loginService.checkSession().subscribe(responseData => {
-      if (responseData && responseData.message && responseData.message.toString() === 'ACTIVE_SESSION') {
-        this.isEditMode = true;
-        this.editPostForm = new FormGroup({
-          postLocationForm: new FormGroup({
-            location: new FormControl(this.currentPost.location, Validators.required)
-          }),
-          postDescriptionForm: new FormGroup({
-            description: new FormControl(this.currentPost.description, Validators.required)
-          }),
-          postVisibilityForm: new FormGroup({
-            visibility: new FormControl(this.currentPost.visibility)
-          }),
-        });
-        this.isLoading = false;
-      }
-    }, errorMessage => {
-      this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
-      this.appComponent.changeLoginState();
-      this.isLoading = false;
+    // this.isLoading = true;
+    // this.onCheckSubscription = this.loginService.checkSession().subscribe(responseData => {
+    //   if (responseData && responseData.message && responseData.data === 'ACTIVE_SESSION') {
+    this.isEditMode = true;
+    this.editPostForm = new FormGroup({
+      postLocationForm: new FormGroup({
+        location: new FormControl(this.currentPost.location, Validators.required)
+      }),
+      postDescriptionForm: new FormGroup({
+        description: new FormControl(this.currentPost.description, Validators.required)
+      }),
+      postVisibilityForm: new FormGroup({
+        visibility: new FormControl(this.currentPost.visibility)
+      }),
     });
+    // this.isLoading = false;
   }
+  // }, errorMessage => {
+  //   this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
+  //   this.logoutService.changeLoginState();
+  //   this.isLoading = false;
+  // });
+  // }
 
   onEdit() {
     this.isUploading = true;
@@ -274,13 +275,13 @@ export class PortfolioComponent implements OnInit, OnDestroy {
   onCreate() {
     this.isLoading = true;
     this.onCheckSubscription = this.loginService.checkSession().subscribe(responseData => {
-      if (responseData && responseData.message && responseData.message.toString() === 'ACTIVE_SESSION') {
+      if (responseData && responseData.message && responseData.data === 'ACTIVE_SESSION') {
         this.isCreateMode = true;
         this.isLoading = false;
       }
     }, errorMessage => {
       this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
-      this.appComponent.changeLoginState();
+      this.logoutService.changeLoginState();
       this.isLoading = false;
     });
   }

@@ -6,7 +6,10 @@ import { LogoutService } from '../auth/logout.service';
 import { ToastService } from '../shared/toast/toast.service';
 import { MessageService } from 'primeng/api';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner.component';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
+import { LoginService } from '../login/login.service';
+import { User } from '../user/user.model';
 
 @Component({
   standalone: true,
@@ -28,11 +31,22 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public isAuthenticated: boolean = false;
   isProcessing: boolean = false;
   logoutSubscription: Subscription;
+  authSubscription: Subscription;
 
-  constructor(private appComponent: AppComponent, private logoutService: LogoutService, private router: Router) { }
+  constructor(private loginService: LoginService, private logoutService: LogoutService, private router: Router, private cookieService: CookieService) { }
 
   ngOnInit(): void {
-    this.isAuthenticated = this.appComponent.getLoginState();
+
+    this.authSubscription = this.loginService.user.subscribe({
+      next: (user: User | null) => {
+
+        if (user !== null) {
+          this.isAuthenticated = true;
+        } else {
+          this.isAuthenticated = false;
+        }
+      }
+    });
   }
 
   menuToggled: boolean = false;
@@ -51,8 +65,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
   onLogout() {
     this.isProcessing = true;
     this.logoutSubscription = this.logoutService.logoutHandle().subscribe(response => {
-      if (response.data.toString() === 'Wylogowano pomyślnie') {
+      if (response.data.toString() === 'SUCCESSFUL_LOGOUT') {
         this.router.navigate(['/login'], { queryParams: { action: 'logout' } });
+        // this.cookieService.deleteAll();
+        this.cookieService.delete('user');
       }
       this.isProcessing = false;
     }, () => {
@@ -63,5 +79,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.logoutSubscription?.unsubscribe();
+    this.authSubscription?.unsubscribe();
   }
 }

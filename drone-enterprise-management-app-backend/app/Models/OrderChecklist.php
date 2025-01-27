@@ -18,4 +18,8 @@ class OrderChecklist extends Model
     ];
 
     public $timestamps = false;
+
+    protected $casts = [
+        'checked' => 'boolean'
+    ];
 }

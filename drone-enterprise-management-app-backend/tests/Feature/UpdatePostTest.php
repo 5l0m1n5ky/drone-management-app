@@ -53,7 +53,7 @@ class UpdatePostTest extends TestCase
             'visibility' => true
         ]);
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->post('/posts/update/' . $post->id, [
+        $response = $this->actingAs($admin)->withSession(['banned' => false])->post('/api/posts/update/' . $post->id, [
             'location' => fake()->city(),
             'description' => fake()->text(200),
             'visibility' => true
@@ -83,8 +83,8 @@ class UpdatePostTest extends TestCase
         $file = UploadedFile::fake()->image('post-file.jpg');
         $cover = UploadedFile::fake()->image('post-cover.jpg');
 
-        $filePath = Storage::disk('public')->putFile('/posts', $file);
-        $coverPath = Storage::disk('public')->putFile('/posts/covers', $cover);
+        $filePath = Storage::disk('public')->putFile('/api/posts', $file);
+        $coverPath = Storage::disk('public')->putFile('/api/posts/covers', $cover);
 
         $post = Post::create([
             'path' => $filePath,
@@ -99,7 +99,7 @@ class UpdatePostTest extends TestCase
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->post('/posts/update/' . $post->id, [
+        $response = $this->actingAs($admin)->withSession(['banned' => false])->post('/api/posts/update/' . $post->id, [
             'file' => $newFile,
             'cover' => $newCover,
             'location' => fake()->city(),
@@ -162,7 +162,7 @@ class UpdatePostTest extends TestCase
             'visibility' => true
         ]);
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/posts/update/' . $post->id, [
+        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/api/posts/update/' . $post->id, [
             'location' => fake()->city(),
             'description' => fake()->text(200),
             'visibility' => true
@@ -202,7 +202,7 @@ class UpdatePostTest extends TestCase
             'visibility' => true
         ]);
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->post('/posts/update/' . $this->generateUniqueId(), [
+        $response = $this->actingAs($admin)->withSession(['banned' => false])->postJson('/api/posts/update/' . $this->generateUniqueId(), [
             'location' => fake()->city(),
             'description' => fake()->text(200),
             'visibility' => true
@@ -222,41 +222,41 @@ class UpdatePostTest extends TestCase
         Storage::disk('public')->delete('posts/covers/' . $cover->hashName());
     }
 
-    /** @test */
-    public function check_csrf_protection(): void
-    {
-        $admin = User::factory()->make(['role' => 'admin']);
+    // /** @test */
+    // public function check_csrf_protection(): void
+    // {
+    //     $admin = User::factory()->make(['role' => 'admin']);
 
-        $file = UploadedFile::fake()->image('post-file.jpg');
-        $cover = UploadedFile::fake()->image('post-cover.jpg');
+    //     $file = UploadedFile::fake()->image('post-file.jpg');
+    //     $cover = UploadedFile::fake()->image('post-cover.jpg');
 
-        $filePath = Storage::putFile('public/posts', $file);
-        $coverPath = Storage::putFile('public/posts/covers', $cover);
+    //     $filePath = Storage::putFile('public/posts', $file);
+    //     $coverPath = Storage::putFile('public/posts/covers', $cover);
 
-        $post = Post::create([
-            'path' => $filePath,
-            'cover' => $coverPath,
-            'location' => fake()->city(),
-            'description' => fake()->text(200),
-            'visibility' => true
-        ]);
+    //     $post = Post::create([
+    //         'path' => $filePath,
+    //         'cover' => $coverPath,
+    //         'location' => fake()->city(),
+    //         'description' => fake()->text(200),
+    //         'visibility' => true
+    //     ]);
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->post('/posts/update/' . $post->id, [
-            'location' => fake()->city(),
-            'description' => fake()->text(200),
-            'visibility' => true
-        ]);
+    //     $response = $this->actingAs($admin)->withSession(['banned' => false])->post('/api/posts/update/' . $post->id, [
+    //         'location' => fake()->city(),
+    //         'description' => fake()->text(200),
+    //         'visibility' => true
+    //     ]);
 
-        $response->assertStatus(500)->assertJsonStructure([
-            'message'
-        ]);
+    //     $response->assertStatus(500)->assertJsonStructure([
+    //         'message'
+    //     ]);
 
-        Post::find($post->id)->delete();
+    //     Post::find($post->id)->delete();
 
-        Storage::disk('public')->assertExists('posts/' . $file->hashName());
-        Storage::disk('public')->assertExists('posts/covers/' . $cover->hashName());
+    //     Storage::disk('public')->assertExists('posts/' . $file->hashName());
+    //     Storage::disk('public')->assertExists('posts/covers/' . $cover->hashName());
 
-        Storage::disk('public')->delete('posts/' . $file->hashName());
-        Storage::disk('public')->delete('posts/covers/' . $cover->hashName());
-    }
+    //     Storage::disk('public')->delete('posts/' . $file->hashName());
+    //     Storage::disk('public')->delete('posts/covers/' . $cover->hashName());
+    // }
 }

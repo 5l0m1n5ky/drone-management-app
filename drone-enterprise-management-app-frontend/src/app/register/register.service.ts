@@ -29,7 +29,7 @@ export class RegisterService {
   }
 
   register(email: string, password: string, passwordConfirmation: string, terms: boolean, newsletter: boolean) {
-    return this.http.post<RegisterResponseData>(`${this.domain}/register`, {
+    return this.http.post<RegisterResponseData>(`${this.domain}/api/register`, {
       email: email,
       password: password,
       password_confirmation: passwordConfirmation,

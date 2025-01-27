@@ -43,12 +43,11 @@ export class ContactComponent implements OnInit, OnDestroy {
       this.contactForm.get('content')?.value
     ).subscribe(response => {
       this.isProcessing = false;
-      this.toastService.generateToast('success', 'Przesyłanie wiadomości', response.data);
+      this.toastService.generateToast('success', 'Przesyłanie wiadomości', response.message);
       this.contactForm.reset();
     }, errorMessage => {
       this.isProcessing = false;
       this.toastService.generateToast('error', 'Przesyłanie wiadomości', errorMessage);
-      this.contactForm.reset();
     });
   }
 

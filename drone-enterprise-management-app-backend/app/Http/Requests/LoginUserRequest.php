@@ -26,16 +26,4 @@ class LoginUserRequest extends FormRequest
             'password' => ['required', 'string', 'min:6']
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'password.min' => 'VALIDATION_ERROR',
-            'required' => 'VALIDATION_ERROR',
-            'email.string' => 'VALIDATION_ERROR',
-            'email.email' => 'VALIDATION_ERROR',
-            'password.string' => 'VALIDATION_ERROR',
-        ];
-    }
-
 }

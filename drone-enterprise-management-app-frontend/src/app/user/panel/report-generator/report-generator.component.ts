@@ -119,7 +119,7 @@ export class ReportGeneratorComponent implements OnInit, OnDestroy {
 
       this.uploadReportSubscription = this.panelService.uploadInspectionReport(this.order[0].id, this.inspectionReport, this.inspectionReportFileName).subscribe(response => {
         this.files = [];
-        this.orderViewComponent.toastService.generateToast('success', 'Generowanie raportu inspekcji', response.data.toString());
+        this.orderViewComponent.toastService.generateToast('success', 'Generowanie raportu inspekcji', response.message);
         this.orderViewComponent.reportCreateMode = false;
         this.orderViewComponent.isProcessing = false;
       }, errorMessage => {
@@ -130,7 +130,6 @@ export class ReportGeneratorComponent implements OnInit, OnDestroy {
       });
 
     } else {
-      console.error('Inspection report donwloading failed');
       this.orderViewComponent.toastService.generateToast('error', 'Generowanie raportu inspekcji', 'Błąd przetwarzania danych');
     }
   }

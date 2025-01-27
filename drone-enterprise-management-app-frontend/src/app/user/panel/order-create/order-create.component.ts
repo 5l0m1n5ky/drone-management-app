@@ -32,6 +32,7 @@ import { State } from '../models/state.model';
 import { BgMusic } from '../models/bg-music.model';
 import * as Leaflet from 'leaflet';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { LogoutService } from 'src/app/auth/logout.service';
 
 @Component({
   standalone: true,
@@ -62,7 +63,6 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedLocation: string = "";
   orderFromOriginToDestinationDistance: number;
 
-  // minDate: Date = new Date();
   minDate: Date;
   maxDate: Date = new Date();
   orderDate: String | undefined;
@@ -133,14 +133,37 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
     iconAnchor: [20, 40],
   });
 
+  selectedPhonePrefix: string = '+48';
+  phoneMask: string = '000-000-000';
 
-  constructor(private orderCreateService: OrderCreateService, private route: ActivatedRoute, private datePipe: DatePipe, private dialog: MatDialog, private router: Router, private toastService: ToastService, private loginService: LoginService, private appComponent: AppComponent, private panelService: PanelService, private dateAdapter: DateAdapter<any>) {
+  phonePrefixes: string[] = [
+    "+48", // Polska
+    "+44", // Wielka Brytania
+    "+33", // Francja
+    "+49", // Niemcy
+    "+39", // Włochy
+    "+34", // Hiszpania
+    "+46", // Szwecja
+    "+31", // Holandia
+    "+32", // Belgia
+    "+351", // Portugalia
+    "+30", // Grecja
+    "+43", // Austria
+    "+1"   // Stany Zjednoczone
+  ];
+
+  constructor(private orderCreateService: OrderCreateService, private route: ActivatedRoute, private datePipe: DatePipe, private dialog: MatDialog, private router: Router, private toastService: ToastService, private loginService: LoginService, private logoutService: LogoutService, private panelService: PanelService, private dateAdapter: DateAdapter<any>) {
 
     this.minDate = new Date();
     this.minDate.setDate(this.minDate.getDate() + 2);
   }
 
   ngOnInit(): void {
+
+    if (this.loginService.isUserSuspended()) {
+      this.router.navigate(['/user/panel/orders']);
+      this.toastService.generateToast("warn", "Tworzenie nowego zlecenia", "Nie masz uprawnień do tworzenia nowych zleceń")
+    }
 
     this.onResize();
 
@@ -152,7 +175,7 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }, errorMessage => {
       this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
-      this.appComponent.changeLoginState();
+      this.logoutService.changeLoginState();
       this.isProcessing = false;
     });
 
@@ -203,7 +226,7 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
       ServiceDetailsForm: new FormGroup({
         service_id: new FormControl(null, Validators.required),
         subservice_id: new FormControl(null, Validators.required),
-        amount: new FormControl(null, Validators.required),
+        amount: new FormControl(null),
         bgMusicId: new FormControl(null),
         format: new FormControl(null),
         report: new FormControl(false),
@@ -216,22 +239,22 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
         date: new FormControl(null, Validators.required),
       }),
       CustomerDataForm: new FormGroup({
-        name: new FormControl(null, Validators.required),
-        surname: new FormControl(null),
+        name: new FormControl(null, [Validators.required, Validators.minLength(2), Validators.maxLength(30)]),
+        surname: new FormControl(null, [Validators.minLength(2), Validators.maxLength(30)]),
         nip: new FormControl(null, [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^[0-9]*$/)]),
         streetName: new FormControl(null, Validators.required),
-        streetNumber: new FormControl(null, [Validators.required]),
+        streetNumber: new FormControl(null, [Validators.required, Validators.maxLength(5)]),
         // streetNumber: new FormControl(null, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-        apartmentNumber: new FormControl(null),
+        apartmentNumber: new FormControl(null, [Validators.maxLength(5)]),
         // apartmentNumber: new FormControl(null, Validators.pattern(/^[0-9]*$/)),
-        city: new FormControl(null, Validators.required),
-        zip: new FormControl(null, [Validators.required, Validators.minLength(5)]),
+        city: new FormControl(null, [Validators.required, Validators.maxLength(30)]),
+        zip: new FormControl(null, [Validators.required, Validators.minLength(5), Validators.maxLength(5)]),
         tel: new FormControl(null, [Validators.required, Validators.minLength(9)]),
         email: new FormControl(null, [Validators.required, Validators.email])
       }),
       OrderDetailForm: new FormGroup({
-        alias: new FormControl(this.orderAlias, Validators.required),
-        description: new FormControl(null),
+        alias: new FormControl(this.orderAlias, [Validators.required, Validators.maxLength(100)]),
+        description: new FormControl(null, [Validators.maxLength(450)]),
         price: new FormControl(null, Validators.required),
       })
     });
@@ -372,7 +395,7 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
       'zip': this.placeOrderForm.get('CustomerDataForm.zip')?.value,
       'nip': this.placeOrderForm.get('CustomerDataForm.nip')?.value,
       'email': this.placeOrderForm.get('CustomerDataForm.email')?.value,
-      'tel': this.placeOrderForm.get('CustomerDataForm.tel')?.value,
+      'tel': this.selectedPhonePrefix + ' ' + this.placeOrderForm.get('CustomerDataForm.tel')?.value,
       'alias': this.placeOrderForm.get('OrderDetailForm.alias')?.value,
       'description': this.placeOrderForm.get('OrderDetailForm.description')?.value,
       'price': this.placeOrderForm.get('OrderDetailForm.price')?.value,
@@ -382,13 +405,13 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
       this.order
     ).subscribe(responseData => {
       this.isProcessing = false;
+      this.placeOrderForm.reset();
       this.router.navigate(['/user/panel/orders'])
       this.toastService.generateToast('success', 'Składanie zamówienia', responseData.message.toString());
     }, errorMessage => {
       this.toastService.generateToast('error', 'Składanie zamówienia', errorMessage);
       this.isProcessing = false;
     });
-    this.placeOrderForm.reset();
   }
 
   onCancel() {
@@ -491,7 +514,79 @@ export class OrderCreateComponent implements OnInit, AfterViewInit, OnDestroy {
     this.placeOrderForm.get("OrderDetailForm.price")?.patchValue(this.priceBrutto);
   }
 
-  // calculateDistance() {}
+  onPrefixChange(event: any): void {
+    this.selectedPhonePrefix = event.value;
+    this.updatePhoneMask();
+  }
+
+  updatePhoneMask(): void {
+    switch (this.selectedPhonePrefix) {
+
+      case "+44": {
+        this.phoneMask = "000-000-0000"
+        break;
+      }
+
+      case "+33": {
+        this.phoneMask = "00-00-00-00-00"
+        break;
+      }
+
+      case "+49": {
+        this.phoneMask = "000-000-0000"
+        break;
+      }
+
+      case "+39": {
+        this.phoneMask = "000-0000000"
+        break;
+      }
+
+      case "+34": {
+        this.phoneMask = "000-000-000"
+        break;
+      }
+
+      case "+46": {
+        this.phoneMask = "000-000-0000"
+        break;
+      }
+
+      case "+31": {
+        this.phoneMask = "000-000-0000"
+        break;
+      }
+
+      case "+32": {
+        this.phoneMask = "000-00-00-00"
+        break;
+      }
+
+      case "+351": {
+        this.phoneMask = "000-000-000"
+        break;
+      }
+
+      case "+30": {
+        this.phoneMask = "000-000-0000"
+        break;
+      }
+
+      case "+43": {
+        this.phoneMask = "000-000-0000"
+        break;
+      }
+
+      case "+1": {
+        this.phoneMask = "000-000-0000"
+        break;
+      }
+
+      default: {
+        this.phoneMask = "000-000-000"
+      }
+    }
+  }
 
   onGeocodingSubmit(geocodingForm: NgForm) {
 

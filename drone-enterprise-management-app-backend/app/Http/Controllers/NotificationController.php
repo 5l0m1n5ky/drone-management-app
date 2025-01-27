@@ -82,15 +82,15 @@ class NotificationController extends Controller
 
             } else {
                 return $this->error(
-                    'You do not have such as previleges to make that request',
                     'DENIED',
+                    'Odrzucono żądanie',
                     500
                 );
             }
         } catch (\ErrorException $errorException) {
             return $this->error(
                 $errorException,
-                'DENIED',
+                'Błąd przetwarzania żądania',
                 500
             );
         }
@@ -128,8 +128,8 @@ class NotificationController extends Controller
 
             if (!$notification) {
                 return $this->error(
-                    'Bład aktualizacji powiadomienia',
                     'NOTIFICATION_UPDATE_ERROR',
+                    'Bład aktualizacji powiadomienia',
                     500
                 );
             }
@@ -138,21 +138,21 @@ class NotificationController extends Controller
 
             if ($result) {
                 return $this->success(
-                    'Zaktualizowano status powiadomienia',
                     'NOTIFICATION_UPDATED',
+                    'Zaktualizowano status powiadomienia',
                     200
                 );
             } else {
                 return $this->error(
-                    'Bład aktualizacji powiadomienia',
                     'NOTIFICATION_UPDATE_ERROR',
+                    'Bład aktualizacji powiadomienia',
                     500
                 );
             }
         } catch (\ErrorException $errorException) {
             return $this->error(
-                'Bład w przetwarzaniu żądania',
                 'REQUEST_ERROR',
+                'Bład w przetwarzaniu żądania',
                 500
             );
         }

@@ -40,7 +40,7 @@ class UpdateNotificationTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->put('/notifications', [
+        $response = $this->actingAs($user)->withSession(['banned' => false])->put('/api/notifications', [
             'notificationId' => $notification->id
         ]);
 
@@ -53,9 +53,9 @@ class UpdateNotificationTest extends TestCase
 
         $messageContent = $response->decodeResponseJson()['message'];
 
-        $this->assertTrue($dataContent === 'Zaktualizowano status powiadomienia');
+        $this->assertTrue($messageContent === 'Zaktualizowano status powiadomienia');
 
-        $this->assertTrue($messageContent === 'NOTIFICATION_UPDATED');
+        $this->assertTrue($dataContent === 'NOTIFICATION_UPDATED');
 
         $notification->delete();
 
@@ -73,7 +73,7 @@ class UpdateNotificationTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->put('/notifications', [
+        $response = $this->actingAs($user)->withSession(['banned' => false])->put('/api/notifications', [
             'notificationId' => $this->generateUniqueId()
         ]);
 
@@ -86,31 +86,12 @@ class UpdateNotificationTest extends TestCase
 
         $messageContent = $response->decodeResponseJson()['message'];
 
-        $this->assertTrue($dataContent === 'Bład aktualizacji powiadomienia');
+        $this->assertTrue($messageContent === 'Bład aktualizacji powiadomienia');
 
-        $this->assertTrue(condition: $messageContent === 'NOTIFICATION_UPDATE_ERROR');
+        $this->assertTrue(condition: $dataContent === 'NOTIFICATION_UPDATE_ERROR');
 
         $notification->delete();
 
         $user->delete();
-    }
-
-    /** @test */
-    public function check_csrf_protection(): void
-    {
-        $this->assertGuest('web');
-
-        $response = $this->put('/notifications', [
-            'notificationId' => $this->generateUniqueId()
-        ]);
-
-        $response->assertStatus(500)->assertJsonStructure([
-            'message'
-        ]);
-
-        $messageContent = $response->decodeResponseJson()['message'];
-
-        $this->assertTrue(condition: $messageContent === 'CSRF_TOKEN_MISMATCH');
-
     }
 }

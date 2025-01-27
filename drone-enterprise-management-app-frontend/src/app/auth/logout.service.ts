@@ -12,7 +12,7 @@ interface LogoutResponse {
   code: string,
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 
 export class LogoutService {
 
@@ -23,7 +23,7 @@ export class LogoutService {
   }
 
   logoutHandle() {
-    return this.http.post<LogoutResponse>(`${this.domain}/logout`, null, {
+    return this.http.post<LogoutResponse>(`${this.domain}/api/logout`, null, {
       headers: new HttpHeaders({
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -31,14 +31,23 @@ export class LogoutService {
       withCredentials: true
     }).pipe(catchError(this.handleError),
       tap(response => {
-        this.loginService.user.next({ id: '', email: '', privileges: '' });
-        this.cookieService.deleteAll();
+        // this.loginService.user.next({ id: '', email: '', privileges: '', suspended: false});
+        this.loginService.user.next(null);
+        // this.cookieService.deleteAll();
+        this.changeLoginState();
+        // this.cookieService.delete('user');
         if (response) {
           return response;
         }
         return 'Wylogowano pomyślnie'
       }
       ));
+  }
+
+  changeLoginState() {
+    this.cookieService.delete('user');
+    this.cookieService.delete('XSRF-TOKEN');
+    // this.cookieService.deleteAll();
   }
 
   private handleError() {

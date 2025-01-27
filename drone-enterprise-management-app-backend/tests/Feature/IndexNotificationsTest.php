@@ -38,7 +38,7 @@ class IndexNotificationsTest extends TestCase
 
         $admin = User::factory()->create(['role' => 'admin']);
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->getJson('/notifications');
+        $response = $this->actingAs($admin)->withSession(['banned' => false])->getJson('/api/notifications');
 
         $response->assertStatus(200)->assertJsonStructure([
             '*' => [
@@ -82,7 +82,7 @@ class IndexNotificationsTest extends TestCase
 
         $notifications_for_user_2 = Notification::factory()->count($notification_amount_for_user_2)->create(['user_id' => $user_2->id]);
 
-        $response = $this->actingAs($user_1)->withSession(['banned' => false])->getJson('/notifications');
+        $response = $this->actingAs($user_1)->withSession(['banned' => false])->getJson('/api/notifications');
 
         $response->assertStatus(200)->assertJsonStructure([
             '*' => [
@@ -115,9 +115,9 @@ class IndexNotificationsTest extends TestCase
     /** @test */
     public function index_notifications_attempt_by_unauthenticated(): void
     {
-        $this->assertGuest(guard: 'web');
+        $this->assertGuest(guard: 'api');
 
-        $response = $this->getJson('/notifications');
+        $response = $this->getJson('/api/notifications');
 
         $response->assertStatus(status: 401)->assertJsonStructure([
             'message'

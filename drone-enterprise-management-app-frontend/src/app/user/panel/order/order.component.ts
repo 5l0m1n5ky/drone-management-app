@@ -9,6 +9,7 @@ import { OrderItem } from '../models/order-item.model';
 import { RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ChecklistComponent } from '../checklist/checklist.component';
+import { LogoutService } from 'src/app/auth/logout.service';
 
 @Component({
   standalone: true,
@@ -24,7 +25,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   orders: OrderItem[] = [];
   isProcessing: boolean = false;
 
-  constructor(private loginService: LoginService, private router: Router, private appComponent: AppComponent, private panelService: PanelService) { }
+  constructor(private loginService: LoginService, private router: Router, private logoutService: LogoutService, private panelService: PanelService) { }
 
   ngOnInit(): void {
 
@@ -38,7 +39,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 
         case "DENIED":
           this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
-          this.appComponent.changeLoginState();        
+          this.logoutService.changeLoginState();        
       }
       this.isProcessing = false;
     });

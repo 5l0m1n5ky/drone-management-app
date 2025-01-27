@@ -1,11 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoginService } from './login/login.service';
 import { Subscription, take } from 'rxjs';
-import { CookieService } from 'ngx-cookie-service';
 import { ActivatedRoute } from '@angular/router';
 import { ToastService } from './shared/toast/toast.service';
-import { environment } from 'src/environments/environment';
 import * as Aos from 'aos';
+import { User } from './user/user.model';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +14,6 @@ import * as Aos from 'aos';
 export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private loginService: LoginService,
-    private cookieService: CookieService,
     private activatedRoute: ActivatedRoute,
     private toastService: ToastService
   ) { }
@@ -23,16 +21,21 @@ export class AppComponent implements OnInit, OnDestroy {
   userSubscription: Subscription;
   queryParamsSubscriber: Subscription;
 
-  isAuthenticated: boolean = false;
-
   title = 'drone-enterprise-management-app';
 
   queryParams: any = {};
 
   ngOnInit(): void {
     Aos.init();
-    this.loginService.user.pipe(take(1)).subscribe((user) => {
-      this.isAuthenticated = !!user;
+    this.userSubscription = this.loginService.user.subscribe({
+      next: (user: User | null) => {
+
+        if (user !== null) {
+          this.loginService.isAuthenticated.next(true);
+        } else {
+          this.loginService.isAuthenticated.next(false);
+        }
+      }
     });
 
     this.queryParamsSubscriber = this.activatedRoute.queryParams.subscribe(
@@ -54,21 +57,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.loginService.autoLogin();
 
-  }
-
-  getLoginState(): boolean {
-    if (this.cookieService.get('user') || this.isAuthenticated) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  changeLoginState() {
-    this.isAuthenticated = false;
-    if (this.getLoginState()) {
-      this.cookieService.delete('user');
-    }
   }
 
   ngOnDestroy() {

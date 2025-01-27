@@ -20,6 +20,8 @@ import { NgForm } from '@angular/forms';
 import { NgxFileSaverService } from '@clemox/ngx-file-saver';
 import * as Leaflet from 'leaflet';
 import { SidebarComponent } from 'src/app/sidebar/sidebar.component';
+import { AppComponent } from 'src/app/app.component';
+import { LogoutService } from 'src/app/auth/logout.service';
 
 @Component({
   selector: 'app-order-view',
@@ -51,9 +53,11 @@ export class OrderViewComponent implements OnInit, AfterViewInit, OnDestroy {
   isInspection: boolean = false;
 
   marker: Leaflet.Marker;
+  markerMobile: Leaflet.Marker;
   map: Leaflet.Map;
+  mapMobile: Leaflet.Map;
 
-  constructor(private panelComponent: PanelComponent, private panelService: PanelService, private router: Router, private location: Location, private loginService: LoginService, private bottomSheet: MatBottomSheet, public toastService: ToastService, private fileSaver: NgxFileSaverService, private sidebarComponent: SidebarComponent) { }
+  constructor(private logoutService: LogoutService, private panelComponent: PanelComponent, private panelService: PanelService, private router: Router, private location: Location, private loginService: LoginService, private bottomSheet: MatBottomSheet, public toastService: ToastService, private fileSaver: NgxFileSaverService, private sidebarComponent: SidebarComponent) { }
 
   ngOnInit(): void {
 
@@ -90,9 +94,16 @@ export class OrderViewComponent implements OnInit, AfterViewInit, OnDestroy {
       parseFloat(this.orderItem.latitude.toString()),
       parseFloat(this.orderItem.longitude.toString())
     ],
-      { icon: customIcon })
-      .addTo(this.map);
-
+      { icon: customIcon }
+    ).addTo(this.map);
+    
+    this.markerMobile = Leaflet.marker([
+      parseFloat(this.orderItem.latitude.toString()),
+      parseFloat(this.orderItem.longitude.toString())
+    ],
+      { icon: customIcon }
+    ).addTo(this.mapMobile);
+    
   }
 
   mapConfig() {
@@ -106,14 +117,23 @@ export class OrderViewComponent implements OnInit, AfterViewInit, OnDestroy {
       minZoom: 1,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(this.map);
+
+    this.mapMobile = Leaflet.map('map-mobile', {
+      center: Leaflet.latLng(parseFloat(this.orderItem.latitude.toString()), parseFloat(this.orderItem.longitude.toString())),
+      zoom: 19,
+    });
+
+    Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      minZoom: 1,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(this.mapMobile);
   }
 
   openBottomSheet() {
     this.isProcessing = true;
     this.statesSubscription = this.panelService.fetchStates().subscribe(states => {
       this.states = states;
-
-      console.log('states: ', states);
 
       const dataToPass = { data: { states: this.states, orderId: this.orderItem.id } }
 
@@ -124,13 +144,12 @@ export class OrderViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
       bottomPanelRef.afterDismissed().subscribe((result) => {
         if (result) {
-          console.log(result);
 
           this.isProcessing = true;
 
           this.updateStateSubscription = this.panelService.updateOrderState(result.orderId, result.stateId, result.comment).subscribe(response => {
             this.sidebarComponent.checkBadgeValue();
-            this.toastService.generateToast('success', 'Modyfikacja statusu', response.data.toString());
+            this.toastService.generateToast('success', 'Modyfikacja statusu', response.message);
             this.isProcessing = false;
             this.router.navigate(['/user/panel/orders']);
           }, errorMessage => {
@@ -174,11 +193,25 @@ export class OrderViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.order) {
       this.checklistUpdateSubscription = this.panelService.updateChecklist(checklist, this.order[0].id).subscribe(response => {
-        this.toastService.generateToast('success', 'Aktualizacja checklisty', response.data.toString());
+        this.toastService.generateToast('success', 'Aktualizacja checklisty', response.message);
         this.isProcessing = false;
       }, errorMessage => {
-        this.toastService.generateToast('error', 'Aktualizacja checklisty', errorMessage);
+
+        switch (errorMessage) {
+
+          case "Unauthenticated": {
+            this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
+            this.logoutService.changeLoginState();
+            break;
+          }
+
+          default: {
+            this.toastService.generateToast('error', 'Aktualizacja checklisty', errorMessage);
+          }
+        }
+
         this.isProcessing = false;
+
       });
     }
   }

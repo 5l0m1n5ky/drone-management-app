@@ -48,21 +48,21 @@ class StateController extends Controller
 
             if ($result) {
                 return $this->success(
-                    'Zaktualizowano status zlecenia',
                     'STATE_UPDATED',
+                    'Zaktualizowano status zlecenia',
                     200
                 );
             } else {
                 return $this->error(
-                    'Bład aktualizacji zlecenia',
                     'STATE_UPDATE_ERROR',
+                    'Bład aktualizacji zlecenia',
                     500
                 );
             }
         } catch (\ErrorException $errorException) {
             return $this->error(
-                'Bład w przetwarzaniu żądania',
                 'REQUEST_ERROR',
+                'Bład w przetwarzaniu żądania',
                 500
             );
         }

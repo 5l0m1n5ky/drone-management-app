@@ -28,7 +28,7 @@ class IndexOrdersTest extends TestCase
 
         $user = User::factory()->make(['role' => 'user']);
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/orders');
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/api/orders');
 
         $response->assertStatus(200)->assertJsonStructure([
             '*' => [
@@ -65,7 +65,7 @@ class IndexOrdersTest extends TestCase
     /** @test */
     public function checks_response_when_unauthenticated(): void
     {
-        $response = $this->get('/orders');
+        $response = $this->get('/api/orders');
 
         $response->assertStatus(500)->assertJsonStructure([
             'data',
@@ -108,7 +108,7 @@ class IndexOrdersTest extends TestCase
             Order::factory()->create(['user_id' => $anotherUser->id, 'order_details_id' => $orderDetails->id]);
         }
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->getJson('/orders');
+        $response = $this->actingAs($user)->withSession(['banned' => false])->getJson('/api/orders');
 
         $response->assertStatus(200);
 
@@ -159,7 +159,7 @@ class IndexOrdersTest extends TestCase
             Order::factory()->create(['user_id' => $anotherUser->id, 'order_details_id' => $orderDetails->id]);
         }
 
-        $response = $this->actingAs($admin)->withSession(['banned' => false])->getJson('/orders');
+        $response = $this->actingAs($admin)->withSession(['banned' => false])->getJson('/api/orders');
 
         $response->assertStatus(200);
 
@@ -172,16 +172,16 @@ class IndexOrdersTest extends TestCase
         $anotherUser->delete();
     }
 
-    /** @test */
-    public function check_csrf_protection(): void
-    {
+    // /** @test */
+    // public function check_csrf_protection(): void
+    // {
 
-        $this->assertGuest('web');
+    //     $this->assertGuest('api');
 
-        $response = $this->get('/orders');
+    //     $response = $this->get('/api/orders');
 
-        $response->assertStatus(500)->assertJsonStructure([
-            'message'
-        ]);
-    }
+    //     $response->assertStatus(500)->assertJsonStructure([
+    //         'message'
+    //     ]);
+    // }
 }

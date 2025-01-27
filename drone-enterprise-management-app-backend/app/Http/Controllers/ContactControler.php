@@ -39,22 +39,22 @@ class ContactControler extends Controller
                 $this->emailController->forwardMessageMail($admin_email, $storeMessageRequest->email, $storeMessageRequest->subject, $storeMessageRequest->content);
 
                 return $this->success(
-                    'Wiadomość wysłana pomyślnie',
                     'MESSAGE_SENT',
+                    'Wiadomość wysłana pomyślnie',
                     200
                 );
             } else {
                 return $this->error(
-                    'Bład wysyłania wiadomości',
                     'MESSAGE_ERROR',
+                    'Bład wysyłania wiadomości',
                     500
                 );
             }
 
         } catch (\ErrorException $errorException) {
             return $this->error(
-                'Bład wysyłania wiadomości',
                 'MESSAGE_ERROR',
+                'Bład wysyłania wiadomości',
                 500
             );
         }

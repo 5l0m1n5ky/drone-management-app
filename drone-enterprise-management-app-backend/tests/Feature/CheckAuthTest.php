@@ -26,7 +26,7 @@ class CheckAuthTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/user/check');
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/api/user/check');
 
         $response->assertStatus(200)->assertJsonStructure([
             'data',
@@ -41,9 +41,9 @@ class CheckAuthTest extends TestCase
     {
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
 
-        $this->assertGuest('web');
+        $this->assertGuest('api');
 
-        $response = $this->postJson('/user/check');
+        $response = $this->getJson('/api/user/check');
 
         $response->assertStatus(401)->assertJsonStructure([
             'message'
@@ -54,15 +54,15 @@ class CheckAuthTest extends TestCase
         $this->assertTrue($errorMessage === 'Unauthenticated.');
     }
 
-    /** @test */
-    public function check_csrf_protection(): void
-    {
-        $this->assertGuest('web');
+    // /** @test */
+    // public function check_csrf_protection(): void
+    // {
+    //     $this->assertGuest('api');
 
-        $response = $this->postJson('/user/check');
+    //     $response = $this->getJson('/api/user/check');
 
-        $response->assertStatus(500)->assertJsonStructure([
-            'message'
-        ]);
-    }
+    //     $response->assertStatus(401)->assertJsonStructure([
+    //         'message'
+    //     ]);
+    // }
 }

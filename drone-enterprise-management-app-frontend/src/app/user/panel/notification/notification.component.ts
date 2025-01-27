@@ -39,11 +39,8 @@ export class NotificationComponent implements OnInit, OnDestroy {
       this.isProcessing = false;
 
     }, errorResponse => {
-      console.log(errorResponse);
 
       this.isProcessing = false;
-
-      console.log(errorResponse.error.message)
 
       switch (errorResponse.error.message) {
         case 'Unauthenticated.':

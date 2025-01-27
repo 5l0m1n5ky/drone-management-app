@@ -19,7 +19,7 @@ export class ContactService {
   }
 
   sendMessage(email: string, subject: string, content: string) {
-    return this.http.post<ResponseData>(`${this.domain}/contact`,
+    return this.http.post<ResponseData>(`${this.domain}/api/contact`,
       {
         email: email,
         subject: subject,

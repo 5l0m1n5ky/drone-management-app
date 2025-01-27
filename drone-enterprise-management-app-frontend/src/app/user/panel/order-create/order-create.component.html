@@ -4,8 +4,9 @@
     <img (click)="onCancel()" src="./assets/icons/cancel-icon.png" alt="cancel-icon"
       class="absolute right-3 top-3 w-4 h-4 brightness-50 hover:brightness-100 transition-all ease-in-out duration-200 cursor-pointer">
     <app-loading-spinner *ngIf="isProcessing"></app-loading-spinner>
-    <form id="form" [formGroup]="placeOrderForm" (ngSubmit)="onPlaceOrder()">
-      <mat-horizontal-stepper #stepper [orientation]="isMobile ? 'vertical' : 'horizontal'" selectedIndex="1"
+    <!-- <form id="form" [formGroup]="placeOrderForm" (ngSubmit)="onPlaceOrder()"> -->
+    <form id="form" [formGroup]="placeOrderForm">
+      <mat-horizontal-stepper #stepper [orientation]="isMobile ? 'vertical' : 'horizontal'" linear
         (selectionChange)="onStepChange($event)"
         style="background-color: transparent; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
         <mat-step [stepControl]="placeOrderForm.get('ServiceDetailsForm')!">
@@ -58,7 +59,7 @@
                 </h2>
                 <mat-slider min="{{ currentSubserviceUnitAmountMin }}" max="{{ currentSubserviceUnitAmountMax }}"
                   step="1" class="material-slider" style="width: 450px;">
-                  <input matSliderThumb #slider formControlName="amount">
+                  <input matSliderThumb #slider formControlName="amount" [value]="currentSubserviceUnitAmountMin">
                 </mat-slider>
                 <p class="mr-5 font-montserrat text-base text-neutral-200">{{slider.value}} min</p>
               </div>
@@ -68,7 +69,7 @@
                 </h2>
                 <mat-slider min="{{ currentSubserviceUnitAmountMin }}" max="{{ currentSubserviceUnitAmountMax }}"
                   step="1" class="material-slider" style="width: 450px;">
-                  <input matSliderThumb #slider formControlName="amount">
+                  <input matSliderThumb #slider formControlName="amount" [value]="currentSubserviceUnitAmountMin">
                 </mat-slider>
                 <p class="mr-5 font-montserrat text-base text-neutral-200">ilość zdjęć: {{slider.value}}</p>
               </div>
@@ -85,7 +86,7 @@
                 </h2>
                 <mat-slider min="{{ currentSubserviceUnitAmountMin }}" max="{{ currentSubserviceUnitAmountMax }}"
                   step="1" class="material-slider" style="width: 450px;">
-                  <input matSliderThumb #slider formControlName="amount">
+                  <input matSliderThumb #slider formControlName="amount" [value]="currentSubserviceUnitAmountMin">
                 </mat-slider>
                 <p class="mr-5 font-montserrat text-base text-neutral-200">{{slider.value}} MW</p>
               </div>
@@ -102,7 +103,7 @@
                 </h2>
                 <mat-slider min="{{ currentSubserviceUnitAmountMin }}" max="{{ currentSubserviceUnitAmountMax }}"
                   step="1" class="material-slider" style="width: 450px;">
-                  <input matSliderThumb #slider formControlName="amount">
+                  <input matSliderThumb #slider formControlName="amount" [value]="currentSubserviceUnitAmountMin">
                 </mat-slider>
                 <p *ngIf="currentSubserviceName !== 'model 3D' && currentServiceName !== undefined"
                   class="mr-5 font-montserrat text-base text-neutral-200">{{slider.value}} [AR]</p>
@@ -117,7 +118,7 @@
                 </h2>
                 <mat-slider min="{{ currentSubserviceUnitAmountMin }}" max="{{ currentSubserviceUnitAmountMax }}"
                   step="1" class="material-slider" style="width: 450px;">
-                  <input matSliderThumb #slider formControlName="amount">
+                  <input matSliderThumb #slider formControlName="amount" [value]="currentSubserviceUnitAmountMin">
                 </mat-slider>
                 <p class="mr-5 font-montserrat text-base text-neutral-200">ilość słupów: {{slider.value}}</p>
               </div>
@@ -129,7 +130,7 @@
                 </h2>
                 <mat-slider min="{{ currentSubserviceUnitAmountMin }}" max="{{ currentSubserviceUnitAmountMax }}"
                   step="1" class="material-slider" style="width: 450px;">
-                  <input matSliderThumb #slider formControlName="amount">
+                  <input matSliderThumb #slider formControlName="amount" [value]="currentSubserviceUnitAmountMin">
                 </mat-slider>
                 <p class="mr-5 font-montserrat text-base text-neutral-200">ilość elektrowni: {{slider.value}}</p>
               </div>
@@ -154,14 +155,16 @@
 
             <!-- geocoding -->
             <section class="w-full flex flex-col items-start justify-start mt-5 mb-12">
-              <form #geocodingForm="ngForm" (ngSubmit)="onGeocodingSubmit(geocodingForm)" class="w-full">
+              <!-- <form #geocodingForm="ngForm" (ngSubmit)="onGeocodingSubmit(geocodingForm)" class="w-full"> -->
+              <form #geocodingForm="ngForm" class="w-full">
                 <div class="w-full flex flex-col md:flex-row justify-start items-center md:gap-5 text-sm">
                   <mat-form-field appearance="outline" class="w-full p-[5px]">
                     <mat-label>Lokalizacja</mat-label>
                     <input matInput id="geocodingAddress" ngModel name="geocodingAddress" type="text"
                       #geocodingAddress="ngModel" class="w-full">
                   </mat-form-field>
-                  <button type="submit" [disabled]="geocodingAddress.value === ''" class="w-full md:w-auto">
+                  <!-- <button type="submit" [disabled]="geocodingAddress.value === ''" class="w-full md:w-auto"> -->
+                  <button type="button" (click)="onGeocodingSubmit(geocodingForm)" [disabled]="geocodingAddress.value === ''" class="w-full md:w-auto">
                     <p class="bg-stone-600 text-white text-sm font-semibold py-2 px-4 rounded-2xl mb-[20px]"
                       [ngClass]="geocodingAddress.value === '' ? 'brightness-50 cursor-not-allowed' : 'brightness-100 cursor-default'">
                       Szukaj
@@ -245,6 +248,11 @@
                     class="font-montserrat text-xs text-red-600">
                     Podaj nazwę firmy
                   </mat-error>
+                  <mat-error
+                    *ngIf="placeOrderForm.get('CustomerDataForm.name')?.hasError('minlength') || placeOrderForm.get('CustomerDataForm.name')?.hasError('maxlength')"
+                    class="font-montserrat text-xs text-red-600">
+                    Nieprawidłowy format
+                  </mat-error>
                 </mat-form-field>
                 <mat-form-field class="w-[150px] lg:w-[450px]">
                   <mat-label>NIP</mat-label>
@@ -267,6 +275,11 @@
                     class="font-montserrat text-xs text-red-600">
                     Podaj imię
                   </mat-error>
+                  <mat-error
+                    *ngIf="placeOrderForm.get('CustomerDataForm.name')?.hasError('minlength') || placeOrderForm.get('CustomerDataForm.name')?.hasError('maxlength')"
+                    class="font-montserrat text-xs text-red-600">
+                    Nieprawidłowy format
+                  </mat-error>
                 </mat-form-field>
                 <mat-form-field class="w-[150px] lg:w-[450px]">
                   <mat-label>Nazwisko</mat-label>
@@ -274,6 +287,11 @@
                   <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.surname')?.hasError('required')"
                     class="font-montserrat text-xs text-red-600">
                     Podaj nazwisko
+                  </mat-error>
+                  <mat-error
+                    *ngIf="placeOrderForm.get('CustomerDataForm.surname')?.hasError('minlength') || placeOrderForm.get('CustomerDataForm.surname')?.hasError('maxlength')"
+                    class="font-montserrat text-xs text-red-600">
+                    Nieprawidłowy format
                   </mat-error>
                 </mat-form-field>
               </div>
@@ -293,15 +311,15 @@
                     class="font-montserrat text-xs text-red-600">
                     Podaj numer ulicy
                   </mat-error>
-                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.streetNumber')?.hasError('required')"
+                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.streetNumber')?.hasError('maxlength')"
                     class="font-montserrat text-xs text-red-600">
-                    Niewłaściwy format
+                    Nieprawidłowy format
                   </mat-error>
                 </mat-form-field>
                 <mat-form-field style="width: 215px;">
                   <mat-label>Nr lokalu</mat-label>
                   <input matInput formControlName="apartmentNumber" maxlength="5">
-                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.apartmentNumber')?.hasError('pattern')"
+                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.apartmentNumber')?.hasError('maxlength')"
                     class="font-montserrat text-xs text-red-600">
                     Nieprawidłowy format
                   </mat-error>
@@ -328,7 +346,7 @@
                   <mat-form-field style="width: 150px;">
                     <mat-label>Nr lokalu</mat-label>
                     <input matInput formControlName="apartmentNumber">
-                    <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.apartmentNumber')?.hasError('pattern')"
+                    <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.apartmentNumber')?.hasError('maxlength')"
                       class="font-montserrat text-xs text-red-600">
                       Nieprawidłowy format
                     </mat-error>
@@ -343,6 +361,10 @@
                     class="font-montserrat text-xs text-red-600">
                     Podaj miasto
                   </mat-error>
+                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.city')?.hasError('maxlength')"
+                    class="font-montserrat text-xs text-red-600">
+                    Nieprawidłowy format
+                  </mat-error>
                 </mat-form-field>
                 <mat-form-field style="width: 450px;">
                   <mat-label>Kod pocztowy</mat-label>
@@ -351,7 +373,8 @@
                     class="font-montserrat text-xs text-red-600">
                     Podaj kod pocztowy
                   </mat-error>
-                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.zip')?.hasError('minlength')"
+                  <mat-error
+                    *ngIf="placeOrderForm.get('CustomerDataForm.zip')?.hasError('minlength') || placeOrderForm.get('CustomerDataForm.zip')?.hasError('maxlength')"
                     class="font-montserrat text-xs text-red-600">
                     Nieprawidłowy format
                   </mat-error>
@@ -365,6 +388,10 @@
                     class="font-montserrat text-xs text-red-600">
                     Podaj miasto
                   </mat-error>
+                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.city')?.hasError('maxlength')"
+                    class="font-montserrat text-xs text-red-600">
+                    Nieprawidłowy format
+                  </mat-error>
                 </mat-form-field>
                 <mat-form-field style="width: 450px;">
                   <mat-label>Kod pocztowy</mat-label>
@@ -373,17 +400,27 @@
                     class="font-montserrat text-xs text-red-600">
                     Podaj kod pocztowy
                   </mat-error>
-                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.zip')?.hasError('minlength')"
+                  <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.zip')?.hasError('minlength') || placeOrderForm.get('CustomerDataForm.zip')?.hasError('maxlength')"
                     class="font-montserrat text-xs text-red-600">
                     Niperawidłowy format
                   </mat-error>
                 </mat-form-field>
               </div>
               <div class="hidden lg:flex flex-row items-center gap-5">
-                <mat-form-field style="width: 450px;">
+                <!-- prefix -->
+                <mat-form-field style="width: 100px;">
+                  <mat-label>Prefix</mat-label>
+                  <mat-select (selectionChange)="onPrefixChange($event)" value="+48">
+                    <mat-option *ngFor="let prefix of phonePrefixes" [value]="prefix">{{ prefix }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <!-- <mat-form-field style="width: 330px;"> -->
+                <mat-form-field style="width: 330px;">
                   <mat-label>Telefon</mat-label>
                   <!-- <span matPrefix>&nbsp;+48&nbsp;</span> -->
-                  <input matInput formControlName="tel" type="text" mask="000-000-000">
+                  <!-- <input matInput formControlName="tel" type="text" mask="000-000-000"> -->
+                  <input matInput formControlName="tel" type="text" [mask]="phoneMask">
                   <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.tel')?.hasError('required')"
                     class="font-montserrat text-xs text-red-600">
                     Podaj numer kontaktowy
@@ -407,9 +444,36 @@
                 </mat-form-field>
               </div>
               <div class="flex lg:hidden flex-col items-center gap-5">
-                <mat-form-field style="width: 450px;">
+
+
+                <!-- prefix -->
+                <div class="flex flex-row items-start justify-center gap-[20px]">
+                  <mat-form-field style="width: 100px;">
+                    <mat-label>Prefix</mat-label>
+                    <mat-select (selectionChange)="onPrefixChange($event)" value="+48">
+                      <mat-option *ngFor="let prefix of phonePrefixes" [value]="prefix">{{ prefix }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <!-- <mat-form-field style="width: 330px;"> -->
+                  <mat-form-field style="width: 330px;">
+                    <mat-label>Telefon</mat-label>
+                    <!-- <span matPrefix>&nbsp;+48&nbsp;</span> -->
+                    <!-- <input matInput formControlName="tel" type="text" mask="000-000-000"> -->
+                    <input matInput formControlName="tel" type="text" [mask]="phoneMask">
+                    <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.tel')?.hasError('required')"
+                      class="font-montserrat text-xs text-red-600">
+                      Podaj numer kontaktowy
+                    </mat-error>
+                    <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.tel')?.hasError('minlength')"
+                      class="font-montserrat text-xs text-red-600">
+                      Nieprawidłowy format
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+
+                <!-- <mat-form-field style="width: 450px;">
                   <mat-label>Telefon</mat-label>
-                  <!-- <span matPrefix>&nbsp;+48&nbsp;</span> -->
                   <input matInput formControlName="tel" type="text" mask="000-000-000">
                   <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.tel')?.hasError('required')"
                     class="font-montserrat text-xs text-red-600">
@@ -418,8 +482,8 @@
                   <mat-error *ngIf="placeOrderForm.get('CustomerDataForm.tel')?.hasError('minlength')"
                     class="font-montserrat text-xs text-red-600">
                     Niperawidłowy format
-                  </mat-error>
-                </mat-form-field>
+                  </mat-error> -->
+                <!-- </mat-form-field> -->
                 <mat-form-field style="width: 450px;">
                   <mat-label>E-mail</mat-label>
                   <input matInput formControlName="email" type="email">
@@ -488,7 +552,7 @@
                 POWRÓT
               </p>
             </button>
-            <button matStepperNext type="submit">
+            <button matStepperNext type="button" (click)="onPlaceOrder()">
               <p
                 [ngClass]="!placeOrderForm.get('OrderDetailForm')?.valid ? 'text-neutral-900 font-semibold text-sm bg-neutral-800 px-7 py-1 rounded-full cursor-not-allowed' : 'text-neutral-900 font-semibold text-sm bg-neutral-600 px-7 py-1 rounded-full hover:bg-neutral-500 ease-in-out transition-all duration-150'">
                 ZŁÓŻ ZAMÓWIENIE

@@ -37,7 +37,7 @@ export class AccountVerificationService {
   verify(userId: number, code: string) {
     return this.http
       .post<AccountVerificationResponseData>(
-        `${this.domain}/verify-account`,
+        `${this.domain}/api/verify-account`,
         {},
         {
           headers: new HttpHeaders({
@@ -57,7 +57,7 @@ export class AccountVerificationService {
   tokenResend(userId: number) {
     return this.http
       .post<ResponseData>(
-        `${this.domain}/regenerate-token`,
+        `${this.domain}/api/regenerate-token`,
         {
           user_id: userId,
         },

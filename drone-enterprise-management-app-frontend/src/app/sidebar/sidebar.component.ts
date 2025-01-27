@@ -4,6 +4,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { PanelService } from '../user/panel/panel.service';
 import { Notification } from '../user/panel/models/notification.model';
 import { Subscription } from 'rxjs';
+import { LoginService } from '../login/login.service';
 
 @Component({
   standalone: true,
@@ -19,8 +20,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
   notifications: Notification[] = [];
   unseenNotifications: Notification[] = [];
   badgeValue: Number = 0;
+  isAdmin: boolean = false;
 
-  constructor(private panelService: PanelService) { }
+  constructor(private panelService: PanelService, private loginService: LoginService) { }
 
   @ViewChild('sidebar') sidebar: ElementRef;
 
@@ -33,6 +35,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.fetchNotifications();
       }
     });
+
+    this.isAdmin = this.loginService.hasAdminPrivileges();
   }
 
   isSidebarHovered: boolean = false;

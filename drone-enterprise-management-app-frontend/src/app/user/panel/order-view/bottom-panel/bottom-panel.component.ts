@@ -47,12 +47,6 @@ export class BottomPanelComponent implements OnInit {
 
   onStateModifySubmit() {
 
-    console.log('order id: ', this.orderId);
-    console.log('state id: ', this.stateForm.get('stateId')?.value);
-    console.log('comment: ', this.stateForm.get('comment')?.value);
-
-    // this.orderView.onStateModify(this.orderId, this.stateForm.get('stateId')?.value, this.stateForm.get('comment')?.value);
-
     const dataToPassBack = { orderId: this.orderId, stateId: this.stateForm.get('stateId')?.value, comment: this.stateForm.get('comment')?.value };
 
     this.bottomPanelRef.dismiss(dataToPassBack);

@@ -16,10 +16,10 @@ export class CsrfInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     if (req.method !== 'GET') {
       if (!this.cookieService.check("XSRF-TOKEN")) {
-        console.log("csrf token isnt set")
         return from(this.csrfService.fetchCsrfToken()).pipe(
           switchMap(() => {
             const csrfToken = this.csrfService.getCsrfToken();
+            // const csrfToken = this.cookieService.get('XSRF-TOKEN');
             const clonedRequest = req.clone({
               headers: req.headers.set(
                 'X-XSRF-TOKEN',
@@ -31,7 +31,6 @@ export class CsrfInterceptor implements HttpInterceptor {
           })
         );
       } else {
-        console.log("attached existing csrf token");
         const csrfToken = this.cookieService.get("XSRF-TOKEN");
         const clonedRequest = req.clone({
           headers: req.headers.set(

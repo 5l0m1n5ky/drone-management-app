@@ -17,6 +17,7 @@ import { CancelDialogComponent } from 'src/app/shared/cancel-dialog/cancel-dialo
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { LoadingSpinnerComponent } from 'src/app/shared/loading-spinner/loading-spinner.component';
+import { LogoutService } from 'src/app/auth/logout.service';
 
 @Component({
   standalone: true,
@@ -72,7 +73,7 @@ export class PreviewMobileComponent implements OnInit, AfterViewInit, OnDestroy 
   private actionSubject = new Subject<any>();
   action$: Observable<any> = this.actionSubject.asObservable();
 
-  constructor(private route: ActivatedRoute, private router: Router, private location: Location, private loginService: LoginService, private portfolioService: PortfolioService, private dialog: MatDialog, private toastService: ToastService, private appComponent: AppComponent) { }
+  constructor(private route: ActivatedRoute, private router: Router, private location: Location, private loginService: LoginService, private portfolioService: PortfolioService, private dialog: MatDialog, private toastService: ToastService, private logoutService: LogoutService) { }
 
   ngOnInit(): void {
     this.postsSubsription = this.route.queryParams.subscribe(params => {
@@ -129,37 +130,35 @@ export class PreviewMobileComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   onEditMode(postId: number) {
-    this.isLoading = true;
-    this.onCheckSubscription = this.loginService.checkSession().subscribe(responseData => {
-      if (responseData && responseData.message && responseData.message.toString() === 'ACTIVE_SESSION') {
+    // this.isLoading = true;
+    // this.onCheckSubscription = this.loginService.checkSession().subscribe(responseData => {
+    //   if (responseData && responseData.message && responseData.message.toString() === 'ACTIVE_SESSION') {
 
-        this.postToEdit = this.loadedPosts.filter(post => post.id === postId)[0];
-        console.log(this.postToEdit);
+    this.postToEdit = this.loadedPosts.filter(post => post.id === postId)[0];
 
-        this.editPostForm = new FormGroup({
-          postLocationForm: new FormGroup({
-            location: new FormControl(this.postToEdit.location, Validators.required)
-          }),
-          postDescriptionForm: new FormGroup({
-            description: new FormControl(this.postToEdit.description, Validators.required)
-          }),
-          postVisibilityForm: new FormGroup({
-            visibility: new FormControl(this.postToEdit.visibility)
-          }),
-        });
-        this.isEditMode = true;
-        this.isLoading = false;
-      }
-    }, errorMessage => {
-      this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
-      this.appComponent.changeLoginState();
-      this.isLoading = false;
+    this.editPostForm = new FormGroup({
+      postLocationForm: new FormGroup({
+        location: new FormControl(this.postToEdit.location, Validators.required)
+      }),
+      postDescriptionForm: new FormGroup({
+        description: new FormControl(this.postToEdit.description, Validators.required)
+      }),
+      postVisibilityForm: new FormGroup({
+        visibility: new FormControl(this.postToEdit.visibility)
+      }),
     });
+    this.isEditMode = true;
+    // this.isLoading = false;
   }
+  //   }, errorMessage => {
+  //     this.router.navigate(['/login'], { queryParams: { action: 'session_expired' } });
+  //     this.logoutService.changeLoginState();
+  //     this.isLoading = false;
+  //   });
+  // }
 
   onEdit() {
     this.isUploading = true;
-    console.log(this.editPostForm);
     this.onEditSubscription = this.portfolioService.updatePost(
       this.postToEdit.id,
       this.file,
